@@ -21,7 +21,7 @@ classifiers = [
 python = "^3.8"
 
 [tool.poetry.group.dev.dependencies]
-black = "^22.3.0"
+black = "*"
 pytest = "*"
 
 [tool.poetry-dynamic-versioning]
