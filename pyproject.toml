@@ -22,6 +22,7 @@ python = "^3.8"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
+jupyter-book = "*"
 pytest = "*"
 
 [tool.poetry-dynamic-versioning]
@@ -29,5 +30,5 @@ enable = true
 style = "semver"
 
 [build-system]
-requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry>=1.2.0b1", "poetry-dynamic-versioning"]
+build-backend = "poetry.masonry.api"
