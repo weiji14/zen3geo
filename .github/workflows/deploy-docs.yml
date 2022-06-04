@@ -1,0 +1,42 @@
+# https://jupyterbook.org/en/stable/publish/gh-pages.html#automatically-host-your-book-with-github-actions
+name: deploy-docs
+
+# Only run this when the main branch changes
+on:
+  push:
+    branches:
+      - main
+    # If your git repository has the Jupyter Book within some-subfolder next to
+    # unrelated files, you can make this run only if a file within that specific
+    # folder has been modified.
+    paths:
+      - '.github/workflows/deploy-docs.yml'
+      - 'docs/**'
+
+# This job installs dependencies, builds the docs, and pushes it to `gh-pages`
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3.0.2
+
+    # Install Python
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v3.1.2
+      with:
+        python-version: 3.9
+
+    # Install dependencies needed for documentation build
+    - name: Install docs build dependencies
+      run: pip install jupyter-book
+
+    # Build the docs
+    - name: Build the docs
+      run: jupyter-book build docs/
+
+    # Push the docs's HTML to github-pages
+    - name: GitHub Pages action
+      uses: peaceiris/actions-gh-pages@v3.8.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs/_build/html
