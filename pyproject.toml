@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "zen3geo"
+version = "0.0.0"
+description = "The 🌏 data science library you've been waiting for~"
+authors = ["Wei Ji <23487320+weiji14@users.noreply.github.com>"]
+license = "LGPL-3.0-or-later"
+readme = "README.md"
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.3.0"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+style = "semver"
+
+[build-system]
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
+build-backend = "poetry.core.masonry.api"
