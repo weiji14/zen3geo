@@ -14,10 +14,6 @@ latex:
   latex_documents:
     targetname: zen3geo.tex
 
-# Add a bibtex file so that we can create citations
-bibtex_bibfiles:
-  - references.bib
-
 # Information about where the book exists on the web
 repository:
   url: https://github.com/weiji14/zen3geo  # Online location of your book
