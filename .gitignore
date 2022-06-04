@@ -8,3 +8,6 @@ dist/
 *.egg-info/
 .eggs/
 MANIFEST
+
+# Jupyter Book
+/docs/_build/
