@@ -16,9 +16,9 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
 ]
 
-
 [tool.poetry.dependencies]
 python = "^3.8"
+rioxarray = ">=0.10.0"
 torchdata = ">=0.3.0"
 
 [tool.poetry.group.dev.dependencies]
