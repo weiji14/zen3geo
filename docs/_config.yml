@@ -32,3 +32,5 @@ sphinx:
     html_show_copyright: false
   extra_extensions:
     - 'sphinx.ext.autodoc'
+    - 'sphinx.ext.napoleon'
+    - 'sphinx.ext.viewcode'
