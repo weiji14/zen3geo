@@ -19,6 +19,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
+torchdata = ">=0.3.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
