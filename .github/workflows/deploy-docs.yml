@@ -31,8 +31,7 @@ jobs:
     # Install dependencies needed for documentation build
     - name: Install docs build dependencies
       run: |
-        pip install jupyter-book
-        pip install .
+        pip install . jupyter-book planetary-computer pystac
         pip list
 
     # Build the docs
