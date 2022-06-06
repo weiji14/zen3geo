@@ -160,6 +160,8 @@ A DataPipe describes a flow of information.
 Through a series of steps it goes,
 as one piece comes in, another might follow.
 
+### Basic iteration ♻️
+
 At the most basic level, you could iterate through the DataPipe like so:
 
 ```{code-cell}
@@ -176,12 +178,34 @@ for filename, dataarray in dp_rioxarray_zoom3:
     # Run model on this data batch
 ```
 
-For the deep learning folks though, you'll probably want to use
-[``torch.utils.data.DataLoader``](https://pytorch.org/docs/1.11/data.html#torch.utils.data.DataLoader):
+### Into a DataLoader 🏋️
+
+For the deep learning folks, you might need one extra step.
+The ``xarray.DataArray`` needs to be converted to a tensor.
+In the Pytorch world, that can happen via ``torch.as_tensor``.
 
 ```{code-cell}
-dataloader = torch.utils.data.DataLoader(dataset=dp_rioxarray_zoom3)
-dataloader
+def fn(da):
+    return torch.as_tensor(da.data)
+```
+
+Using [``torchdata.datapipes.iter.Mapper``](https://pytorch.org/data/0.4.0/generated/torchdata.datapipes.iter.Mapper.html),
+we'll apply the tensor conversion function to index 1 of the
+``(filename, dataarray)`` tuple.
+
+```{code-cell}
+dp_tensor = dp_rioxarray_zoom3.map(fn=fn, input_col=1)
+dp_tensor
+```
+
+Finally, let's put our DataPipe into a
+[``torch.utils.data.DataLoader``](https://pytorch.org/docs/1.11/data.html#torch.utils.data.DataLoader)!
+
+```{code-cell}
+dataloader = torch.utils.data.DataLoader(dataset=dp_tensor)
+for batch in dataloader:
+    filename, tensor = batch
+    print(tensor)
 ```
 
 And so it begins 🌄
