@@ -4,7 +4,7 @@ name: deploy-docs
 # Only run this when the main branch changes
 on:
   # Uncomment the 'pull_request' line below to manually re-build the docs
-  pull_request:
+  # pull_request:
   push:
     branches:
       - main
