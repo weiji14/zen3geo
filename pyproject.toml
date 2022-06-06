@@ -23,8 +23,12 @@ torchdata = ">=0.3.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
-jupyter-book = "*"
 pytest = "*"
+
+[tool.poetry.group.docs.dependencies]
+jupyter-book = "*"
+planetary-computer = "*"
+pystac = "*"
 
 [tool.poetry-dynamic-versioning]
 enable = true
