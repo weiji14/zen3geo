@@ -4,6 +4,8 @@
 format: jb-book
 root: index
 chapters:
+  - title: 🦮 Walkthrough
+    file: walkthrough
   - title: 📖 API Reference
     file: api
   - title: 🫶 Code of Conduct
