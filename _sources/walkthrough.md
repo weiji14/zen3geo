@@ -25,19 +25,24 @@ using ``torchdata`` and by the end of this lesson, you should be able to:
 These are the tools 🛠️ you'll need.
 
 ```{code-cell}
+# Geospatial libraries
 import pystac
 import planetary_computer
 import rioxarray
+# Deep Learning libraries
+import torch
 import torchdata
 import zen3geo
 ```
 
 Just to make sure we’re on the same page 📃,
-let’s check that we’ve got the same versions.
+let’s check that we’ve got compatible versions installed.
 
 ```{code-cell}
 print(f"pystac version: {pystac.__version__}")
 print(f"planetary-computer version: {planetary_computer.__version__}")
+print(f"torch version: {torch.__version__}")
+
 print(f"torchdata version: {torchdata.__version__}")
 print(f"zen3geo version: {zen3geo.__version__}")
 rioxarray.show_versions()
@@ -87,13 +92,13 @@ Yes, I don't know what it really means either, so here's some extra reading.
 🔖 References:
 - https://pytorch.org/blog/pytorch-1.11-released/#introducing-torchdata
 - https://github.com/pytorch/data/tree/v0.3.0#what-are-datapipes
-- https://realpython.com/inheritance-composition-python/#creating-class-hierarchies
+- https://realpython.com/inheritance-composition-python
 
 ### Create an Iterable 📏
 
 Start by wrapping a list of URLs to the Cloud-Optimized GeoTIFF files.
 We only have 1 item so we'll use ``[url]``, but if you have more, you can do
-``[url1, url2, url3]``, etc. Passing this iterable list into
+``[url1, url2, url3]``, etc. Pass this iterable list into
 [`torchdata.datapipes.iter.IterableWrapper`](https://pytorch.org/data/0.4.0/generated/torchdata.datapipes.iter.IterableWrapper.html):
 
 ```{code-cell}
@@ -129,17 +134,66 @@ Note that both ways are equivalent (they produce the same IterDataPipe output),
 but the latter (functional) form is preferred, see also
 https://pytorch.org/data/0.4.0/tutorial.html#registering-datapipes-with-the-functional-api
 
+What if you don't want the whole Sentinel-2 scene at the full 10m resolution?
+Since we're using Cloud-Optimized GeoTIFFs, you could set an ``overview_level``
+(following https://corteva.github.io/rioxarray/stable/examples/COG.html).
+
+```{code-cell}
+dp_rioxarray_zoom3 = dp.read_from_rioxarray(overview_level=3)
+dp_rioxarray_zoom3
+```
+
+Extra keyword arguments will be handled by
+[``rioxarray.open_rasterio``](https://corteva.github.io/rioxarray/stable/rioxarray.html#rioxarray-open-rasterio)
+or [``rasterio.open``](https://rasterio.readthedocs.io/en/stable/api/rasterio.html#rasterio.open).
+
+```{note}
+Other DataPipe classes/functions can be stacked or joined to this basic GeoTIFF
+reader. For example, clipping by bounding box or reprojecting to a certain
+Coordinate Reference System. If you would like to implement this, check out the
+[Contributing Guidelines](./CONTRIBUTING) to get started!
+```
 
 ## 2️⃣ Loop through DataPipe ⚙️
 
-TODO
+A DataPipe describes a flow of information.
+Through a series of steps it goes,
+as one piece comes in, another might follow.
+
+At the most basic level, you could iterate through the DataPipe like so:
+
+```{code-cell}
+it = iter(dp_rioxarray_zoom3)
+filename, dataarray = next(it)
+dataarray
+```
+
+Or if you're more familiar with a for-loop, here it is:
+
+```{code-cell}
+for filename, dataarray in dp_rioxarray_zoom3:
+    print(dataarray)
+    # Run model on this data batch
+```
+
+For the deep learning folks though, you'll probably want to use
+[``torch.utils.data.DataLoader``](https://pytorch.org/docs/1.11/data.html#torch.utils.data.DataLoader):
+
+```{code-cell}
+dataloader = torch.utils.data.DataLoader(dataset=dp_rioxarray_zoom3)
+dataloader
+```
+
+And so it begins 🌄
+
+---
 
 That’s all 🎉! For more information on how to use DataPipes, check out:
 
 - Tutorial at https://pytorch.org/data/0.4.0/tutorial.html
 - Usage examples at https://pytorch.org/data/0.4.0/examples.html
 
-If you have any questions 🙋, feel free to ask anything
+If you have any questions 🙋, feel free to ask us anything at
 https://github.com/weiji14/zen3geo/discussions or visit the Pytorch forums at
 https://discuss.pytorch.org/c/data/37.
 
