@@ -1,6 +1,8 @@
 # API Reference
 
+## DataPipes
+
 ```{eval-rst}
-.. automodule:: zen3geo
+.. automodule:: zen3geo.datapipes
     :members:
 ```

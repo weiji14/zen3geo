@@ -296,12 +296,36 @@ title="Print to PDF"
     </ul>
   </div>
 </div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
 
     </div>
 </div>
 
 <!-- Table of contents -->
 <div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#module-zen3geo.datapipes">
+   DataPipes
+  </a>
+ </li>
+</ul>
+
+    </nav>
 </div>
     </div>
     <div class="article row">
@@ -313,6 +337,19 @@ title="Print to PDF"
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#module-zen3geo.datapipes">
+   DataPipes
+  </a>
+ </li>
+</ul>
+
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -320,9 +357,64 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="module-zen3geo">
-<span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-zen3geo" title="Permalink to this headline">#</a></h1>
-<p>zen3geo - The 🌏 data science library you’ve been waiting for~</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">#</a></h1>
+<section id="module-zen3geo.datapipes">
+<span id="datapipes"></span><h2>DataPipes<a class="headerlink" href="#module-zen3geo.datapipes" title="Permalink to this headline">#</a></h2>
+<p>Iterable-style DataPipes for geospatial raster and vector data.</p>
+<p>Based on
+<a class="reference external" href="https://github.com/pytorch/data/blob/v0.3.0/torchdata/datapipes/iter/load/online.py#L29-L59">https://github.com/pytorch/data/blob/v0.3.0/torchdata/datapipes/iter/load/online.py#L29-L59</a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="zen3geo.datapipes.RioXarrayReaderIterDataPipe">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">zen3geo.datapipes.</span></span><span class="sig-name descname"><span class="pre">RioXarrayReaderIterDataPipe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_datapipe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.utils.data.dataset.IterDataPipe</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zen3geo/datapipes.html#RioXarrayReaderIterDataPipe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zen3geo.datapipes.RioXarrayReaderIterDataPipe" title="Permalink to this definition">#</a></dt>
+<dd><p>Takes raster files (e.g. GeoTIFFs) from local disk or URLs
+(as long as they can be read by rioxarray and/or rasterio)
+and yields tuples of filename and xarray.DataArray objects
+(functional name: <code class="docutils literal notranslate"><span class="pre">read_from_rioxarray</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_datapipe</strong> (<em>IterDataPipe</em><em>[</em><em>str</em><em>]</em>) – A DataPipe that contains filepaths or URL links to raster files such as
+GeoTIFFs.</p></li>
+<li><p><strong>kwargs</strong> (<em>Optional</em>) – Extra keyword arguments to pass to <code class="docutils literal notranslate"><span class="pre">rioxarray.open_rasterio</span></code> and/or
+<code class="docutils literal notranslate"><span class="pre">rasterio.open</span></code>. See
+<a class="reference external" href="https://corteva.github.io/rioxarray/stable/rioxarray.html#rioxarray-open-rasterio">https://corteva.github.io/rioxarray/stable/rioxarray.html#rioxarray-open-rasterio</a>
+and <a class="reference external" href="https://rasterio.readthedocs.io/en/stable/api/rasterio.html#rasterio.open">https://rasterio.readthedocs.io/en/stable/api/rasterio.html#rasterio.open</a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p><strong>stream_obj</strong> (<em>Tuple[str, xarray.DataArray]</em>) – A tuple consisting of the filename that was passed in, and an
+<code class="docutils literal notranslate"><span class="pre">xarray.DataArray</span></code> object containing the raster data.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">torchdata.datapipes.iter</span> <span class="kn">import</span> <span class="n">IterableWrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">zen3geo</span> <span class="kn">import</span> <span class="n">RioXarrayReader</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Read in GeoTIFF data using DataPipe</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">file_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;https://github.com/GenericMappingTools/gmtserver-admin/raw/master/cache/earth_day_HD.tif&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dp</span> <span class="o">=</span> <span class="n">IterableWrapper</span><span class="p">(</span><span class="n">iterable</span><span class="o">=</span><span class="p">[</span><span class="n">file_url</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dp_rioxarray</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">read_from_rioxarray</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Loop or iterate over the DataPipe stream</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">it</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">dp_rioxarray</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filename</span><span class="p">,</span> <span class="n">dataarray</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filename</span>
+<span class="go">&#39;https://github.com/GenericMappingTools/gmtserver-admin/raw/master/cache/earth_day_HD.tif&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataarray</span>
+<span class="go">StreamWrapper&lt;&lt;xarray.DataArray (band: 1, y: 960, x: 1920)&gt;</span>
+<span class="go">[1843200 values with dtype=uint8]</span>
+<span class="go">Coordinates:</span>
+<span class="go">  * band         (band) int64 1</span>
+<span class="go">  * x            (x) float64 -179.9 -179.7 -179.5 -179.3 ... 179.5 179.7 179.9</span>
+<span class="go">  * y            (y) float64 89.91 89.72 89.53 89.34 ... -89.53 -89.72 -89.91</span>
+<span class="go">    spatial_ref  int64 0</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
 </section>
 
     <script type="text/x-thebe-config">
