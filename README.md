@@ -14,3 +14,9 @@ Deep Learning, you hope, has an answer to all
 Too this, too that, where to though, where to?
 Look out, sense within, and now you must know
 ```
+
+## Installation
+
+For now, install from source using
+
+    pip install git+https://github.com/weiji14/zen3geo.git
