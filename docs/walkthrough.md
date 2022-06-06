@@ -87,13 +87,13 @@ Yes, I don't know what it really means either, so here's some extra reading.
 🔖 References:
 - https://pytorch.org/blog/pytorch-1.11-released/#introducing-torchdata
 - https://github.com/pytorch/data/tree/v0.3.0#what-are-datapipes
-- https://realpython.com/inheritance-composition-python/#creating-class-hierarchies
+- https://realpython.com/inheritance-composition-python
 
 ### Create an Iterable 📏
 
 Start by wrapping a list of URLs to the Cloud-Optimized GeoTIFF files.
 We only have 1 item so we'll use ``[url]``, but if you have more, you can do
-``[url1, url2, url3]``, etc. Passing this iterable list into
+``[url1, url2, url3]``, etc. Pass this iterable list into
 [`torchdata.datapipes.iter.IterableWrapper`](https://pytorch.org/data/0.4.0/generated/torchdata.datapipes.iter.IterableWrapper.html):
 
 ```{code-cell}
@@ -129,6 +129,25 @@ Note that both ways are equivalent (they produce the same IterDataPipe output),
 but the latter (functional) form is preferred, see also
 https://pytorch.org/data/0.4.0/tutorial.html#registering-datapipes-with-the-functional-api
 
+What if you don't want the whole Sentinel-2 scene at the full 10m resolution?
+Since we're using Cloud-Optimized GeoTIFFs, you could set an ``overview_level``
+(following https://corteva.github.io/rioxarray/stable/examples/COG.html).
+
+```{code-cell}
+dp_rioxarray_zoom3 = dp.read_from_rioxarray(overview_level=3)
+dp_rioxarray_zoom3
+```
+
+Extra keyword arguments will be handled by
+[``rioxarray.open_rasterio``](https://corteva.github.io/rioxarray/stable/rioxarray.html#rioxarray-open-rasterio)
+or [``rasterio.open``](https://rasterio.readthedocs.io/en/stable/api/rasterio.html#rasterio.open).
+
+```{note}
+Other DataPipe classes/functions can be stacked or joined to this basic GeoTIFF
+reader. For example, clipping by bounding box or reprojecting to a certain
+Coordinate Reference System. If you would like to implement this, check out the
+[Contributing Guidelines](./CONTRIBUTING) to get started!
+```
 
 ## 2️⃣ Loop through DataPipe ⚙️
 
@@ -139,7 +158,7 @@ That’s all 🎉! For more information on how to use DataPipes, check out:
 - Tutorial at https://pytorch.org/data/0.4.0/tutorial.html
 - Usage examples at https://pytorch.org/data/0.4.0/examples.html
 
-If you have any questions 🙋, feel free to ask anything
+If you have any questions 🙋, feel free to ask us anything at
 https://github.com/weiji14/zen3geo/discussions or visit the Pytorch forums at
 https://discuss.pytorch.org/c/data/37.
 
