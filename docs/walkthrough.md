@@ -25,19 +25,24 @@ using ``torchdata`` and by the end of this lesson, you should be able to:
 These are the tools 🛠️ you'll need.
 
 ```{code-cell}
+# Geospatial libraries
 import pystac
 import planetary_computer
 import rioxarray
+# Deep Learning libraries
+import torch
 import torchdata
 import zen3geo
 ```
 
 Just to make sure we’re on the same page 📃,
-let’s check that we’ve got the same versions.
+let’s check that we’ve got compatible versions installed.
 
 ```{code-cell}
 print(f"pystac version: {pystac.__version__}")
 print(f"planetary-computer version: {planetary_computer.__version__}")
+print(f"torch version: {torch.__version__}")
+
 print(f"torchdata version: {torchdata.__version__}")
 print(f"zen3geo version: {zen3geo.__version__}")
 rioxarray.show_versions()
@@ -151,7 +156,37 @@ Coordinate Reference System. If you would like to implement this, check out the
 
 ## 2️⃣ Loop through DataPipe ⚙️
 
-TODO
+A DataPipe describes a flow of information.
+Through a series of steps it goes,
+as one piece comes in, another might follow.
+
+At the most basic level, you could iterate through the DataPipe like so:
+
+```{code-cell}
+it = iter(dp_rioxarray_zoom3)
+filename, dataarray = next(it)
+dataarray
+```
+
+Or if you're more familiar with a for-loop, here it is:
+
+```{code-cell}
+for filename, dataarray in dp_rioxarray_zoom3:
+    print(dataarray)
+    # Run model on this data batch
+```
+
+For the deep learning folks though, you'll probably want to use
+[``torch.utils.data.DataLoader``](https://pytorch.org/docs/1.11/data.html#torch.utils.data.DataLoader):
+
+```{code-cell}
+dataloader = torch.utils.data.DataLoader(dataset=dp_rioxarray_zoom3)
+dataloader
+```
+
+And so it begins 🌄
+
+---
 
 That’s all 🎉! For more information on how to use DataPipes, check out:
 
