@@ -43,6 +43,14 @@ jobs:
           poetry plugin add poetry-dynamic-versioning-plugin
           poetry show
 
+      - name: Fix up version string for TestPyPI
+        if: ${{ !startsWith(github.ref, 'refs/tags') }}
+        run: |
+          # Change poetry-dynamic-versioning to use metadata=false so that the
+          # local part of the version isn't included, making the version string
+          # compatible with PyPI.
+          sed --in-place "s/metadata = true/metadata = false/g" pyproject.toml
+
       - name: Build a binary wheel and a source tarball
         run: |
           poetry build -vvv

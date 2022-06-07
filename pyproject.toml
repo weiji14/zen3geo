@@ -38,8 +38,10 @@ docs = [
 ]
 
 [tool.poetry-dynamic-versioning]
+bump = true
 enable = true
-style = "semver"
+metadata = true
+style = "pep440"
 
 [build-system]
 requires = ["poetry>=1.2.0b1", "poetry-dynamic-versioning"]
