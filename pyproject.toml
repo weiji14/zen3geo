@@ -17,18 +17,25 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
+# Required
 python = "^3.8"
 rioxarray = ">=0.10.0"
 torchdata = ">=0.3.0"
+# Docs
+jupyter-book = {version="*", optional=true}
+planetary-computer = {version="*", optional=true}
+pystac = {version="*", optional=true}
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
 pytest = "*"
 
-[tool.poetry.group.docs.dependencies]
-jupyter-book = "*"
-planetary-computer = "*"
-pystac = "*"
+[tool.poetry.extras]
+docs = [
+    "jupyter-book",
+    "planetary-computer",
+    "pystac"
+]
 
 [tool.poetry-dynamic-versioning]
 enable = true
