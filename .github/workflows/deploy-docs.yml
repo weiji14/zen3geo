@@ -15,16 +15,21 @@ on:
       - '.github/workflows/deploy-docs.yml'
       - 'docs/**'
 
+permissions:
+  contents: read
+
 # This job installs dependencies, builds the docs, and pushes it to `gh-pages`
 jobs:
   deploy-docs:
+    permissions:
+      contents: write  # for peaceiris/actions-gh-pages to push pages branch
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3.0.2
+    - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
 
     # Install Python
     - name: Set up Python 3.9
-      uses: actions/setup-python@v3.1.2
+      uses: actions/setup-python@98f2ad02fd48d057ee3b4d4f66525b231c3e52b6
       with:
         python-version: 3.9
 
@@ -40,7 +45,7 @@ jobs:
 
     # Push the docs's HTML to github-pages
     - name: GitHub Pages action
-      uses: peaceiris/actions-gh-pages@v3.8.0
+      uses: peaceiris/actions-gh-pages@b24891da2a683970a75ebe54633f084809cc25c0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: docs/_build/html
