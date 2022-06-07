@@ -1,0 +1,32 @@
+name-template: 'v$RESOLVED_VERSION 🌈'
+tag-template: 'v$RESOLVED_VERSION'
+categories:
+  - title: '🚀 Features'
+    label: 'feature'
+  - title: '🐛 Bug Fixes'
+    label: 'bug'
+  - title: '📖 Documentation'
+    label: 'documentation'
+  - title: '🧰 Maintenance'
+    label: 'maintenance'
+version-resolver:
+  minor:
+    labels:
+      - 'feature'
+  default: patch
+exclude-labels:
+  - 'skip-changelog'
+category-template: '### $TITLE'
+change-template: '* $TITLE ([#$NUMBER]($URL))'
+template: |
+  ## Release v$RESOLVED_VERSION (20YY/MM/DD)
+
+  ### 💫 Highlights
+
+  *
+
+  $CHANGES
+
+  ### 🧑‍🤝‍🧑 Contributors
+
+  $CONTRIBUTORS
