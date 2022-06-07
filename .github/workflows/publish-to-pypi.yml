@@ -1,0 +1,71 @@
+# Publish archives to PyPI and TestPyPI using GitHub Actions
+# https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
+
+name: Publish to PyPI
+
+# Only run for pushes to the main branch and releases.
+on:
+  push:
+    branches:
+      - main
+  release:
+    types:
+      - published
+  # Runs for pull requests should be disabled other than for testing purposes
+  #pull_request:
+  #  branches:
+  #    - main
+
+permissions:
+  contents: read
+
+jobs:
+  publish-pypi:
+    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+    runs-on: ubuntu-22.04
+    if: github.repository == 'weiji14/zen3geo'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+        with:
+          # fetch all history so that poetry-dynamic-versioning works
+          fetch-depth: 0
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@98f2ad02fd48d057ee3b4d4f66525b231c3e52b6
+        with:
+          python-version: '3.9'
+
+      - name: Install Poetry and dynamic-versioning plugin
+        run: |
+          pip install poetry==1.2.0b1
+          poetry plugin add poetry-dynamic-versioning-plugin
+          poetry show
+
+      - name: Fix up version string for TestPyPI
+        if: ${{ !startsWith(github.ref, 'refs/tags') }}
+        run: |
+          # Change poetry-dynamic-versioning to use metadata=false so that the
+          # local part of the version isn't included, making the version string
+          # compatible with PyPI.
+          sed --in-place "s/metadata = true/metadata = false/g" pyproject.toml
+
+      - name: Build a binary wheel and a source tarball
+        run: |
+          poetry build -vvv
+          echo ""
+          echo "Generated files:"
+          ls -lh dist/
+
+      - name: Publish distribution 📦 to Test PyPI
+        uses: pypa/gh-action-pypi-publish@0fc90bca7acbb84292e0cff399f8579284fcfc7d
+        with:
+          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
+
+      - name: Publish distribution 📦 to PyPI
+        if: startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@0fc90bca7acbb84292e0cff399f8579284fcfc7d
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}

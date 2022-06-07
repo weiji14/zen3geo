@@ -6,7 +6,7 @@ authors = ["Wei Ji <23487320+weiji14@users.noreply.github.com>"]
 license = "LGPL-3.0-or-later"
 readme = "README.md"
 classifiers = [
-    "Development Status :: 1 - Planning",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
     "Topic :: Scientific/Engineering",
@@ -38,8 +38,10 @@ docs = [
 ]
 
 [tool.poetry-dynamic-versioning]
+bump = true
 enable = true
-style = "semver"
+metadata = true
+style = "pep440"
 
 [build-system]
 requires = ["poetry>=1.2.0b1", "poetry-dynamic-versioning"]
