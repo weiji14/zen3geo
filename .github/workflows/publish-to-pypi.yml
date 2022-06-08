@@ -43,8 +43,7 @@ jobs:
           poetry self add poetry-dynamic-versioning-plugin
           poetry show
 
-      - name: Fix up version string for TestPyPI
-        if: ${{ !startsWith(github.ref, 'refs/tags') }}
+      - name: Fix up version string for TestPyPI and PyPI
         run: |
           # Change poetry-dynamic-versioning to use metadata=false so that the
           # local part of the version isn't included, making the version string
@@ -63,6 +62,7 @@ jobs:
         with:
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
           repository_url: https://test.pypi.org/legacy/
+          skip_existing: true
 
       - name: Publish distribution 📦 to PyPI
         if: startsWith(github.ref, 'refs/tags')

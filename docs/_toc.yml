@@ -8,6 +8,8 @@ chapters:
     file: walkthrough
   - title: 📖 API Reference
     file: api
+  - title: 📆 Changelog
+    file: changelog
   - title: 🫶 Code of Conduct
     file: CODE_OF_CONDUCT
   - title: 🧑‍🤝‍🧑 Contributing
