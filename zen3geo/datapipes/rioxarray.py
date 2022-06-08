@@ -1,8 +1,5 @@
 """
-Iterable-style DataPipes for geospatial raster and vector data.
-
-Based on
-https://github.com/pytorch/data/blob/v0.3.0/torchdata/datapipes/iter/load/online.py#L29-L59
+DataPipes for rioxarray.
 """
 from typing import Any, Dict, Iterator, Optional, Tuple
 
@@ -19,6 +16,9 @@ class RioXarrayReaderIterDataPipe(IterDataPipe[Tuple[str, StreamWrapper]]):
     (as long as they can be read by rioxarray and/or rasterio)
     and yields tuples of filename and xarray.DataArray objects
     (functional name: ``read_from_rioxarray``).
+
+    Based on
+    https://github.com/pytorch/data/blob/v0.3.0/torchdata/datapipes/iter/load/online.py#L29-L59
 
     Parameters
     ----------
@@ -41,7 +41,7 @@ class RioXarrayReaderIterDataPipe(IterDataPipe[Tuple[str, StreamWrapper]]):
     Example
     -------
     >>> from torchdata.datapipes.iter import IterableWrapper
-    >>> from zen3geo import RioXarrayReader
+    >>> from zen3geo.datapipes import RioXarrayReader
     ...
     >>> # Read in GeoTIFF data using DataPipe
     >>> file_url: str = "https://github.com/GenericMappingTools/gmtserver-admin/raw/master/cache/earth_day_HD.tif"

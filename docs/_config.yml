@@ -29,6 +29,7 @@ html:
 
 sphinx:
   config:
+    autodoc_typehints: 'description'
     html_show_copyright: false
   extra_extensions:
     - 'sphinx.ext.autodoc'

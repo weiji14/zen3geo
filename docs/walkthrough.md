@@ -111,16 +111,16 @@ Now to apply some more transformations/functions on it.
 
 ### Read using RioXarrayReader 🌐
 
-This is where ``zen3geo`` comes in. We'll be using the
-{py:class}`zen3geo.datapipes.RioXarrayReaderIterDataPipe` class, or rather,
-the short alias  ``zen3geo.RioXarrayReader``.
+This is where ☯ ``zen3geo`` comes in. We'll be using the
+{py:class}`zen3geo.datapipes.rioxarray.RioXarrayReaderIterDataPipe` class, or
+rather, the short alias {py:class}`zen3geo.datapipes.RioXarrayReader`.
 
 Confusingly, there are two ways or forms of applying ``RioXarrayReader``,
 a class-based method and a functional method.
 
 ```{code-cell}
 # Using class constructors
-dp_rioxarray = zen3geo.RioXarrayReader(source_datapipe=dp)
+dp_rioxarray = zen3geo.datapipes.RioXarrayReader(source_datapipe=dp)
 dp_rioxarray
 ```
 
