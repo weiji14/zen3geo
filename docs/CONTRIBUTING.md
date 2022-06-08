@@ -113,7 +113,7 @@ cd zen3geo
 mamba create --name zen3geo python=3.9
 mamba activate
 
-pip install poetry==1.2.0b1
+pip install poetry==1.2.0b2
 poetry install
 ```
 
