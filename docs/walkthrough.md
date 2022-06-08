@@ -99,7 +99,7 @@ Yes, I don't know what it really means either, so here's some extra reading.
 Start by wrapping a list of URLs to the Cloud-Optimized GeoTIFF files.
 We only have 1 item so we'll use ``[url]``, but if you have more, you can do
 ``[url1, url2, url3]``, etc. Pass this iterable list into
-[`torchdata.datapipes.iter.IterableWrapper`](https://pytorch.org/data/0.4.0/generated/torchdata.datapipes.iter.IterableWrapper.html):
+{py:class}`torchdata.datapipes.iter.IterableWrapper`:
 
 ```{code-cell}
 dp = torchdata.datapipes.iter.IterableWrapper(iterable=[url])
@@ -143,9 +143,8 @@ dp_rioxarray_zoom3 = dp.read_from_rioxarray(overview_level=3)
 dp_rioxarray_zoom3
 ```
 
-Extra keyword arguments will be handled by
-[``rioxarray.open_rasterio``](https://corteva.github.io/rioxarray/stable/rioxarray.html#rioxarray-open-rasterio)
-or [``rasterio.open``](https://rasterio.readthedocs.io/en/stable/api/rasterio.html#rasterio.open).
+Extra keyword arguments will be handled by {py:func}`rioxarray.open_rasterio`
+or {py:func}`rasterio.open`.
 
 ```{note}
 Other DataPipe classes/functions can be stacked or joined to this basic GeoTIFF
@@ -181,15 +180,15 @@ for filename, dataarray in dp_rioxarray_zoom3:
 ### Into a DataLoader 🏋️
 
 For the deep learning folks, you might need one extra step.
-The ``xarray.DataArray`` needs to be converted to a tensor.
-In the Pytorch world, that can happen via ``torch.as_tensor``.
+The {py:class}``xarray.DataArray`` needs to be converted to a tensor.
+In the Pytorch world, that can happen via {py:func}``torch.as_tensor``.
 
 ```{code-cell}
 def fn(da):
     return torch.as_tensor(da.data)
 ```
 
-Using [``torchdata.datapipes.iter.Mapper``](https://pytorch.org/data/0.4.0/generated/torchdata.datapipes.iter.Mapper.html),
+Using {py:class}`torchdata.datapipes.iter.Mapper`,
 we'll apply the tensor conversion function to index 1 of the
 ``(filename, dataarray)`` tuple.
 
@@ -198,8 +197,7 @@ dp_tensor = dp_rioxarray_zoom3.map(fn=fn, input_col=1)
 dp_tensor
 ```
 
-Finally, let's put our DataPipe into a
-[``torch.utils.data.DataLoader``](https://pytorch.org/docs/1.11/data.html#torch.utils.data.DataLoader)!
+Finally, let's put our DataPipe into a {py:class}`torch.utils.data.DataLoader`!
 
 ```{code-cell}
 dataloader = torch.utils.data.DataLoader(dataset=dp_tensor)

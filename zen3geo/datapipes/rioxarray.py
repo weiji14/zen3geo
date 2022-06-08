@@ -14,7 +14,7 @@ class RioXarrayReaderIterDataPipe(IterDataPipe[Tuple[str, StreamWrapper]]):
     """
     Takes raster files (e.g. GeoTIFFs) from local disk or URLs
     (as long as they can be read by rioxarray and/or rasterio)
-    and yields tuples of filename and xarray.DataArray objects
+    and yields tuples of filename and :py:class:`xarray.DataArray` objects
     (functional name: ``read_from_rioxarray``).
 
     Based on
@@ -27,16 +27,14 @@ class RioXarrayReaderIterDataPipe(IterDataPipe[Tuple[str, StreamWrapper]]):
         GeoTIFFs.
 
     kwargs : Optional
-        Extra keyword arguments to pass to ``rioxarray.open_rasterio`` and/or
-        ``rasterio.open``. See
-        https://corteva.github.io/rioxarray/stable/rioxarray.html#rioxarray-open-rasterio
-        and https://rasterio.readthedocs.io/en/stable/api/rasterio.html#rasterio.open
+        Extra keyword arguments to pass to :py:func:`rioxarray.open_rasterio`
+        and/or :py:func:`rasterio.open`.
 
     Yields
     ------
     stream_obj : Tuple[str, xarray.DataArray]
         A tuple consisting of the filename that was passed in, and an
-        ``xarray.DataArray`` object containing the raster data.
+        :py:class:`xarray.DataArray` object containing the raster data.
 
     Example
     -------
