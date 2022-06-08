@@ -3,7 +3,7 @@ Tests for datapipes.
 """
 from torchdata.datapipes.iter import IterableWrapper
 
-from zen3geo import RioXarrayReader
+from zen3geo.datapipes import RioXarrayReader
 
 
 # %%

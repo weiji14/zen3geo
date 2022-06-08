@@ -36,11 +36,11 @@ jobs:
       # Install poetry package manager and dependencies from poetry.lock
       - name: Install Poetry python dependencies
         run: |
-          pip install poetry==1.2.0b1
+          pip install poetry==1.2.0b2
           poetry install
-          poetry plugin add poetry-dynamic-versioning-plugin
+          poetry self add poetry-dynamic-versioning-plugin
           poetry show
 
       # Run the unit tests and doctests
       - name: Test with pytest
-        run: poetry run --verbose pytest --doctest-modules
+        run: poetry run --verbose pytest --doctest-modules zen3geo/

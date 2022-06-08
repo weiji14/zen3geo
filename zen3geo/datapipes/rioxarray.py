@@ -1,8 +1,5 @@
 """
-Iterable-style DataPipes for geospatial raster and vector data.
-
-Based on
-https://github.com/pytorch/data/blob/v0.3.0/torchdata/datapipes/iter/load/online.py#L29-L59
+DataPipes for rioxarray.
 """
 from typing import Any, Dict, Iterator, Optional, Tuple
 
@@ -17,8 +14,11 @@ class RioXarrayReaderIterDataPipe(IterDataPipe[Tuple[str, StreamWrapper]]):
     """
     Takes raster files (e.g. GeoTIFFs) from local disk or URLs
     (as long as they can be read by rioxarray and/or rasterio)
-    and yields tuples of filename and xarray.DataArray objects
+    and yields tuples of filename and :py:class:`xarray.DataArray` objects
     (functional name: ``read_from_rioxarray``).
+
+    Based on
+    https://github.com/pytorch/data/blob/v0.3.0/torchdata/datapipes/iter/load/online.py#L29-L59
 
     Parameters
     ----------
@@ -27,21 +27,19 @@ class RioXarrayReaderIterDataPipe(IterDataPipe[Tuple[str, StreamWrapper]]):
         GeoTIFFs.
 
     kwargs : Optional
-        Extra keyword arguments to pass to ``rioxarray.open_rasterio`` and/or
-        ``rasterio.open``. See
-        https://corteva.github.io/rioxarray/stable/rioxarray.html#rioxarray-open-rasterio
-        and https://rasterio.readthedocs.io/en/stable/api/rasterio.html#rasterio.open
+        Extra keyword arguments to pass to :py:func:`rioxarray.open_rasterio`
+        and/or :py:func:`rasterio.open`.
 
     Yields
     ------
     stream_obj : Tuple[str, xarray.DataArray]
         A tuple consisting of the filename that was passed in, and an
-        ``xarray.DataArray`` object containing the raster data.
+        :py:class:`xarray.DataArray` object containing the raster data.
 
     Example
     -------
     >>> from torchdata.datapipes.iter import IterableWrapper
-    >>> from zen3geo import RioXarrayReader
+    >>> from zen3geo.datapipes import RioXarrayReader
     ...
     >>> # Read in GeoTIFF data using DataPipe
     >>> file_url: str = "https://github.com/GenericMappingTools/gmtserver-admin/raw/master/cache/earth_day_HD.tif"

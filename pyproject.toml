@@ -44,5 +44,5 @@ metadata = true
 style = "pep440"
 
 [build-system]
-requires = ["poetry>=1.2.0b1", "poetry-dynamic-versioning"]
+requires = ["poetry>=1.2.0b2", "poetry-dynamic-versioning"]
 build-backend = "poetry.masonry.api"

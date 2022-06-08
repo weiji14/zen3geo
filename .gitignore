@@ -1,4 +1,5 @@
 # Byte-compiled / optimized / DLL files
+__pycache__/
 *.py[cod]
 
 # Distribution / packaging
@@ -8,6 +9,9 @@ dist/
 *.egg-info/
 .eggs/
 MANIFEST
+
+# Unit test / coverage reports
+.pytest_cache/
 
 # Jupyter Book
 /docs/_build/
