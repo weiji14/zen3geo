@@ -32,6 +32,12 @@ sphinx:
     autodoc_typehints: 'description'
     html_show_copyright: false
     intersphinx_mapping:
+      geopandas:
+        - 'https://geopandas.org/en/latest/'
+        - null
+      pyogrio:
+        - 'https://pyogrio.readthedocs.io/en/latest/'
+        - null
       python:
         - 'https://docs.python.org/3/'
         - null

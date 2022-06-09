@@ -7,6 +7,7 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
+    types: [opened, ready_for_review, reopened, synchronize]
     branches: [ "main" ]
 
 permissions:
@@ -19,8 +20,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9"]
+        python-version: ["3.8", "3.9"]
         os: [ubuntu-22.04]
+        # Is it a draft Pull Request (true or false)?
+        isDraft:
+          - ${{ github.event.pull_request.draft }}
+        # Exclude Ubuntu + Python 3.8 job for draft PRs
+        exclude:
+          - python-version: '3.8'
+            isDraft: true
+        # Only install optional packages on Ubuntu-22.04/Python 3.9
+        include:
+          - os: 'ubuntu-22.04'
+            python-version: '3.9'
+            extra-packages: '--extras vector'
 
     steps:
       # Checkout current git repository
@@ -37,7 +50,7 @@ jobs:
       - name: Install Poetry python dependencies
         run: |
           pip install poetry==1.2.0b2
-          poetry install
+          poetry install ${{ matrix.extra-packages }}
           poetry self add poetry-dynamic-versioning-plugin
           poetry show
 
