@@ -317,6 +317,44 @@ python-versions = "*"
 devel = ["colorama", "jsonschema", "json-spec", "pylint", "pytest", "pytest-benchmark", "pytest-cache", "validictory"]
 
 [[package]]
+name = "fiona"
+version = "1.8.21"
+description = "Fiona reads and writes spatial data files"
+category = "main"
+optional = true
+python-versions = "*"
+
+[package.dependencies]
+attrs = ">=17"
+certifi = "*"
+click = ">=4.0"
+click-plugins = ">=1.0"
+cligj = ">=0.5"
+munch = "*"
+setuptools = "*"
+six = ">=1.7"
+
+[package.extras]
+all = ["boto3 (>=1.2.4)", "pytest-cov", "shapely", "pytest (>=3)", "mock"]
+calc = ["shapely"]
+s3 = ["boto3 (>=1.2.4)"]
+test = ["pytest (>=3)", "pytest-cov", "boto3 (>=1.2.4)", "mock"]
+
+[[package]]
+name = "geopandas"
+version = "0.10.2"
+description = "Geographic pandas extensions"
+category = "main"
+optional = true
+python-versions = ">=3.7"
+
+[package.dependencies]
+fiona = ">=1.8"
+pandas = ">=0.25.0"
+pyproj = ">=2.2.0"
+shapely = ">=1.6"
+
+[[package]]
 name = "gitdb"
 version = "4.0.9"
 description = "Git Object Database"
@@ -794,6 +832,21 @@ optional = true
 python-versions = "*"
 
 [[package]]
+name = "munch"
+version = "2.5.0"
+description = "A dot-accessible dictionary (a la JavaScript objects)"
+category = "main"
+optional = true
+python-versions = "*"
+
+[package.dependencies]
+six = "*"
+
+[package.extras]
+testing = ["pytest", "coverage", "astroid (>=1.5.3,<1.6.0)", "pylint (>=1.7.2,<1.8.0)", "astroid (>=2.0)", "pylint (>=2.3.1,<2.4.0)"]
+yaml = ["PyYAML (>=5.1.0)"]
+
+[[package]]
 name = "mypy-extensions"
 version = "0.4.3"
 description = "Experimental type system extensions for programs checked with the mypy typechecker."
@@ -1239,12 +1292,47 @@ coverage = ["pytest-cov", "codecov", "pydata-sphinx-theme"]
 dev = ["pyyaml", "pre-commit", "nox", "pydata-sphinx-theme"]
 
 [[package]]
+name = "pygeos"
+version = "0.12.0"
+description = "GEOS wrapped in numpy ufuncs"
+category = "main"
+optional = true
+python-versions = ">=3.6"
+
+[package.dependencies]
+numpy = ">=1.13"
+
+[package.extras]
+docs = ["sphinx", "numpydoc"]
+test = ["pytest"]
+
+[[package]]
 name = "pygments"
 version = "2.12.0"
 description = "Pygments is a syntax highlighting package written in Python."
 category = "main"
 optional = true
 python-versions = ">=3.6"
+
+[[package]]
+name = "pyogrio"
+version = "0.4.0a1"
+description = "Vectorized spatial vector file format I/O using GDAL/OGR"
+category = "main"
+optional = true
+python-versions = ">=3.8"
+
+[package.dependencies]
+certifi = "*"
+geopandas = {version = "*", optional = true, markers = "extra == \"geopandas\""}
+numpy = "*"
+pygeos = {version = "*", optional = true, markers = "extra == \"geopandas\""}
+
+[package.extras]
+benchmark = ["pytest-benchmark"]
+dev = ["cython"]
+geopandas = ["pygeos", "geopandas"]
+test = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "pyparsing"
@@ -1485,6 +1573,19 @@ python-versions = ">=3.7"
 docs = ["sphinx", "jaraco.packaging (>=9)", "rst.linker (>=1.9)", "jaraco.tidelift (>=1.4)", "pygments-github-lexers (==0.0.5)", "sphinx-favicon", "sphinx-inline-tabs", "sphinx-reredirects", "sphinxcontrib-towncrier", "furo"]
 testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-enabler (>=1.0.1)", "pytest-perf", "mock", "flake8-2020", "virtualenv (>=13.0.0)", "wheel", "pip (>=19.1)", "jaraco.envs (>=2.2)", "pytest-xdist", "jaraco.path (>=3.2.0)", "build", "filelock (>=3.4.0)", "pip-run (>=8.8)", "ini2toml[lite] (>=0.9)", "tomli-w (>=1.0.0)", "pytest-black (>=0.3.7)", "pytest-cov", "pytest-mypy (>=0.9.1)"]
 testing-integration = ["pytest", "pytest-xdist", "pytest-enabler", "virtualenv (>=13.0.0)", "tomli", "wheel", "jaraco.path (>=3.2.0)", "jaraco.envs (>=2.2)", "build", "filelock (>=3.4.0)"]
+
+[[package]]
+name = "shapely"
+version = "1.8.2"
+description = "Geometric objects, predicates, and operations"
+category = "main"
+optional = true
+python-versions = ">=3.6"
+
+[package.extras]
+all = ["pytest", "pytest-cov", "numpy"]
+test = ["pytest", "pytest-cov"]
+vectorized = ["numpy"]
 
 [[package]]
 name = "six"
@@ -2060,11 +2161,12 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 
 [extras]
 docs = ["jupyter-book", "planetary-computer", "pystac"]
+vector = ["pyogrio"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "e2020f1956d1bb5210b8346a3f148e580855ba85b7e83672d68dbe2490e6978e"
+content-hash = "73989d191a6f6bb368db5c610c35a4ecfea2fe3dfa3f60306c76302aaf9a17aa"
 
 [metadata.files]
 affine = [
@@ -2283,6 +2385,23 @@ fastjsonschema = [
     {file = "fastjsonschema-2.15.3-py3-none-any.whl", hash = "sha256:ddb0b1d8243e6e3abb822bd14e447a89f4ab7439342912d590444831fa00b6a0"},
     {file = "fastjsonschema-2.15.3.tar.gz", hash = "sha256:0a572f0836962d844c1fc435e200b2e4f4677e4e6611a2e3bdd01ba697c275ec"},
 ]
+fiona = [
+    {file = "Fiona-1.8.21-cp310-cp310-macosx_10_10_x86_64.whl", hash = "sha256:39c656421e25b4d0d73d0b6acdcbf9848e71f3d9b74f44c27d2d516d463409ae"},
+    {file = "Fiona-1.8.21-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:43b1d2e45506e56cf3a9f59ba5d6f7981f3f75f4725d1e6cb9a33ba856371ebd"},
+    {file = "Fiona-1.8.21-cp36-cp36m-macosx_10_10_x86_64.whl", hash = "sha256:315e186cb880a8128e110312eb92f5956bbc54d7152af999d3483b463758d6f9"},
+    {file = "Fiona-1.8.21-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:9fb2407623c4f44732a33b3f056f8c58c54152b51f0324bf8f10945e711eb549"},
+    {file = "Fiona-1.8.21-cp37-cp37m-macosx_10_10_x86_64.whl", hash = "sha256:b69054ed810eb7339d7effa88589afca48003206d7627d0b0b149715fc3fde41"},
+    {file = "Fiona-1.8.21-cp37-cp37m-manylinux2014_x86_64.whl", hash = "sha256:11532ccfda1073d3f5f558e4bb78d45b268e8680fd6e14993a394c564ddbd069"},
+    {file = "Fiona-1.8.21-cp38-cp38-macosx_10_10_x86_64.whl", hash = "sha256:3789523c811809a6e2e170cf9c437631f959f4c7a868f024081612d30afab468"},
+    {file = "Fiona-1.8.21-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:085f18d943097ac3396f3f9664ac1ae04ad0ff272f54829f03442187f01b6116"},
+    {file = "Fiona-1.8.21-cp39-cp39-macosx_10_10_x86_64.whl", hash = "sha256:388acc9fa07ba7858d508dfe826d4b04d813818bced16c4049de19cc7ca322ef"},
+    {file = "Fiona-1.8.21-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:40b4eaf5b88407421d6c9e707520abd2ff16d7cd43efb59cd398aa41d2de332c"},
+    {file = "Fiona-1.8.21.tar.gz", hash = "sha256:3a0edca2a7a070db405d71187214a43d2333a57b4097544a3fcc282066a58bfc"},
+]
+geopandas = [
+    {file = "geopandas-0.10.2-py2.py3-none-any.whl", hash = "sha256:1722853464441b603d9be3d35baf8bde43831424a891e82a8545eb8997b65d6c"},
+    {file = "geopandas-0.10.2.tar.gz", hash = "sha256:efbf47e70732e25c3727222019c92b39b2e0a66ebe4fe379fbe1aa43a2a871db"},
+]
 gitdb = [
     {file = "gitdb-4.0.9-py3-none-any.whl", hash = "sha256:8033ad4e853066ba6ca92050b9df2f89301b8fc8bf7e9324d412a63f8bf1a8fd"},
     {file = "gitdb-4.0.9.tar.gz", hash = "sha256:bac2fd45c0a1c9cf619e63a90d62bdc63892ef92387424b855792a6cabe789aa"},
@@ -2497,6 +2616,10 @@ mdit-py-plugins = [
 mistune = [
     {file = "mistune-0.8.4-py2.py3-none-any.whl", hash = "sha256:88a1051873018da288eee8538d476dffe1262495144b33ecb586c4ab266bb8d4"},
     {file = "mistune-0.8.4.tar.gz", hash = "sha256:59a3429db53c50b5c6bcc8a07f8848cb00d7dc8bdb431a4ab41920d201d4756e"},
+]
+munch = [
+    {file = "munch-2.5.0-py2.py3-none-any.whl", hash = "sha256:6f44af89a2ce4ed04ff8de41f70b226b984db10a91dcc7b9ac2efc1c77022fdd"},
+    {file = "munch-2.5.0.tar.gz", hash = "sha256:2d735f6f24d4dba3417fa448cae40c6e896ec1fdab6cdb5e6510999758a4dbd2"},
 ]
 mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
@@ -2724,9 +2847,57 @@ pydata-sphinx-theme = [
     {file = "pydata_sphinx_theme-0.8.1-py3-none-any.whl", hash = "sha256:af2c99cb0b43d95247b1563860942ba75d7f1596360594fce510caaf8c4fcc16"},
     {file = "pydata_sphinx_theme-0.8.1.tar.gz", hash = "sha256:96165702253917ece13dd895e23b96ee6dce422dcc144d560806067852fe1fed"},
 ]
+pygeos = [
+    {file = "pygeos-0.12.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:e3593360f1a93d2a6fe1ea75fa84882186bd3851d187e4c4bbb586495c748e3d"},
+    {file = "pygeos-0.12.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:ec4112b69823866fa966ec4869e1b51b6560d892c65c20b3fb065266519046e2"},
+    {file = "pygeos-0.12.0-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:75b5b0aefffb6b7747df299414df4f2e160e3a8993d2b6a86b805fb5b0196f13"},
+    {file = "pygeos-0.12.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:26fae3eabb83a15348c2c3f78892114aca9bc4efaa342ab2fa3fa39a85e05dc5"},
+    {file = "pygeos-0.12.0-cp310-cp310-win_amd64.whl", hash = "sha256:b4ec8fe577ca7ba6dd046481cdb736f99961216fcb54c84211287a10d1158459"},
+    {file = "pygeos-0.12.0-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:6db68dc4583c88222d32cc624622234a97080b3c4650f0c0e12987664d49f374"},
+    {file = "pygeos-0.12.0-cp36-cp36m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:da856315a4047d581300d860dd2aa01438e64121570bed46c81ad0a90f477db0"},
+    {file = "pygeos-0.12.0-cp36-cp36m-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:3cf6d734aea07f04c7644ae24e303a447e96ea123ea524ab309e492ca683240e"},
+    {file = "pygeos-0.12.0-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:12e06ec4417453f1a95d36b8ba8822569c30f6938dd4a7bac97433cab641b61f"},
+    {file = "pygeos-0.12.0-cp36-cp36m-win32.whl", hash = "sha256:ea7f3ea9c76f8c94ed9b360b4d6249c44d5bc48c8db5cb3a5d4b017e51d1bd8a"},
+    {file = "pygeos-0.12.0-cp36-cp36m-win_amd64.whl", hash = "sha256:a6cf496887f25b99427624399bcd07107660e6f9135466c33dc60ad9bd4c9ebe"},
+    {file = "pygeos-0.12.0-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:f155f268676ff7b20a553a542a436be0f8df14233c873facc80214d836d6463b"},
+    {file = "pygeos-0.12.0-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:f74abd81487839532c7110721f3b1450d0c6bcfb5e18c45d604ddeb75ec99f86"},
+    {file = "pygeos-0.12.0-cp37-cp37m-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:6ac4ddfbe548d8a3e93732577b8a6d4df071f038338f6c400466b3c2bfe3dc78"},
+    {file = "pygeos-0.12.0-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:504a03330147d2bb3309f291f4333db892cdba40a66ac4f3db8a2672dff7cf4f"},
+    {file = "pygeos-0.12.0-cp37-cp37m-win32.whl", hash = "sha256:e3bcfb55e966aea26ff8e9b8fd314cee618c363f639e83b1eaaefb66bc97e7b0"},
+    {file = "pygeos-0.12.0-cp37-cp37m-win_amd64.whl", hash = "sha256:835b7b1b2ef44453ff9d759dd67ee17fb89a52d8cdbd4d1655bf0be6ccfd90c3"},
+    {file = "pygeos-0.12.0-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:60d103b4c099940ad73f0b193f65dfc77f957646451b8a399e4f1f5835c57ab6"},
+    {file = "pygeos-0.12.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:5bc1b9a548848f9c69c913eca8ab0bb9164b35a28da51f86fcc0887c553bd863"},
+    {file = "pygeos-0.12.0-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:11cb186f6cb9a2453a990a3e9894f861d308c574170d1c6f55a598cb11b87579"},
+    {file = "pygeos-0.12.0-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b8fcb175645f57d7a6fa153a1582f9dbf625bb69c55267207b1bc8d2b983013b"},
+    {file = "pygeos-0.12.0-cp38-cp38-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:2453c07c9b8a24054f897ed56e8046c7dd743939f7f5d6637fdeafdccc411f29"},
+    {file = "pygeos-0.12.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:962df97f937d6656ce9293e7072318e99860b0d41f61df9017551855a8bc188e"},
+    {file = "pygeos-0.12.0-cp38-cp38-win32.whl", hash = "sha256:d72e3691e47f44b49d3a23f05bb55eca34ed28b0e7b1b4aeb50207a95ae83f8f"},
+    {file = "pygeos-0.12.0-cp38-cp38-win_amd64.whl", hash = "sha256:41119e394ea90bf8f697613f530cf92c77ab98346c19cb19beba33a82fd5b91d"},
+    {file = "pygeos-0.12.0-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:dfad4c0a4b60861f8e571ca409ce128859d26e1ac26a15ee071cf1f222431fdd"},
+    {file = "pygeos-0.12.0-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:aeaf1f9ae45cf35a25ccdeb2b083e057b31d98cf9351bfc42a59352130ff5c31"},
+    {file = "pygeos-0.12.0-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:59971b44e3b8f61e96b159acdc5f9347b94766a4efb94af7b926b1c4958b60d4"},
+    {file = "pygeos-0.12.0-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:efcbd52e5602d758b1ff42e67b91b33b1599667b478d0be9c13e17b286cbfcf0"},
+    {file = "pygeos-0.12.0-cp39-cp39-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:47e7b2614d8982f841e33cc1f18d39b7a654d4d7958d456e4765ff4a9c76589b"},
+    {file = "pygeos-0.12.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1f045632a940905c2f380544450bbcd48556b529bdfb9320aac777d90990fc25"},
+    {file = "pygeos-0.12.0-cp39-cp39-win32.whl", hash = "sha256:d2fefb3a9cf96d1ee4841772464e82b2ae3a8ddf3caf14ecb04c5fcdae6a7248"},
+    {file = "pygeos-0.12.0-cp39-cp39-win_amd64.whl", hash = "sha256:25b94e8bc755a8d3e50661995556b2c27d253bfdd55aa719ea3c202de44a9569"},
+    {file = "pygeos-0.12.0.tar.gz", hash = "sha256:3c41542ef67c66015f443ae3e6e683503a8a221f9c24fb2380f6ae42aed1600a"},
+]
 pygments = [
     {file = "Pygments-2.12.0-py3-none-any.whl", hash = "sha256:dc9c10fb40944260f6ed4c688ece0cd2048414940f1cea51b8b226318411c519"},
     {file = "Pygments-2.12.0.tar.gz", hash = "sha256:5eb116118f9612ff1ee89ac96437bb6b49e8f04d8a13b514ba26f620208e26eb"},
+]
+pyogrio = [
+    {file = "pyogrio-0.4.0a1-cp310-cp310-macosx_10_15_x86_64.whl", hash = "sha256:d630126959ef1989b29ab2685c646933039f51d153ae969542bdefb3dda5c96d"},
+    {file = "pyogrio-0.4.0a1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:bd5223b1a5ad2690f01ea1ded539aa04e5df457b18aadeb910cad9d59180b987"},
+    {file = "pyogrio-0.4.0a1-cp310-cp310-win_amd64.whl", hash = "sha256:3de19c59e24c5a423eb5e928d92984e5ac3a4f8b0d7d4e9502bf3f03f5839875"},
+    {file = "pyogrio-0.4.0a1-cp38-cp38-macosx_10_15_x86_64.whl", hash = "sha256:ae67efc69e1a96b42a4dd841fa3aa329a10062a38fa99f982255d5a8a253ab7c"},
+    {file = "pyogrio-0.4.0a1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b1190a1052128a894b17d1751cc7ea8b78b7f3d6995a7c4b8bf7c06b27387a62"},
+    {file = "pyogrio-0.4.0a1-cp38-cp38-win_amd64.whl", hash = "sha256:4f5cc684ee1e30155bebe872bcdc51a712035d63700d9827be85292eab14c0de"},
+    {file = "pyogrio-0.4.0a1-cp39-cp39-macosx_10_15_x86_64.whl", hash = "sha256:340f5bf765ecf04a94048ad9fee8e69c473b3636bbc44c21fdd0ebd8468e58be"},
+    {file = "pyogrio-0.4.0a1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d5e312060d126a25236d88840fb1ee07ddbed3bc7fc8114098ad58dac64bb3db"},
+    {file = "pyogrio-0.4.0a1-cp39-cp39-win_amd64.whl", hash = "sha256:10be1d40ede4b1c04395c64ae5926176d4d89e4158a75ec8bc38b285d8861b23"},
+    {file = "pyogrio-0.4.0a1.tar.gz", hash = "sha256:fa3243c3591549cd01769c6ab1fc2f3e84c9e6f6a70d879c1af08ea37dd82f02"},
 ]
 pyparsing = [
     {file = "pyparsing-3.0.9-py3-none-any.whl", hash = "sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc"},
@@ -2946,6 +3117,42 @@ send2trash = [
 setuptools = [
     {file = "setuptools-62.3.3-py3-none-any.whl", hash = "sha256:d1746e7fd520e83bbe210d02fff1aa1a425ad671c7a9da7d246ec2401a087198"},
     {file = "setuptools-62.3.3.tar.gz", hash = "sha256:e7d11f3db616cda0751372244c2ba798e8e56a28e096ec4529010b803485f3fe"},
+]
+shapely = [
+    {file = "Shapely-1.8.2-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:7c9e3400b716c51ba43eea1678c28272580114e009b6c78cdd00c44df3e325fa"},
+    {file = "Shapely-1.8.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:ce0b5c5f7acbccf98b3460eecaa40e9b18272b2a734f74fcddf1d7696e047e95"},
+    {file = "Shapely-1.8.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:3a40bf497b57a6625b83996aed10ce2233bca0e5471b8af771b186d681433ac5"},
+    {file = "Shapely-1.8.2-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:6bdc7728f1e5df430d8c588661f79f1eed4a2728c8b689e12707cfec217f68f8"},
+    {file = "Shapely-1.8.2-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a60861b5ca2c488ebcdc706eca94d325c26d1567921c74acc83df5e6913590c7"},
+    {file = "Shapely-1.8.2-cp310-cp310-win32.whl", hash = "sha256:840be3f27a1152851c54b968f2e12d718c9f13b7acd51c482e58a70f60f29e31"},
+    {file = "Shapely-1.8.2-cp310-cp310-win_amd64.whl", hash = "sha256:c60f3758212ec480675b820b13035dda8af8f7cc560d2cc67999b2717fb8faef"},
+    {file = "Shapely-1.8.2-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:56413f7d32c70b63f239eb0865b24c0c61029e38757de456cc4ab3c416559a0b"},
+    {file = "Shapely-1.8.2-cp36-cp36m-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:256bdf8080bb7bb504d47b2c76919ecebab9708cc1b26266b3ec32b42448f642"},
+    {file = "Shapely-1.8.2-cp36-cp36m-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:c0a0d7752b145343838bd36ed09382d85f5befe426832d7384c5b051c147acbd"},
+    {file = "Shapely-1.8.2-cp36-cp36m-win32.whl", hash = "sha256:62056e64b12b6d483d79f8e34bf058d2fe734d51c9227c1713705399434eff3b"},
+    {file = "Shapely-1.8.2-cp36-cp36m-win_amd64.whl", hash = "sha256:8e3ed52a081da58eb4a885c157c594876633dbd4eb283f13ba5bf39c82322d76"},
+    {file = "Shapely-1.8.2-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:7c8eda45085ccdd7f9805ea4a93fdd5eb0b6039a61d5f0cefb960487e6dc17a1"},
+    {file = "Shapely-1.8.2-cp37-cp37m-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:beee3949ddf381735049cfa6532fb234d5d20a5be910c4f2fb7c7295fd7960e3"},
+    {file = "Shapely-1.8.2-cp37-cp37m-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:e07b0bd2a0e61a8afd4d1c1bd23f3550b711f01274ffb53de99358fd781eefd8"},
+    {file = "Shapely-1.8.2-cp37-cp37m-win32.whl", hash = "sha256:78966332a89813b237de357a03f612fd451a871fe6e26c12b6b71645fe8eee39"},
+    {file = "Shapely-1.8.2-cp37-cp37m-win_amd64.whl", hash = "sha256:8fe641f1f61b3d43dd61b5a85d2ef023e6e19bf8f204a5160a1cb1ec645cbc09"},
+    {file = "Shapely-1.8.2-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:cec89a5617c0137f4678282e983c3d63bf838fb00cdf318cc555b4d8409f7130"},
+    {file = "Shapely-1.8.2-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:68c8e18dc9dc8a198c3addc8c9596f64137101f566f04b96ecfca0b214cb8b12"},
+    {file = "Shapely-1.8.2-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:f12695662c3ad1e6031b3de98f191963d0f09de6d1a4988acd907405644032ba"},
+    {file = "Shapely-1.8.2-cp38-cp38-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:15a856fbb588ad5d042784e00918c662902776452008c771ecba2ff615cd197a"},
+    {file = "Shapely-1.8.2-cp38-cp38-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:d74de394684d66e25e780b0359fda85be7766af85940fa2dfad728b1a815c71f"},
+    {file = "Shapely-1.8.2-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:d3f3fac625690f01f35af665649e993f15f924e740b5c0ac0376900655815521"},
+    {file = "Shapely-1.8.2-cp38-cp38-win32.whl", hash = "sha256:1d95842cc6bbbeab673061b63e70b07be9a375c15a60f4098f8fbd29f43af1b4"},
+    {file = "Shapely-1.8.2-cp38-cp38-win_amd64.whl", hash = "sha256:a58e1f362f2091743e5e13212f5d5d16251a4bb63dd0ed587c652d3be9620d3a"},
+    {file = "Shapely-1.8.2-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:5254240eefc44139ab0d128faf671635d8bdd9c23955ee063d4d6b8f20073ae0"},
+    {file = "Shapely-1.8.2-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:75042e8039c79dd01f102bb288beace9dc2f49fc44a2dea875f9b697aa8cd30d"},
+    {file = "Shapely-1.8.2-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:0c0fd457ce477b1dced507a72f1e2084c9191bfcb8a1e09886990ebd02acf024"},
+    {file = "Shapely-1.8.2-cp39-cp39-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:6fcb28836ae93809de1dde73c03c9c24bab0ba2b2bf419ddb2aeb72c96d110e9"},
+    {file = "Shapely-1.8.2-cp39-cp39-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:44d2832c1b706bf43101fda92831a083467cc4b4923a7ed17319ab599c1025d8"},
+    {file = "Shapely-1.8.2-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:137f1369630408024a62ff79a437a5657e6c5b76b9cd352dde704b425acdb298"},
+    {file = "Shapely-1.8.2-cp39-cp39-win32.whl", hash = "sha256:2e02da2e988e74d61f15c720f9f613fab51942aae2dfeacdcb78eadece00e1f3"},
+    {file = "Shapely-1.8.2-cp39-cp39-win_amd64.whl", hash = "sha256:3423299254deec075e79fb7dc7909d702104e4167149de7f45510c3a6342eeea"},
+    {file = "Shapely-1.8.2.tar.gz", hash = "sha256:572af9d5006fd5e3213e37ee548912b0341fb26724d6dc8a4e3950c10197ebb6"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
