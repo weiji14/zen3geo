@@ -1,5 +1,5 @@
 """
-Tests for datapipes.
+Tests for rioxarray datapipes.
 """
 from torchdata.datapipes.iter import IterableWrapper
 

@@ -43,4 +43,4 @@ jobs:
 
       # Run the unit tests and doctests
       - name: Test with pytest
-        run: poetry run --verbose pytest --doctest-modules zen3geo/
+        run: poetry run pytest --verbose --doctest-modules zen3geo/
