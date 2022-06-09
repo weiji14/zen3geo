@@ -1,5 +1,5 @@
 """
-DataPipes for rioxarray.
+DataPipes for :doc:`rioxarray <rioxarray:index>`.
 """
 from typing import Any, Dict, Iterator, Optional, Tuple
 
