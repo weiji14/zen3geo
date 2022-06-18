@@ -6,6 +6,9 @@ root: index
 chapters:
   - title: 🦮 Walkthrough
     file: walkthrough
+    sections:
+      - title: 🀄 Batching
+        file: batching
   - title: 📖 API Reference
     file: api
   - title: 📆 Changelog
