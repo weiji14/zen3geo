@@ -30,8 +30,7 @@ class PyogrioReaderIterDataPipe(IterDataPipe[Tuple[str, StreamWrapper]]):
         FlatGeoBuf, GeoPackage, GeoJSON, etc.
 
     kwargs : Optional
-        Extra keyword arguments to pass to
-        `pyogrio.read_dataframe <https://pyogrio.readthedocs.io/en/latest/api.html#geopandas-integration>`_.
+        Extra keyword arguments to pass to :py:func:`pyogrio.read_dataframe`.
 
     Yields
     ------
