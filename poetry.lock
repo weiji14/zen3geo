@@ -342,17 +342,18 @@ test = ["pytest (>=3)", "pytest-cov", "boto3 (>=1.2.4)", "mock"]
 
 [[package]]
 name = "geopandas"
-version = "0.10.2"
+version = "0.11.0"
 description = "Geographic pandas extensions"
 category = "main"
 optional = true
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 
 [package.dependencies]
 fiona = ">=1.8"
-pandas = ">=0.25.0"
-pyproj = ">=2.2.0"
-shapely = ">=1.6"
+packaging = "*"
+pandas = ">=1.0.0"
+pyproj = ">=2.6.1.post1"
+shapely = ">=1.7,<2"
 
 [[package]]
 name = "gitdb"
@@ -1316,7 +1317,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "pyogrio"
-version = "0.4.0a1"
+version = "0.4.0"
 description = "Vectorized spatial vector file format I/O using GDAL/OGR"
 category = "main"
 optional = true
@@ -2166,7 +2167,7 @@ vector = ["pyogrio"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "73989d191a6f6bb368db5c610c35a4ecfea2fe3dfa3f60306c76302aaf9a17aa"
+content-hash = "489a37991d7e227379c9f398018b42ac977d161ab1de07180954b11b9e06cb29"
 
 [metadata.files]
 affine = [
@@ -2399,8 +2400,8 @@ fiona = [
     {file = "Fiona-1.8.21.tar.gz", hash = "sha256:3a0edca2a7a070db405d71187214a43d2333a57b4097544a3fcc282066a58bfc"},
 ]
 geopandas = [
-    {file = "geopandas-0.10.2-py2.py3-none-any.whl", hash = "sha256:1722853464441b603d9be3d35baf8bde43831424a891e82a8545eb8997b65d6c"},
-    {file = "geopandas-0.10.2.tar.gz", hash = "sha256:efbf47e70732e25c3727222019c92b39b2e0a66ebe4fe379fbe1aa43a2a871db"},
+    {file = "geopandas-0.11.0-py3-none-any.whl", hash = "sha256:0991f279d4f9e3a04e3666f32b1ac64d6ba439933da3d9654a26031e0ccea5dc"},
+    {file = "geopandas-0.11.0.tar.gz", hash = "sha256:562fe7dc19a6e0f61532d654c4752f7bf46e0714990c5844fe3de3f9c99cb873"},
 ]
 gitdb = [
     {file = "gitdb-4.0.9-py3-none-any.whl", hash = "sha256:8033ad4e853066ba6ca92050b9df2f89301b8fc8bf7e9324d412a63f8bf1a8fd"},
@@ -2888,16 +2889,16 @@ pygments = [
     {file = "Pygments-2.12.0.tar.gz", hash = "sha256:5eb116118f9612ff1ee89ac96437bb6b49e8f04d8a13b514ba26f620208e26eb"},
 ]
 pyogrio = [
-    {file = "pyogrio-0.4.0a1-cp310-cp310-macosx_10_15_x86_64.whl", hash = "sha256:d630126959ef1989b29ab2685c646933039f51d153ae969542bdefb3dda5c96d"},
-    {file = "pyogrio-0.4.0a1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:bd5223b1a5ad2690f01ea1ded539aa04e5df457b18aadeb910cad9d59180b987"},
-    {file = "pyogrio-0.4.0a1-cp310-cp310-win_amd64.whl", hash = "sha256:3de19c59e24c5a423eb5e928d92984e5ac3a4f8b0d7d4e9502bf3f03f5839875"},
-    {file = "pyogrio-0.4.0a1-cp38-cp38-macosx_10_15_x86_64.whl", hash = "sha256:ae67efc69e1a96b42a4dd841fa3aa329a10062a38fa99f982255d5a8a253ab7c"},
-    {file = "pyogrio-0.4.0a1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b1190a1052128a894b17d1751cc7ea8b78b7f3d6995a7c4b8bf7c06b27387a62"},
-    {file = "pyogrio-0.4.0a1-cp38-cp38-win_amd64.whl", hash = "sha256:4f5cc684ee1e30155bebe872bcdc51a712035d63700d9827be85292eab14c0de"},
-    {file = "pyogrio-0.4.0a1-cp39-cp39-macosx_10_15_x86_64.whl", hash = "sha256:340f5bf765ecf04a94048ad9fee8e69c473b3636bbc44c21fdd0ebd8468e58be"},
-    {file = "pyogrio-0.4.0a1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d5e312060d126a25236d88840fb1ee07ddbed3bc7fc8114098ad58dac64bb3db"},
-    {file = "pyogrio-0.4.0a1-cp39-cp39-win_amd64.whl", hash = "sha256:10be1d40ede4b1c04395c64ae5926176d4d89e4158a75ec8bc38b285d8861b23"},
-    {file = "pyogrio-0.4.0a1.tar.gz", hash = "sha256:fa3243c3591549cd01769c6ab1fc2f3e84c9e6f6a70d879c1af08ea37dd82f02"},
+    {file = "pyogrio-0.4.0-cp310-cp310-macosx_10_15_x86_64.whl", hash = "sha256:ec5e461ef5076ea89cf29d0933f9c278b67dd84bb371e5ed64c6c049bdfaa719"},
+    {file = "pyogrio-0.4.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f564ee5778520e643e351826c6f6b5f4421c11c977876722adbc79fd58317c8b"},
+    {file = "pyogrio-0.4.0-cp310-cp310-win_amd64.whl", hash = "sha256:1a8ab670cce03c259eac8d7f8b1042fa4bb61b525f8157b7a39fa87dbb562281"},
+    {file = "pyogrio-0.4.0-cp38-cp38-macosx_10_15_x86_64.whl", hash = "sha256:ecd68c47153b85598f72cec979a7fb595731d5caa2b6ff7d753c76838a8ceac0"},
+    {file = "pyogrio-0.4.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a8100b233d34ee3438100662487e5c084dcfadfa65de7cdab5206f180929c9d0"},
+    {file = "pyogrio-0.4.0-cp38-cp38-win_amd64.whl", hash = "sha256:96f6d3fc15ccf1a6799704a559636b7a4ca62ecbea6a93b2dc146fea5be55466"},
+    {file = "pyogrio-0.4.0-cp39-cp39-macosx_10_15_x86_64.whl", hash = "sha256:f87605c383b8ff11049792118f948388cfc80131b3724c0b9b649f0a7709400b"},
+    {file = "pyogrio-0.4.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:54e7f6136568b19977380211cdece9a3f2a0bd806e97e00f2466aacef0039186"},
+    {file = "pyogrio-0.4.0-cp39-cp39-win_amd64.whl", hash = "sha256:0d205bed128ade326392e94c7fcc2d66f86b1ebd87a26928efb12bf01d7ec3cc"},
+    {file = "pyogrio-0.4.0.tar.gz", hash = "sha256:85480e687872a3e3b11b3e2147e8aa779e28f165c60e01b2102971c895b84b82"},
 ]
 pyparsing = [
     {file = "pyparsing-3.0.9-py3-none-any.whl", hash = "sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc"},
