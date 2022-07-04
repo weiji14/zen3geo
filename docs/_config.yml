@@ -56,6 +56,9 @@ sphinx:
       xarray:
         - 'https://xarray.pydata.org/en/latest/'
         - null
+      xbatcher:
+        - 'https://xbatcher.readthedocs.io/en/latest/'
+        - null
   extra_extensions:
     - 'sphinx.ext.autodoc'
     - 'sphinx.ext.intersphinx'
