@@ -2276,12 +2276,13 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 
 [extras]
 docs = ["jupyter-book", "planetary-computer", "pystac"]
+raster = ["xbatcher"]
 vector = ["pyogrio"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "539396ebced00dc77ea622826b2553e698815e10ca3712503394f382aeea90b8"
+content-hash = "8092ee6f6a1c7b10476ce96ff65b66eacfd5864669a16d4fe12ca50fd6eb2626"
 
 [metadata.files]
 affine = [

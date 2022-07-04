@@ -114,7 +114,7 @@ mamba create --name zen3geo python=3.9
 mamba activate
 
 pip install poetry==1.2.0b2
-poetry install
+poetry install --extras "raster vector"
 ```
 
 ### Building documentation 📖

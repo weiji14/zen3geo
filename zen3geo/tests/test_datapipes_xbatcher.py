@@ -2,10 +2,13 @@
 Tests for xbatcher datapipes.
 """
 import numpy as np
+import pytest
 import xarray as xr
 from torchdata.datapipes.iter import IterableWrapper
 
 from zen3geo.datapipes import XbatcherSlicer
+
+xbatcher = pytest.importorskip("xbatcher")
 
 
 # %%

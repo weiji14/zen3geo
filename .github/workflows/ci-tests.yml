@@ -33,7 +33,7 @@ jobs:
         include:
           - os: 'ubuntu-22.04'
             python-version: '3.9'
-            extra-packages: '--extras vector'
+            extra-packages: '--extras "raster vector"'
 
     steps:
       # Checkout current git repository

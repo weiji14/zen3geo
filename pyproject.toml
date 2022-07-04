@@ -39,6 +39,7 @@ docs = [
     "planetary-computer",
     "pystac"
 ]
+raster = ["xbatcher"]
 vector = ["pyogrio"]
 
 [tool.poetry-dynamic-versioning]
