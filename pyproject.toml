@@ -21,7 +21,9 @@ classifiers = [
 python = "^3.8"
 rioxarray = ">=0.10.0"
 torchdata = ">=0.3.0"
+# Optional
 pyogrio = {version = ">=0.4.0", extras = ["geopandas"], optional = true}
+xbatcher = {git = "https://github.com/pangeo-data/xbatcher.git", optional = true}
 # Docs
 jupyter-book = {version="*", optional=true}
 planetary-computer = {version="*", optional=true}
@@ -37,6 +39,7 @@ docs = [
     "planetary-computer",
     "pystac"
 ]
+raster = ["xbatcher"]
 vector = ["pyogrio"]
 
 [tool.poetry-dynamic-versioning]

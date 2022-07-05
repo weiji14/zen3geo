@@ -24,3 +24,12 @@
 .. autoclass:: zen3geo.datapipes.pyogrio.PyogrioReaderIterDataPipe
     :show-inheritance:
 ```
+
+### Xbatcher
+
+```{eval-rst}
+.. automodule:: zen3geo.datapipes.xbatcher
+.. autoclass:: zen3geo.datapipes.XbatcherSlicer
+.. autoclass:: zen3geo.datapipes.xbatcher.XbatcherSlicerIterDataPipe
+    :show-inheritance:
+```
