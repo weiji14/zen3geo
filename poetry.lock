@@ -2244,23 +2244,16 @@ viz = ["matplotlib", "seaborn", "nc-time-axis"]
 
 [[package]]
 name = "xbatcher"
-version = "0.1.0.post67"
+version = "0.1.0"
 description = "Batch generation from xarray dataset"
 category = "main"
 optional = true
 python-versions = ">=3.7"
-develop = false
 
 [package.dependencies]
 dask = "*"
 numpy = "*"
 xarray = "*"
-
-[package.source]
-type = "git"
-url = "https://github.com/pangeo-data/xbatcher.git"
-reference = "HEAD"
-resolved_reference = "d3e1c2f75dd0eea4e699b3398ba4d8bc1035a5e5"
 
 [[package]]
 name = "zipp"
@@ -2276,13 +2269,13 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 
 [extras]
 docs = ["jupyter-book", "planetary-computer", "pystac"]
-raster = ["xbatcher"]
+raster = []
 vector = ["pyogrio"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8092ee6f6a1c7b10476ce96ff65b66eacfd5864669a16d4fe12ca50fd6eb2626"
+content-hash = "c3518275926de7d4673644383f1708cc23ebc1caef8b08c99c2645ea016e9a83"
 
 [metadata.files]
 affine = [
@@ -3546,7 +3539,10 @@ xarray = [
     {file = "xarray-2022.3.0-py3-none-any.whl", hash = "sha256:560f36eaabe7a989d5583d37ec753dd737357aa6a6453e55c80bb4f92291a69e"},
     {file = "xarray-2022.3.0.tar.gz", hash = "sha256:398344bf7d170477aaceff70210e11ebd69af6b156fe13978054d25c48729440"},
 ]
-xbatcher = []
+xbatcher = [
+    {file = "xbatcher-0.1.0-py3-none-any.whl", hash = "sha256:811dbdc5e17a8a42284419a8033adc631998d87d5e3fd502726fe7784d004954"},
+    {file = "xbatcher-0.1.0.tar.gz", hash = "sha256:f09badd59a8821f8976a303f68ca74371a0b29703dc1e70032ff05d38fb5218f"},
+]
 zipp = [
     {file = "zipp-3.8.0-py3-none-any.whl", hash = "sha256:c4f6e5bbf48e74f7a38e7cc5b0480ff42b0ae5178957d564d18932525d5cf099"},
     {file = "zipp-3.8.0.tar.gz", hash = "sha256:56bf8aadb83c24db6c4b577e13de374ccfb67da2078beba1d037c17980bf43ad"},
