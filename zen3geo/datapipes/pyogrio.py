@@ -5,7 +5,7 @@ from typing import Any, Dict, Iterator, Optional, Tuple
 
 try:
     import pyogrio
-except:
+except ImportError:
     pyogrio = None
 from torchdata.datapipes import functional_datapipe
 from torchdata.datapipes.iter import IterDataPipe
@@ -54,7 +54,7 @@ class PyogrioReaderIterDataPipe(IterDataPipe[Tuple[str, StreamWrapper]]):
     >>> from torchdata.datapipes.iter import IterableWrapper
     >>> from zen3geo.datapipes import PyogrioReader
     ...
-    >>> # Read in GeoTIFF data using DataPipe
+    >>> # Read in GeoPackage data using DataPipe
     >>> file_url: str = "https://github.com/geopandas/pyogrio/raw/v0.4.0a1/pyogrio/tests/fixtures/test_gpkg_nulls.gpkg"
     >>> dp = IterableWrapper(iterable=[file_url])
     >>> dp_pyogrio = dp.read_from_pyogrio()
