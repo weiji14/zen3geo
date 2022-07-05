@@ -93,7 +93,7 @@ class XbatcherSlicerIterDataPipe(IterDataPipe[Union[xr.DataArray, xr.Dataset]]):
 
     def __iter__(self) -> Iterator[Union[xr.DataArray, xr.Dataset]]:
         for dataarray in self.source_datapipe:
-            if dataarray.name is None:
+            if hasattr(dataarray, "name") and dataarray.name is None:
                 dataarray.name = "z"
             for chip in dataarray.batch.generator(
                 input_dims=self.input_dims, **self.kwargs
