@@ -165,14 +165,14 @@ At the most basic level, you could iterate through the DataPipe like so:
 
 ```{code-cell}
 it = iter(dp_rioxarray_zoom3)
-filename, dataarray = next(it)
+dataarray = next(it)
 dataarray
 ```
 
 Or if you're more familiar with a for-loop, here it is:
 
 ```{code-cell}
-for filename, dataarray in dp_rioxarray_zoom3:
+for dataarray in dp_rioxarray_zoom3:
     print(dataarray)
     # Run model on this data batch
 ```
@@ -189,11 +189,10 @@ def fn(da):
 ```
 
 Using {py:class}`torchdata.datapipes.iter.Mapper`,
-we'll apply the tensor conversion function to index 1 of the
-``(filename, dataarray)`` tuple.
+we'll apply the tensor conversion function to each dataarray in the DataPipe.
 
 ```{code-cell}
-dp_tensor = dp_rioxarray_zoom3.map(fn=fn, input_col=1)
+dp_tensor = dp_rioxarray_zoom3.map(fn=fn)
 dp_tensor
 ```
 
@@ -202,7 +201,7 @@ Finally, let's put our DataPipe into a {py:class}`torch.utils.data.DataLoader`!
 ```{code-cell}
 dataloader = torch.utils.data.DataLoader(dataset=dp_tensor)
 for batch in dataloader:
-    filename, tensor = batch
+    tensor = batch
     print(tensor)
 ```
 

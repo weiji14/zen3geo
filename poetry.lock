@@ -250,12 +250,44 @@ click = ">=4.0"
 test = ["pytest-cov"]
 
 [[package]]
+name = "cloudpickle"
+version = "2.1.0"
+description = "Extended pickling support for Python objects"
+category = "main"
+optional = true
+python-versions = ">=3.6"
+
+[[package]]
 name = "colorama"
 version = "0.4.4"
 description = "Cross-platform colored terminal text."
 category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[[package]]
+name = "dask"
+version = "2022.6.1"
+description = "Parallel PyData with Task Scheduling"
+category = "main"
+optional = true
+python-versions = ">=3.8"
+
+[package.dependencies]
+cloudpickle = ">=1.1.1"
+fsspec = ">=0.6.0"
+packaging = ">=20.0"
+partd = ">=0.3.10"
+pyyaml = ">=5.3.1"
+toolz = ">=0.8.2"
+
+[package.extras]
+array = ["numpy (>=1.18)"]
+complete = ["bokeh (>=2.4.2)", "distributed (==2022.6.1)", "jinja2", "numpy (>=1.18)", "pandas (>=1.0)"]
+dataframe = ["numpy (>=1.18)", "pandas (>=1.0)"]
+diagnostics = ["bokeh (>=2.4.2)", "jinja2"]
+distributed = ["distributed (==2022.6.1)"]
+test = ["pytest", "pytest-rerunfailures", "pytest-xdist", "pre-commit"]
 
 [[package]]
 name = "debugpy"
@@ -341,18 +373,50 @@ s3 = ["boto3 (>=1.2.4)"]
 test = ["pytest (>=3)", "pytest-cov", "boto3 (>=1.2.4)", "mock"]
 
 [[package]]
-name = "geopandas"
-version = "0.10.2"
-description = "Geographic pandas extensions"
+name = "fsspec"
+version = "2022.5.0"
+description = "File-system specification"
 category = "main"
 optional = true
 python-versions = ">=3.7"
 
+[package.extras]
+abfs = ["adlfs"]
+adl = ["adlfs"]
+arrow = ["pyarrow (>=1)"]
+dask = ["dask", "distributed"]
+dropbox = ["dropboxdrivefs", "requests", "dropbox"]
+entrypoints = ["importlib-metadata"]
+fuse = ["fusepy"]
+gcs = ["gcsfs"]
+git = ["pygit2"]
+github = ["requests"]
+gs = ["gcsfs"]
+gui = ["panel"]
+hdfs = ["pyarrow (>=1)"]
+http = ["requests", "aiohttp"]
+libarchive = ["libarchive-c"]
+oci = ["ocifs"]
+s3 = ["s3fs"]
+sftp = ["paramiko"]
+smb = ["smbprotocol"]
+ssh = ["paramiko"]
+tqdm = ["tqdm"]
+
+[[package]]
+name = "geopandas"
+version = "0.11.0"
+description = "Geographic pandas extensions"
+category = "main"
+optional = true
+python-versions = ">=3.8"
+
 [package.dependencies]
 fiona = ">=1.8"
-pandas = ">=0.25.0"
-pyproj = ">=2.2.0"
-shapely = ">=1.6"
+packaging = "*"
+pandas = ">=1.0.0"
+pyproj = ">=2.6.1.post1"
+shapely = ">=1.7,<2"
 
 [[package]]
 name = "gitdb"
@@ -770,6 +834,14 @@ doc = ["sphinx", "sphinx-book-theme", "myst-parser"]
 test = ["coverage", "pytest", "pytest-cov"]
 
 [[package]]
+name = "locket"
+version = "1.0.0"
+description = "File-based locks for Python on Linux and Windows"
+category = "main"
+optional = true
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[[package]]
 name = "markdown-it-py"
 version = "1.1.0"
 description = "Python port of markdown-it. Markdown parsing, done right!"
@@ -1093,6 +1165,21 @@ qa = ["flake8 (==3.8.3)", "mypy (==0.782)"]
 testing = ["docopt", "pytest (<6.0.0)"]
 
 [[package]]
+name = "partd"
+version = "1.2.0"
+description = "Appendable key-value storage"
+category = "main"
+optional = true
+python-versions = ">=3.5"
+
+[package.dependencies]
+locket = "*"
+toolz = "*"
+
+[package.extras]
+complete = ["numpy (>=1.9.0)", "pandas (>=0.19.0)", "pyzmq", "blosc"]
+
+[[package]]
 name = "pathspec"
 version = "0.9.0"
 description = "Utility library for gitignore style pattern matching of file paths."
@@ -1316,7 +1403,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "pyogrio"
-version = "0.4.0a1"
+version = "0.4.0"
 description = "Vectorized spatial vector file format I/O using GDAL/OGR"
 category = "main"
 optional = true
@@ -2001,6 +2088,14 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "toolz"
+version = "0.11.2"
+description = "List processing tools and functional utilities"
+category = "main"
+optional = true
+python-versions = ">=3.5"
+
+[[package]]
 name = "torch"
 version = "1.11.0"
 description = "Tensors and Dynamic neural networks in Python with strong GPU acceleration"
@@ -2148,6 +2243,19 @@ parallel = ["dask"]
 viz = ["matplotlib", "seaborn", "nc-time-axis"]
 
 [[package]]
+name = "xbatcher"
+version = "0.1.0"
+description = "Batch generation from xarray dataset"
+category = "main"
+optional = true
+python-versions = ">=3.7"
+
+[package.dependencies]
+dask = "*"
+numpy = "*"
+xarray = "*"
+
+[[package]]
 name = "zipp"
 version = "3.8.0"
 description = "Backport of pathlib-compatible object wrapper for zip files"
@@ -2161,12 +2269,13 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 
 [extras]
 docs = ["jupyter-book", "planetary-computer", "pystac"]
+raster = []
 vector = ["pyogrio"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "73989d191a6f6bb368db5c610c35a4ecfea2fe3dfa3f60306c76302aaf9a17aa"
+content-hash = "c3518275926de7d4673644383f1708cc23ebc1caef8b08c99c2645ea016e9a83"
 
 [metadata.files]
 affine = [
@@ -2337,9 +2446,17 @@ cligj = [
     {file = "cligj-0.7.2-py3-none-any.whl", hash = "sha256:c1ca117dbce1fe20a5809dc96f01e1c2840f6dcc939b3ddbb1111bf330ba82df"},
     {file = "cligj-0.7.2.tar.gz", hash = "sha256:a4bc13d623356b373c2c27c53dbd9c68cae5d526270bfa71f6c6fa69669c6b27"},
 ]
+cloudpickle = [
+    {file = "cloudpickle-2.1.0-py3-none-any.whl", hash = "sha256:b5c434f75c34624eedad3a14f2be5ac3b5384774d5b0e3caf905c21479e6c4b1"},
+    {file = "cloudpickle-2.1.0.tar.gz", hash = "sha256:bb233e876a58491d9590a676f93c7a5473a08f747d5ab9df7f9ce564b3e7938e"},
+]
 colorama = [
     {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
     {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
+]
+dask = [
+    {file = "dask-2022.6.1-py3-none-any.whl", hash = "sha256:fbd2707070ee8cba080a297301c3984de3d0dee211f30c81387d5fa8adc7de74"},
+    {file = "dask-2022.6.1.tar.gz", hash = "sha256:6ecc4571da3e5575dd1fa1537237434908f81b929f7f2a3493a7f6eb8507903e"},
 ]
 debugpy = [
     {file = "debugpy-1.6.0-cp310-cp310-macosx_10_15_x86_64.whl", hash = "sha256:eb1946efac0c0c3d411cea0b5ac772fbde744109fd9520fb0c5a51979faf05ad"},
@@ -2398,9 +2515,13 @@ fiona = [
     {file = "Fiona-1.8.21-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:40b4eaf5b88407421d6c9e707520abd2ff16d7cd43efb59cd398aa41d2de332c"},
     {file = "Fiona-1.8.21.tar.gz", hash = "sha256:3a0edca2a7a070db405d71187214a43d2333a57b4097544a3fcc282066a58bfc"},
 ]
+fsspec = [
+    {file = "fsspec-2022.5.0-py3-none-any.whl", hash = "sha256:2c198c50eb541a80bbd03540b07602c4a957366f3fb416a1f270d34bd4ff0926"},
+    {file = "fsspec-2022.5.0.tar.gz", hash = "sha256:7a5459c75c44e760fbe6a3ccb1f37e81e023cde7da8ba20401258d877ec483b4"},
+]
 geopandas = [
-    {file = "geopandas-0.10.2-py2.py3-none-any.whl", hash = "sha256:1722853464441b603d9be3d35baf8bde43831424a891e82a8545eb8997b65d6c"},
-    {file = "geopandas-0.10.2.tar.gz", hash = "sha256:efbf47e70732e25c3727222019c92b39b2e0a66ebe4fe379fbe1aa43a2a871db"},
+    {file = "geopandas-0.11.0-py3-none-any.whl", hash = "sha256:0991f279d4f9e3a04e3666f32b1ac64d6ba439933da3d9654a26031e0ccea5dc"},
+    {file = "geopandas-0.11.0.tar.gz", hash = "sha256:562fe7dc19a6e0f61532d654c4752f7bf46e0714990c5844fe3de3f9c99cb873"},
 ]
 gitdb = [
     {file = "gitdb-4.0.9-py3-none-any.whl", hash = "sha256:8033ad4e853066ba6ca92050b9df2f89301b8fc8bf7e9324d412a63f8bf1a8fd"},
@@ -2559,6 +2680,10 @@ linkify-it-py = [
     {file = "linkify-it-py-1.0.3.tar.gz", hash = "sha256:2b3f168d5ce75e3a425e34b341a6b73e116b5d9ed8dbbbf5dc7456843b7ce2ee"},
     {file = "linkify_it_py-1.0.3-py3-none-any.whl", hash = "sha256:11e29f00150cddaa8f434153f103c14716e7e097a8fd372d9eb1ed06ed91524d"},
 ]
+locket = [
+    {file = "locket-1.0.0-py2.py3-none-any.whl", hash = "sha256:b6c819a722f7b6bd955b80781788e4a66a55628b858d347536b7e81325a3a5e3"},
+    {file = "locket-1.0.0.tar.gz", hash = "sha256:5c0d4c052a8bbbf750e056a8e65ccd309086f4f0f18a2eac306a8dfa4112a632"},
+]
 markdown-it-py = [
     {file = "markdown-it-py-1.1.0.tar.gz", hash = "sha256:36be6bb3ad987bfdb839f5ba78ddf094552ca38ccbd784ae4f74a4e1419fc6e3"},
     {file = "markdown_it_py-1.1.0-py3-none-any.whl", hash = "sha256:98080fc0bc34c4f2bcf0846a096a9429acbd9d5d8e67ed34026c03c61c464389"},
@@ -2715,6 +2840,10 @@ pandocfilters = [
 parso = [
     {file = "parso-0.8.3-py2.py3-none-any.whl", hash = "sha256:c001d4636cd3aecdaf33cbb40aebb59b094be2a74c556778ef5576c175e19e75"},
     {file = "parso-0.8.3.tar.gz", hash = "sha256:8c07be290bb59f03588915921e29e8a50002acaf2cdc5fa0e0114f91709fafa0"},
+]
+partd = [
+    {file = "partd-1.2.0-py3-none-any.whl", hash = "sha256:5c3a5d70da89485c27916328dc1e26232d0e270771bd4caef4a5124b6a457288"},
+    {file = "partd-1.2.0.tar.gz", hash = "sha256:aa67897b84d522dcbc86a98b942afab8c6aa2f7f677d904a616b74ef5ddbc3eb"},
 ]
 pathspec = [
     {file = "pathspec-0.9.0-py2.py3-none-any.whl", hash = "sha256:7d15c4ddb0b5c802d161efc417ec1a2558ea2653c2e8ad9c19098201dc1c993a"},
@@ -2888,16 +3017,16 @@ pygments = [
     {file = "Pygments-2.12.0.tar.gz", hash = "sha256:5eb116118f9612ff1ee89ac96437bb6b49e8f04d8a13b514ba26f620208e26eb"},
 ]
 pyogrio = [
-    {file = "pyogrio-0.4.0a1-cp310-cp310-macosx_10_15_x86_64.whl", hash = "sha256:d630126959ef1989b29ab2685c646933039f51d153ae969542bdefb3dda5c96d"},
-    {file = "pyogrio-0.4.0a1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:bd5223b1a5ad2690f01ea1ded539aa04e5df457b18aadeb910cad9d59180b987"},
-    {file = "pyogrio-0.4.0a1-cp310-cp310-win_amd64.whl", hash = "sha256:3de19c59e24c5a423eb5e928d92984e5ac3a4f8b0d7d4e9502bf3f03f5839875"},
-    {file = "pyogrio-0.4.0a1-cp38-cp38-macosx_10_15_x86_64.whl", hash = "sha256:ae67efc69e1a96b42a4dd841fa3aa329a10062a38fa99f982255d5a8a253ab7c"},
-    {file = "pyogrio-0.4.0a1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b1190a1052128a894b17d1751cc7ea8b78b7f3d6995a7c4b8bf7c06b27387a62"},
-    {file = "pyogrio-0.4.0a1-cp38-cp38-win_amd64.whl", hash = "sha256:4f5cc684ee1e30155bebe872bcdc51a712035d63700d9827be85292eab14c0de"},
-    {file = "pyogrio-0.4.0a1-cp39-cp39-macosx_10_15_x86_64.whl", hash = "sha256:340f5bf765ecf04a94048ad9fee8e69c473b3636bbc44c21fdd0ebd8468e58be"},
-    {file = "pyogrio-0.4.0a1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d5e312060d126a25236d88840fb1ee07ddbed3bc7fc8114098ad58dac64bb3db"},
-    {file = "pyogrio-0.4.0a1-cp39-cp39-win_amd64.whl", hash = "sha256:10be1d40ede4b1c04395c64ae5926176d4d89e4158a75ec8bc38b285d8861b23"},
-    {file = "pyogrio-0.4.0a1.tar.gz", hash = "sha256:fa3243c3591549cd01769c6ab1fc2f3e84c9e6f6a70d879c1af08ea37dd82f02"},
+    {file = "pyogrio-0.4.0-cp310-cp310-macosx_10_15_x86_64.whl", hash = "sha256:ec5e461ef5076ea89cf29d0933f9c278b67dd84bb371e5ed64c6c049bdfaa719"},
+    {file = "pyogrio-0.4.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f564ee5778520e643e351826c6f6b5f4421c11c977876722adbc79fd58317c8b"},
+    {file = "pyogrio-0.4.0-cp310-cp310-win_amd64.whl", hash = "sha256:1a8ab670cce03c259eac8d7f8b1042fa4bb61b525f8157b7a39fa87dbb562281"},
+    {file = "pyogrio-0.4.0-cp38-cp38-macosx_10_15_x86_64.whl", hash = "sha256:ecd68c47153b85598f72cec979a7fb595731d5caa2b6ff7d753c76838a8ceac0"},
+    {file = "pyogrio-0.4.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a8100b233d34ee3438100662487e5c084dcfadfa65de7cdab5206f180929c9d0"},
+    {file = "pyogrio-0.4.0-cp38-cp38-win_amd64.whl", hash = "sha256:96f6d3fc15ccf1a6799704a559636b7a4ca62ecbea6a93b2dc146fea5be55466"},
+    {file = "pyogrio-0.4.0-cp39-cp39-macosx_10_15_x86_64.whl", hash = "sha256:f87605c383b8ff11049792118f948388cfc80131b3724c0b9b649f0a7709400b"},
+    {file = "pyogrio-0.4.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:54e7f6136568b19977380211cdece9a3f2a0bd806e97e00f2466aacef0039186"},
+    {file = "pyogrio-0.4.0-cp39-cp39-win_amd64.whl", hash = "sha256:0d205bed128ade326392e94c7fcc2d66f86b1ebd87a26928efb12bf01d7ec3cc"},
+    {file = "pyogrio-0.4.0.tar.gz", hash = "sha256:85480e687872a3e3b11b3e2147e8aa779e28f165c60e01b2102971c895b84b82"},
 ]
 pyparsing = [
     {file = "pyparsing-3.0.9-py3-none-any.whl", hash = "sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc"},
@@ -3299,6 +3428,10 @@ tomli = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
     {file = "tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
 ]
+toolz = [
+    {file = "toolz-0.11.2-py3-none-any.whl", hash = "sha256:a5700ce83414c64514d82d60bcda8aabfde092d1c1a8663f9200c07fdcc6da8f"},
+    {file = "toolz-0.11.2.tar.gz", hash = "sha256:6b312d5e15138552f1bda8a4e66c30e236c831b612b2bf0005f8a1df10a4bc33"},
+]
 torch = [
     {file = "torch-1.11.0-cp310-cp310-manylinux1_x86_64.whl", hash = "sha256:62052b50fffc29ca7afc0c04ef8206b6f1ca9d10629cb543077e12967e8d0398"},
     {file = "torch-1.11.0-cp310-cp310-manylinux2014_aarch64.whl", hash = "sha256:866bfba29ac98dec35d893d8e17eaec149d0ac7a53be7baae5c98069897db667"},
@@ -3405,6 +3538,10 @@ widgetsnbextension = [
 xarray = [
     {file = "xarray-2022.3.0-py3-none-any.whl", hash = "sha256:560f36eaabe7a989d5583d37ec753dd737357aa6a6453e55c80bb4f92291a69e"},
     {file = "xarray-2022.3.0.tar.gz", hash = "sha256:398344bf7d170477aaceff70210e11ebd69af6b156fe13978054d25c48729440"},
+]
+xbatcher = [
+    {file = "xbatcher-0.1.0-py3-none-any.whl", hash = "sha256:811dbdc5e17a8a42284419a8033adc631998d87d5e3fd502726fe7784d004954"},
+    {file = "xbatcher-0.1.0.tar.gz", hash = "sha256:f09badd59a8821f8976a303f68ca74371a0b29703dc1e70032ff05d38fb5218f"},
 ]
 zipp = [
     {file = "zipp-3.8.0-py3-none-any.whl", hash = "sha256:c4f6e5bbf48e74f7a38e7cc5b0480ff42b0ae5178957d564d18932525d5cf099"},

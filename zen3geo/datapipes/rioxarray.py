@@ -1,7 +1,7 @@
 """
 DataPipes for :doc:`rioxarray <rioxarray:index>`.
 """
-from typing import Any, Dict, Iterator, Optional, Tuple
+from typing import Any, Dict, Iterator, Optional
 
 import rioxarray
 from torchdata.datapipes import functional_datapipe
@@ -10,15 +10,15 @@ from torchdata.datapipes.utils import StreamWrapper
 
 
 @functional_datapipe("read_from_rioxarray")
-class RioXarrayReaderIterDataPipe(IterDataPipe[Tuple[str, StreamWrapper]]):
+class RioXarrayReaderIterDataPipe(IterDataPipe[StreamWrapper]):
     """
     Takes raster files (e.g. GeoTIFFs) from local disk or URLs
     (as long as they can be read by rioxarray and/or rasterio)
-    and yields tuples of filename and :py:class:`xarray.DataArray` objects
-    (functional name: ``read_from_rioxarray``).
+    and yields :py:class:`xarray.DataArray` objects (functional name:
+    ``read_from_rioxarray``).
 
     Based on
-    https://github.com/pytorch/data/blob/v0.3.0/torchdata/datapipes/iter/load/online.py#L29-L59
+    https://github.com/pytorch/data/blob/v0.4.0/torchdata/datapipes/iter/load/online.py#L55-L96
 
     Parameters
     ----------
@@ -32,9 +32,8 @@ class RioXarrayReaderIterDataPipe(IterDataPipe[Tuple[str, StreamWrapper]]):
 
     Yields
     ------
-    stream_obj : Tuple[str, xarray.DataArray]
-        A tuple consisting of the filename that was passed in, and an
-        :py:class:`xarray.DataArray` object containing the raster data.
+    stream_obj : xarray.DataArray
+        An :py:class:`xarray.DataArray` object containing the raster data.
 
     Example
     -------
@@ -48,8 +47,8 @@ class RioXarrayReaderIterDataPipe(IterDataPipe[Tuple[str, StreamWrapper]]):
     ...
     >>> # Loop or iterate over the DataPipe stream
     >>> it = iter(dp_rioxarray)
-    >>> filename, dataarray = next(it)
-    >>> filename
+    >>> dataarray = next(it)
+    >>> dataarray.encoding["source"]
     'https://github.com/GenericMappingTools/gmtserver-admin/raw/master/cache/earth_day_HD.tif'
     >>> dataarray
     StreamWrapper<<xarray.DataArray (band: 1, y: 960, x: 1920)>
@@ -68,13 +67,10 @@ class RioXarrayReaderIterDataPipe(IterDataPipe[Tuple[str, StreamWrapper]]):
         self.source_datapipe: IterDataPipe[str] = source_datapipe
         self.kwargs = kwargs
 
-    def __iter__(self) -> Iterator[Tuple]:
+    def __iter__(self) -> Iterator[StreamWrapper]:
         for filename in self.source_datapipe:
-            yield (
-                filename,
-                StreamWrapper(
-                    rioxarray.open_rasterio(filename=filename, **self.kwargs)
-                ),
+            yield StreamWrapper(
+                rioxarray.open_rasterio(filename=filename, **self.kwargs)
             )
 
     def __len__(self) -> int:
