@@ -37,7 +37,8 @@ pytest = "*"
 docs = [
     "jupyter-book",
     "planetary-computer",
-    "pystac"
+    "pystac",
+    "xbatcher"
 ]
 raster = ["xbatcher"]
 vector = ["pyogrio"]
