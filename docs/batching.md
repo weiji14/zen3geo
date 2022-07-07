@@ -69,9 +69,9 @@ signed_items
 The Sentinel-1 STAC item contains several assets.
 These include different 〰️ polarizations (e.g. 'VH', 'VV').
 Let's just use the 'thumbnail' product for now which is an RGB preview, with
-the red channel (R) representing the co-polarization (VV or HH), the green
-channel (G) representing the cross-polarization (VH or HV) and the blue channel
-(B) representing the ratio of the cross and co-polarizations.
+the red 🟥 channel (R) representing the co-polarization (VV or HH), the green
+🟩 channel (G) representing the cross-polarization (VH or HV) and the blue 🟦
+channel (B) representing the ratio of the cross and co-polarizations.
 
 ```{code-cell}
 url: str = signed_items[0].assets["thumbnail"].href
@@ -82,3 +82,67 @@ da
 This is how the Sentinel-1 radar image looks like over Osaka on 14 June 2022.
 
 ![Sentinel-1 image over Osaka, Japan on 20220614](https://planetarycomputer.microsoft.com/api/data/v1/item/preview.png?collection=sentinel-1-grd&item=S1A_IW_GRDH_1SDV_20220614T210034_20220614T210059_043664_05368A&assets=vv&assets=vh&expression=vv%2Cvh%2Cvv%2Fvh&rescale=0%2C500&rescale=0%2C300&rescale=0%2C7&tile_format=png)
+
+## 1️⃣ Creating 512x512 chips from large satellite scenes 🗺️
+
+Unless you have a lot of RAM, it is common to cut ✂️ a large satellite scene
+into multiple smaller chips (or patches, tiles 🀄, etc) first.
+This is typically done in a rolling or sliding window 🪟 fashion,
+via a nested loop through the y-dimension and x-dimension in strides of say,
+512 pixels x 512 pixels.
+
+Let's begin by setting up the first part of the DataPipe,
+which is to read the satellite scene 🖼️ using `rioxarray`.
+
+```{code-cell}
+# Just get the VV polarization for now from Sentinel-1
+urls = [item.assets["vv"].href for item in signed_items]
+dp = torchdata.datapipes.iter.IterableWrapper(iterable=urls)
+dp_rioxarray = dp.read_from_rioxarray(overview_level=3)
+dp_rioxarray
+```
+
+### Slicing with XbatcherSlicer 🍕
+
+To create the chips, we'll be using ``xbatcher`` which allows slicing 🔪 of an
+n-dimensional datacube along any dimension (e.g. longitude, latitude, time 🕛).
+This ``xbatcher`` library is integrated into ☯ ``zen3geo`` as a DataPipe called
+{py:class}`zen3geo.datapipes.XbatcherSlicer`, which can be used as follows:
+
+```{code-cell}
+dp_xbatcher = dp_rioxarray.slice_with_xbatcher(input_dims={"y": 512, "x": 512})
+dp_xbatcher
+```
+
+This should give us about 12 chips in total.
+
+```{code-cell}
+chips = [chip for chip in dp_xbatcher]
+print(f"Number of chips: {len(chips)}")
+```
+
+Now, if you want to customize the sliding window (e.g. do overlapping strides),
+pass in extra parameters to ``slice_with_xbatcher``, and it will be handled by
+{py:class}`xbatcher.BatchGenerator`.
+
+```{code-cell}
+dp_xbatcher = dp_rioxarray.slice_with_xbatcher(
+        input_dims={"y": 512, "x": 512}, input_overlap={"y": 256, "x": 256}
+)
+dp_xbatcher
+```
+
+Great, and this overlapping stride method should give us more 512x512 chips 🧮
+than before.
+
+```{code-cell}
+chips = [chip for chip in dp_xbatcher]
+print(f"Number of chips: {len(chips)}")
+```
+
+Double-check that single chips are of the correct dimensions
+(band: 1, y: 512, x: 512).
+
+```{code-cell}
+chips[0]
+```

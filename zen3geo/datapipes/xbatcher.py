@@ -94,7 +94,12 @@ class XbatcherSlicerIterDataPipe(IterDataPipe[Union[xr.DataArray, xr.Dataset]]):
     def __iter__(self) -> Iterator[Union[xr.DataArray, xr.Dataset]]:
         for dataarray in self.source_datapipe:
             if hasattr(dataarray, "name") and dataarray.name is None:
-                dataarray.name = "z"
+                # Workaround for ValueError: unable to convert unnamed
+                # DataArray to a Dataset without providing an explicit name
+                dataarray = dataarray.to_dataset(
+                    name=xr.backends.api.DATAARRAY_VARIABLE
+                )[xr.backends.api.DATAARRAY_VARIABLE]
+                # dataarray.name = "z"  # doesn't work for some reason
             for chip in dataarray.batch.generator(
                 input_dims=self.input_dims, **self.kwargs
             ):
