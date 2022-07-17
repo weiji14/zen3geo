@@ -26,7 +26,7 @@ A clear and concise description of what you expected to happen.
 
 **System details (please complete the following information):**
  - OS: [e.g. Linux, macOS, Windows]
- - Python Version [e.g. 3.9]
+ - Python Version [e.g. 3.10]
 
 **Additional context**
 Add any other context about the problem here.
