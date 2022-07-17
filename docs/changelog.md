@@ -1,6 +1,6 @@
 # Changelog
 
-## Release v0.2.0 (2022/07/16)
+## Release v0.2.0 (2022/07/17)
 
 ### 💫 Highlights
 
