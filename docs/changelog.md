@@ -1,5 +1,35 @@
 # Changelog
 
+## Release v0.2.0 (2022/07/17)
+
+### 💫 Highlights
+
+* 🎉 **Second release of zen3geo** 🎉
+* 🚸 Walkthrough on creating batches of data chips ([#20](https://github.com/weiji14/zen3geo/pull/20))
+
+### 🚀 Features
+
+* ♻️ Let RioXarrayReader return dataarray only instead of tuple ([#24](https://github.com/weiji14/zen3geo/pull/24))
+* ✨ XbatcherSlicerIterDataPipe for slicing xarray.DataArray ([#22](https://github.com/weiji14/zen3geo/pull/22))
+* ✨ PyogrioReaderIterDataPipe for reading vector OGR files ([#19](https://github.com/weiji14/zen3geo/pull/19))
+
+### 📖 Documentation
+
+* 🎨 Extra subsection for rioxarray datapipes ([#18](https://github.com/weiji14/zen3geo/pull/18))
+
+### 🧰 Maintenance
+
+* 👷 NEP29: Run CI and Docs build on Python 3.10 ([#29](https://github.com/weiji14/zen3geo/pull/29))
+* ⬆️ Bump poetry from 1.2.0b2 to 1.2.0b3 ([#28](https://github.com/weiji14/zen3geo/pull/28))
+* 📌 Pin minimum torchdata version to 0.4.0 ([#25](https://github.com/weiji14/zen3geo/pull/25))
+* 📌 Pin minimum pyogrio version to 0.4.0 ([#21](https://github.com/weiji14/zen3geo/pull/21))
+
+### 🧑‍🤝‍🧑 Contributors
+
+@weiji14
+
+---
+
 ## Release v0.1.0 (2022/06/08)
 
 ### 💫 Highlights
