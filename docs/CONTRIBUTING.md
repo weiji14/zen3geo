@@ -110,10 +110,10 @@ cd zen3geo
 ### Setup virtual environment ☁️
 
 ```
-mamba create --name zen3geo python=3.9
+mamba create --name zen3geo python=3.10
 mamba activate zen3geo
 
-pip install poetry==1.2.0b2
+pip install poetry==1.2.0b3
 poetry install --extras "raster vector"
 ```
 

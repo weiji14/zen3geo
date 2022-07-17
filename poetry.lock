@@ -1587,11 +1587,11 @@ py = {version = "*", markers = "implementation_name == \"pypy\""}
 
 [[package]]
 name = "rasterio"
-version = "1.2.10"
+version = "1.3.0"
 description = "Fast and direct raster I/O for use with Numpy and SciPy"
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.8"
 
 [package.dependencies]
 affine = "*"
@@ -1605,7 +1605,7 @@ setuptools = "*"
 snuggs = ">=1.4.1"
 
 [package.extras]
-all = ["numpydoc", "hypothesis", "matplotlib", "pytest-cov (>=2.2.0)", "sphinx", "ipython (>=2.0)", "boto3 (>=1.2.4)", "shapely", "pytest (>=2.8.2)", "packaging", "sphinx-rtd-theme", "ghp-import"]
+all = ["hypothesis", "numpydoc", "ipython (>=2.0)", "ghp-import", "matplotlib", "sphinx-rtd-theme", "sphinx", "packaging", "shapely", "boto3 (>=1.2.4)", "pytest (>=2.8.2)", "pytest-cov (>=2.2.0)"]
 docs = ["ghp-import", "numpydoc", "sphinx", "sphinx-rtd-theme"]
 ipython = ["ipython (>=2.0)"]
 plot = ["matplotlib"]
@@ -3239,17 +3239,7 @@ pyzmq = [
     {file = "pyzmq-23.1.0-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:05ec90a8da618f2398f9d1aa20b18a9ef332992c6ac23e8c866099faad6ef0d6"},
     {file = "pyzmq-23.1.0.tar.gz", hash = "sha256:1df26aa854bdd3a8341bf199064dd6aa6e240f2eaa3c9fa8d217e5d8b868c73e"},
 ]
-rasterio = [
-    {file = "rasterio-1.2.10-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:f86efb0e4989201f244d6818575d442b716ce81af6cd969c3caead76b9690837"},
-    {file = "rasterio-1.2.10-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:831b6dbefb409c3ece23fa219d8446a7534e30c69a075fd366e72742b1f94c58"},
-    {file = "rasterio-1.2.10-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:42a1a6364313c384fcd631d850792621301e930449b47f72ced048c415c9c84e"},
-    {file = "rasterio-1.2.10-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:1572003273225162933d4c88729076ac39050e7becd9de7d31988d1dd40942c1"},
-    {file = "rasterio-1.2.10-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:8f9867a3b6663396260fc5bdfbea372cac9202074b709478db741767f40dfffc"},
-    {file = "rasterio-1.2.10-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:ba95aa3221814e364ef49cf8dd8ca4a73e2ea702bd9228a3a845e197091792ae"},
-    {file = "rasterio-1.2.10-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:2394ce0ae1e7b49b456ddc6bbf00ce6840656e926046c1a5a54cd0f66ea67dc4"},
-    {file = "rasterio-1.2.10-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:c73248b4ba0564798bf64df869834821a7b823a4c9ceda3de9b772d69c3f5405"},
-    {file = "rasterio-1.2.10.tar.gz", hash = "sha256:6062456047ba6494fe18bd0da98a383b6fad5306b16cd52a22e76c59172a2b5f"},
-]
+rasterio = []
 requests = [
     {file = "requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d"},
     {file = "requests-2.27.1.tar.gz", hash = "sha256:68d7c56fd5a8999887728ef304a6d12edc7be74f1cfa47714fc8b414525c9a61"},

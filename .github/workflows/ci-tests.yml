@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9"]
+        python-version: ["3.8", "3.10"]
         os: [ubuntu-22.04]
         # Is it a draft Pull Request (true or false)?
         isDraft:
@@ -29,10 +29,10 @@ jobs:
         exclude:
           - python-version: '3.8'
             isDraft: true
-        # Only install optional packages on Ubuntu-22.04/Python 3.9
+        # Only install optional packages on Ubuntu-22.04/Python 3.10
         include:
           - os: 'ubuntu-22.04'
-            python-version: '3.9'
+            python-version: '3.10'
             extra-packages: '--extras "raster vector"'
 
     steps:
@@ -49,7 +49,7 @@ jobs:
       # Install poetry package manager and dependencies from poetry.lock
       - name: Install Poetry python dependencies
         run: |
-          pip install poetry==1.2.0b2
+          pip install poetry==1.2.0b3
           poetry install ${{ matrix.extra-packages }}
           poetry self add poetry-dynamic-versioning-plugin
           poetry show
