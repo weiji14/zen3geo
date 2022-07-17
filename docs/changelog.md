@@ -19,6 +19,8 @@
 
 ### 🧰 Maintenance
 
+* 👷 NEP29: Run CI and Docs build on Python 3.10 ([#29](https://github.com/weiji14/zen3geo/pull/29))
+* ⬆️ Bump poetry from 1.2.0b2 to 1.2.0b3 ([#28](https://github.com/weiji14/zen3geo/pull/28))
 * 📌 Pin minimum torchdata version to 0.4.0 ([#25](https://github.com/weiji14/zen3geo/pull/25))
 * 📌 Pin minimum pyogrio version to 0.4.0 ([#21](https://github.com/weiji14/zen3geo/pull/21))
 
