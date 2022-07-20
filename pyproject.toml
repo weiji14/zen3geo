@@ -37,6 +37,7 @@ pytest = "*"
 docs = [
     "jupyter-book",
     "planetary-computer",
+    "pyogrio",
     "pystac",
     "xbatcher"
 ]
