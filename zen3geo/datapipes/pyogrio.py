@@ -1,7 +1,7 @@
 """
 DataPipes for :doc:`pyogrio <pyogrio:index>`.
 """
-from typing import Any, Dict, Iterator, Optional, Tuple
+from typing import Any, Dict, Iterator, Optional
 
 try:
     import pyogrio
@@ -13,15 +13,15 @@ from torchdata.datapipes.utils import StreamWrapper
 
 
 @functional_datapipe("read_from_pyogrio")
-class PyogrioReaderIterDataPipe(IterDataPipe[Tuple[str, StreamWrapper]]):
+class PyogrioReaderIterDataPipe(IterDataPipe[StreamWrapper]):
     """
     Takes vector files (e.g. FlatGeoBuf, GeoPackage, GeoJSON) from local disk
-    or URLs (as long as they can be read by pyogrio) and yields tuples of
-    filename and :py:class:`geopandas.GeoDataFrame` objects
+    or URLs (as long as they can be read by pyogrio) and yields
+    :py:class:`geopandas.GeoDataFrame` objects
     (functional name: ``read_from_pyogrio``).
 
     Based on
-    https://github.com/pytorch/data/blob/v0.3.0/torchdata/datapipes/iter/load/iopath.py#L37-L83
+    https://github.com/pytorch/data/blob/v0.4.0/torchdata/datapipes/iter/load/iopath.py#L42-L97
 
     Parameters
     ----------
@@ -34,9 +34,8 @@ class PyogrioReaderIterDataPipe(IterDataPipe[Tuple[str, StreamWrapper]]):
 
     Yields
     ------
-    stream_obj : Tuple[str, geopandas.GeoDataFrame]
-        A tuple consisting of the filename that was passed in, and a
-        :py:class:`geopandas.GeoDataFrame` object containing the vector data.
+    stream_obj : geopandas.GeoDataFrame
+        A :py:class:`geopandas.GeoDataFrame` object containing the vector data.
 
     Raises
     ------
@@ -55,15 +54,13 @@ class PyogrioReaderIterDataPipe(IterDataPipe[Tuple[str, StreamWrapper]]):
     >>> from zen3geo.datapipes import PyogrioReader
     ...
     >>> # Read in GeoPackage data using DataPipe
-    >>> file_url: str = "https://github.com/geopandas/pyogrio/raw/v0.4.0a1/pyogrio/tests/fixtures/test_gpkg_nulls.gpkg"
+    >>> file_url: str = "https://github.com/geopandas/pyogrio/raw/v0.4.0/pyogrio/tests/fixtures/test_gpkg_nulls.gpkg"
     >>> dp = IterableWrapper(iterable=[file_url])
     >>> dp_pyogrio = dp.read_from_pyogrio()
     ...
     >>> # Loop or iterate over the DataPipe stream
     >>> it = iter(dp_pyogrio)
-    >>> filename, geodataframe = next(it)
-    >>> filename
-    'https://github.com/geopandas/pyogrio/raw/v0.4.0a1/pyogrio/tests/fixtures/test_gpkg_nulls.gpkg'
+    >>> geodataframe = next(it)
     >>> geodataframe
     StreamWrapper<   col_bool  col_int8  ...  col_float64                 geometry
     0       1.0       1.0  ...          1.5  POINT (0.00000 0.00000)
@@ -87,12 +84,9 @@ class PyogrioReaderIterDataPipe(IterDataPipe[Tuple[str, StreamWrapper]]):
         self.source_datapipe: IterDataPipe[str] = source_datapipe
         self.kwargs = kwargs
 
-    def __iter__(self) -> Iterator[Tuple]:
+    def __iter__(self) -> Iterator[StreamWrapper]:
         for filename in self.source_datapipe:
-            yield (
-                filename,
-                StreamWrapper(pyogrio.read_dataframe(filename, **self.kwargs)),
-            )
+            yield StreamWrapper(pyogrio.read_dataframe(filename, **self.kwargs))
 
     def __len__(self) -> int:
         return len(self.source_datapipe)
