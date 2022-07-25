@@ -7,6 +7,15 @@
     :members:
 ```
 
+### Rasterio
+
+```{eval-rst}
+.. automodule:: zen3geo.datapipes.rasterio
+.. autoclass:: zen3geo.datapipes.RasterioRasterizer
+.. autoclass:: zen3geo.datapipes.rasterio.RasterioRasterizerIterDataPipe
+    :show-inheritance:
+```
+
 ### Rioxarray
 
 ```{eval-rst}

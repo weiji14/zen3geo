@@ -35,6 +35,9 @@ sphinx:
       geopandas:
         - 'https://geopandas.org/en/latest/'
         - null
+      numpy:
+        - 'https://numpy.org/doc/stable/'
+        - null
       pyogrio:
         - 'https://pyogrio.readthedocs.io/en/latest/'
         - null
@@ -46,6 +49,9 @@ sphinx:
         - null
       rioxarray:
         - 'https://corteva.github.io/rioxarray/stable/'
+        - null
+      shapely:
+        - 'https://shapely.readthedocs.io/en/latest/'
         - null
       torch:
         - 'https://pytorch.org/docs/stable/'
