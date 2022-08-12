@@ -24,7 +24,11 @@ class XarrayCanvasIterDataPipe(IterDataPipe[Union[xr.DataArray, xr.Dataset]]):
     ----------
     source_datapipe : IterDataPipe[xr.DataArray]
         A DataPipe that contains :py:class:`xarray.DataArray` or
-        :py:class:`xarray.Dataset` objects.
+        :py:class:`xarray.Dataset` objects. These data objects need to have
+        both a ``.rio.x_dim`` and ``.rio.y_dim`` attribute, which is present
+        if the original dataset was opened using
+        :py:func:`rioxarray.open_rasterio`, or by setting it manually using
+        :py:meth:`rioxarray.rioxarray.XRasterBase.set_spatial_dims`.
 
     kwargs : Optional
         Extra keyword arguments to pass to :py:func:`datashader.Canvas`.
@@ -75,8 +79,7 @@ class XarrayCanvasIterDataPipe(IterDataPipe[Union[xr.DataArray, xr.Dataset]]):
       * x        (x) int64 0 1 2 3 4 5
       * y        (y) int64 0 -1 -2
       * band     (band) int64 1
-    Attributes:
-        res:      1.0
+    ...
     """
 
     def __init__(
@@ -98,8 +101,10 @@ class XarrayCanvasIterDataPipe(IterDataPipe[Union[xr.DataArray, xr.Dataset]]):
 
     def __iter__(self) -> Iterator[datashader.Canvas]:
         for dataarray in self.source_datapipe:
-            plot_width: int = len(dataarray[dataarray.rio.x_dim])
-            plot_height: int = len(dataarray[dataarray.rio.y_dim])
+            x_dim: str = dataarray.rio.x_dim
+            y_dim: str = dataarray.rio.y_dim
+            plot_width: int = len(dataarray[x_dim])
+            plot_height: int = len(dataarray[y_dim])
             xmin, ymin, xmax, ymax = dataarray.rio.bounds()
 
             canvas = datashader.Canvas(
