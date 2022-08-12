@@ -32,6 +32,9 @@ sphinx:
     autodoc_typehints: 'description'
     html_show_copyright: false
     intersphinx_mapping:
+      datashader:
+        - 'https://datashader.org/'
+        - null
       geopandas:
         - 'https://geopandas.org/en/latest/'
         - null
