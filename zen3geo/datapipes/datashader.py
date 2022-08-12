@@ -99,7 +99,7 @@ class XarrayCanvasIterDataPipe(IterDataPipe[Union[xr.DataArray, xr.Dataset]]):
         ] = source_datapipe
         self.kwargs = kwargs
 
-    def __iter__(self) -> Iterator[datashader.Canvas]:
+    def __iter__(self) -> Iterator:
         for dataarray in self.source_datapipe:
             x_dim: str = dataarray.rio.x_dim
             y_dim: str = dataarray.rio.y_dim
