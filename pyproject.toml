@@ -37,6 +37,7 @@ pytest = "*"
 
 [tool.poetry.extras]
 docs = [
+    "datashader",
     "jupyter-book",
     "planetary-computer",
     "pystac",
