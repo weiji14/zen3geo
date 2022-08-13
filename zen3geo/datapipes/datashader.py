@@ -131,6 +131,8 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
         for canvas, vector in self.source_datapipe.zip_longest(
             self.vector_datapipe, fill_value=fill_value
         ):
+            # If canvas has no CRS attribute, set one to prevent AttributeError
+            canvas.crs = getattr(canvas, "crs", None)
             # Reproject vector geometries to coordinate reference system
             # of the raster canvas if both are different
             if vector.crs != canvas.crs:
@@ -138,18 +140,25 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
 
             # Convert vector to spatialpandas format to allow datashader's
             # rasterization methods to work
-            _vector = spatialpandas.GeoDataFrame(data=vector.geometry)
+            try:
+                _vector = spatialpandas.GeoDataFrame(data=vector.geometry)
+            except ValueError as e:
+                raise ValueError(
+                    f"Unsupported geometry type(s) {set(vector.geom_type)} detected, "
+                    "only point, line or polygon vector geometry types are supported."
+                ) from e
 
             # Determine geometry type to know which rasterization method to use
             vector_dtype: spatialpandas.geometry.GeometryDtype = _vector.geometry.dtype
-            if isinstance(vector_dtype, spatialpandas.geometry.PointDtype):
+            if isinstance(
+                vector_dtype,
+                (
+                    spatialpandas.geometry.PointDtype,
+                    spatialpandas.geometry.MultiPointDtype,
+                ),
+            ):
                 raster: xr.DataArray = canvas.points(
                     source=_vector, geometry="geometry", **self.kwargs
-                )
-            else:
-                raise ValueError(
-                    f"Unsupported geometry type {vector_dtype}, only "
-                    "point, line or polygon vector geometry types are supported."
                 )
 
             # Set coordinate transform for raster and ensure affine
