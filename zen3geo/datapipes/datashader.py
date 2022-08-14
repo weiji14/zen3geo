@@ -9,6 +9,14 @@ except ImportError:
     datashader = None
 try:
     import spatialpandas
+    from spatialpandas.geometry import (
+        PointDtype,
+        MultiPointDtype,
+        LineDtype,
+        MultiLineDtype,
+        PolygonDtype,
+        MultiPolygonDtype,
+    )
 except ImportError:
     spatialpandas = None
 
@@ -155,7 +163,8 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
             # Convert vector to spatialpandas format to allow datashader's
             # rasterization methods to work
             try:
-                _vector = spatialpandas.GeoDataFrame(data=vector.geometry)
+                columns = ["geometry"] if not hasattr(vector, "columns") else None
+                _vector = spatialpandas.GeoDataFrame(data=vector, columns=columns)
             except ValueError as e:
                 raise ValueError(
                     f"Unsupported geometry type(s) {set(vector.geom_type)} detected, "
@@ -164,17 +173,23 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
 
             # Determine geometry type to know which rasterization method to use
             vector_dtype: spatialpandas.geometry.GeometryDtype = _vector.geometry.dtype
-            if isinstance(
-                vector_dtype,
-                (
-                    spatialpandas.geometry.PointDtype,
-                    spatialpandas.geometry.MultiPointDtype,
-                ),
-            ):
+
+            if isinstance(vector_dtype, (PointDtype, MultiPointDtype)):
                 raster: xr.DataArray = canvas.points(
                     source=_vector, geometry="geometry", **self.kwargs
                 )
+            elif isinstance(vector_dtype, (LineDtype, MultiLineDtype)):
+                raster: xr.DataArray = canvas.line(
+                    source=_vector, geometry="geometry", **self.kwargs
+                )
+            elif isinstance(vector_dtype, (PolygonDtype, MultiPolygonDtype)):
+                raster: xr.DataArray = canvas.polygons(
+                    source=_vector, geometry="geometry", **self.kwargs
+                )
 
+            # Convert boolean dtype rasters to uint8 to enable reprojection
+            if raster.dtype == "bool":
+                raster: xr.DataArray = raster.astype(dtype="uint8")
             # Set coordinate transform for raster and ensure affine
             # transform is correct (the y-coordinate goes from North to South)
             raster: xr.DataArray = raster.rio.set_crs(input_crs=canvas.crs)

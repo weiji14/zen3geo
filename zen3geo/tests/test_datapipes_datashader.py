@@ -20,8 +20,9 @@ def fixture_geoms():
 
     geometries = shapely.geometry.GeometryCollection(
         geoms=[
-            shapely.geometry.Point(1, 0),
-            shapely.geometry.LineString([(10, 0), (10, 5), (0, 0)]),
+            shapely.geometry.MultiPoint([(4.5, 4.5), (3.5, 1), (6, 3.5)]),
+            shapely.geometry.LineString([(3, 5), (5, 3), (3, 2), (5, 0)]),
+            shapely.geometry.Polygon([(6, 5), (3.5, 2.5), (6, 0), (6, 2.5), (5, 2.5)]),
         ]
     )
     return geometries
@@ -57,9 +58,46 @@ def test_datashader_canvas_dataset():
     assert hasattr(canvas, "raster")
 
 
+@pytest.mark.parametrize(
+    ("geom_type", "sum_val"), [("Point", 3), ("Line", 13), ("Polygon", 15)]
+)
+def test_datashader_rasterize_vector_geometry(geometries, geom_type, sum_val):
+    """
+    Ensure that DatashaderRasterizer works to rasterize a geopandas.GeoSeries
+    object of point, line or polygon type into an xarray.DataArray grid.
+    """
+    gpd = pytest.importorskip("geopandas")
+
+    canvas = datashader.Canvas(
+        plot_width=14, plot_height=10, x_range=(1, 8), y_range=(0, 5)
+    )
+    canvas.crs = "EPSG:4326"
+    dp = IterableWrapper(iterable=[canvas])
+
+    geoms = [geom for geom in geometries.geoms if geom_type in geom.type]
+    vector = gpd.GeoSeries(data=geoms)
+    vector = vector.set_crs(epsg=4326)
+    dp_vector = IterableWrapper(iterable=[vector])
+
+    # Using class constructors
+    dp_canvas = DatashaderRasterizer(source_datapipe=dp, vector_datapipe=dp_vector)
+    # Using functional form (recommended)
+    dp_datashader = dp.rasterize_with_datashader(vector_datapipe=dp_vector)
+
+    assert len(dp_datashader) == 1
+    it = iter(dp_datashader)
+    dataarray = next(it)
+
+    assert dataarray.data.sum() == sum_val
+    assert dataarray.dims == ("y", "x")
+    assert dataarray.rio.crs == "EPSG:4326"
+    assert dataarray.rio.shape == (10, 14)
+    assert dataarray.rio.transform().e == -0.5
+
+
 def test_datashader_rasterize_missing_crs(geometries):
     """
-    Ensure that DatashaderRasterizer raises a ValueError when either of the
+    Ensure that DatashaderRasterizer raises a ValueError when either the input
     datashader.Canvas or geopandas.GeoDataFrame has no crs attribute.
     """
     gpd = pytest.importorskip("geopandas")
