@@ -115,7 +115,7 @@ def test_datashader_rasterize_missing_crs(geometries):
     assert len(dp_datashader) == 1
     it = iter(dp_datashader)
     with pytest.raises(
-        ValueError, match="Missing crs information for datashader.Canvas"
+        AttributeError, match="Missing crs information for datashader.Canvas"
     ):
         raster = next(it)
 
@@ -126,7 +126,7 @@ def test_datashader_rasterize_missing_crs(geometries):
 
     assert len(dp_datashader2) == 1
     it = iter(dp_datashader2)
-    with pytest.raises(ValueError, match="Missing crs information for input"):
+    with pytest.raises(AttributeError, match="Missing crs information for input"):
         raster = next(it)
 
 

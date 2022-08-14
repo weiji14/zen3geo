@@ -31,7 +31,7 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
     Takes vector :py:class:`geopandas.GeoSeries` or
     :py:class:`geopandas.GeoDataFrame` geometries and rasterizes them using
     :py:class:`datashader.Canvas` to yield an :py:class:`xarray.DataArray`
-    raster image with input geometries burned in
+    raster with input geometries aggregated into a fixed-sized grid
     (functional name: ``rasterize_with_datashader``).
 
     Parameters
@@ -43,7 +43,19 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
 
     vector_datapipe : IterDataPipe[geopandas.GeoDataFrame]
         A DataPipe that contains :py:class:`geopandas.GeoSeries` or
-        :py:class:`geopandas.GeoDataFrame` vector geometries.
+        :py:class:`geopandas.GeoDataFrame` vector geometries with a ``.crs``
+        attribute.
+
+    agg : Optional[datashader.reductions.Reduction]
+        Reduction operation to compute. Default depends on the input vector
+        type:
+
+        - For points, default is :py:class:`datashader.reductions.count`
+        - For lines, default is :py:class:`datashader.reductions.any`
+        - For polygons, default is :py:class:`datashader.reductions.any`
+
+        For more information, refer to the section on Aggregation under
+        datashader's :doc:`datashader:getting_started/Pipeline` docs.
 
     kwargs : Optional
         Extra keyword arguments to pass to the :py:class:`datashader.Canvas`
@@ -62,6 +74,23 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
     ModuleNotFoundError
         If ``spatialpandas`` is not installed. Please install it (e.g. via
         ``pip install spatialpandas``) before using this class.
+
+    AttributeError
+        If either the canvas in ``source_datapipe`` or vector geometry in
+        ``vector_datapipe`` is missing a ``.crs`` attribute. Please set the
+        coordinate reference system (e.g. using ``canvas.crs = 'EPSG:4326'``
+        for the :py:class:`datashader.Canvas` input or
+        ``vector = vector.set_crs(epsg=4326)`` for the
+        :py:class:`geopandas.GeoSeries` or :py:class:`geopandas.GeoDataFrame`
+        input) before passing them into the datapipe.
+
+    ValueError
+        If the input vector geometry type to ``vector_datapipe`` is not
+        supported, typically when a
+        :py:class:`shapely.geometry.GeometryCollection` is used. Supported
+        types include `Point`, `LineString`, and `Polygon`, plus their
+        multipart equivalents `MultiPoint`, `MultiLineString`, and
+        `MultiPolygon`.
 
     Example
     -------
@@ -118,6 +147,7 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
         self,
         source_datapipe: IterDataPipe,
         vector_datapipe: IterDataPipe,
+        agg: Optional = None,
         **kwargs: Optional[Dict[str, Any]],
     ) -> None:
         if spatialpandas is None:
@@ -129,6 +159,7 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
             )
         self.source_datapipe: IterDataPipe = source_datapipe  # datashader.Canvas
         self.vector_datapipe: IterDataPipe = vector_datapipe  # geopandas.GeoDataFrame
+        self.agg: Optional = agg  # Datashader Aggregation/Reduction function
         self.kwargs = kwargs
 
     def __iter__(self) -> Iterator[xr.DataArray]:
@@ -142,7 +173,7 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
             # If canvas has no CRS attribute, set one to prevent AttributeError
             canvas.crs = getattr(canvas, "crs", None)
             if canvas.crs is None:
-                raise ValueError(
+                raise AttributeError(
                     "Missing crs information for datashader.Canvas with "
                     f"x_range: {canvas.x_range} and y_range: {canvas.y_range}. "
                     "Please set crs using e.g. `canvas.crs = 'EPSG:4326'`."
@@ -154,10 +185,10 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
                 if vector.crs != canvas.crs:
                     vector = vector.to_crs(crs=canvas.crs)
             except (AttributeError, ValueError) as e:
-                raise ValueError(
+                raise AttributeError(
                     f"Missing crs information for input {vector.__class__} object "
                     f"with the following bounds: \n {vector.bounds} \n"
-                    f"Please set crs using e.g. `vector = vector.set_crs(epsg=4326)."
+                    f"Please set crs using e.g. `vector = vector.set_crs(epsg=4326)`."
                 ) from e
 
             # Convert vector to spatialpandas format to allow datashader's
@@ -176,15 +207,15 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
 
             if isinstance(vector_dtype, (PointDtype, MultiPointDtype)):
                 raster: xr.DataArray = canvas.points(
-                    source=_vector, geometry="geometry", **self.kwargs
+                    source=_vector, agg=self.agg, geometry="geometry", **self.kwargs
                 )
             elif isinstance(vector_dtype, (LineDtype, MultiLineDtype)):
                 raster: xr.DataArray = canvas.line(
-                    source=_vector, geometry="geometry", **self.kwargs
+                    source=_vector, agg=self.agg, geometry="geometry", **self.kwargs
                 )
             elif isinstance(vector_dtype, (PolygonDtype, MultiPolygonDtype)):
                 raster: xr.DataArray = canvas.polygons(
-                    source=_vector, geometry="geometry", **self.kwargs
+                    source=_vector, agg=self.agg, geometry="geometry", **self.kwargs
                 )
 
             # Convert boolean dtype rasters to uint8 to enable reprojection
@@ -230,7 +261,7 @@ class XarrayCanvasIterDataPipe(IterDataPipe[Union[xr.DataArray, xr.Dataset]]):
     ------
     canvas : datashader.Canvas
         A :py:class:`datashader.Canvas` object representing the same spatial
-        extent and x/y coordinates of the input raster image. This canvas
+        extent and x/y coordinates of the input raster grid. This canvas
         will also have a ``.crs`` attribute that captures the original
         Coordinate Reference System from the input xarray object's
         :py:attr:`rioxarray.rioxarray.XRasterBase.crs` property.
