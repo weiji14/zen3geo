@@ -31,7 +31,7 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
     Takes vector :py:class:`geopandas.GeoSeries` or
     :py:class:`geopandas.GeoDataFrame` geometries and rasterizes them using
     :py:class:`datashader.Canvas` to yield an :py:class:`xarray.DataArray`
-    raster with input geometries aggregated into a fixed-sized grid
+    raster with the input geometries aggregated into a fixed-sized grid
     (functional name: ``rasterize_with_datashader``).
 
     Parameters
@@ -141,6 +141,11 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
       * y            (y) float64 4.157e+05 3.47e+05 2.783e+05 ... 1.41e+05 7.237e+04
         spatial_ref  int64 0
     ...
+    >>> dataarray.rio.crs
+    CRS.from_epsg(32631)
+    >>> dataarray.rio.transform()
+    Affine(98871.00388807665, 0.0, 160000.0,
+           0.0, -68660.4193667199, 450000.0)
     """
 
     def __init__(
