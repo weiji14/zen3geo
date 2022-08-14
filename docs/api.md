@@ -11,6 +11,8 @@
 
 ```{eval-rst}
 .. automodule:: zen3geo.datapipes.datashader
+.. autoclass:: zen3geo.datapipes.DatashaderRasterizer
+.. autoclass:: zen3geo.datapipes.datashader.DatashaderRasterizerIterDataPipe
 .. autoclass:: zen3geo.datapipes.XarrayCanvas
 .. autoclass:: zen3geo.datapipes.datashader.XarrayCanvasIterDataPipe
     :show-inheritance:

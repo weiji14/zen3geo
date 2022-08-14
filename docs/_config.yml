@@ -50,6 +50,9 @@ sphinx:
       rioxarray:
         - 'https://corteva.github.io/rioxarray/stable/'
         - null
+      shapely:
+        - 'https://shapely.readthedocs.io/en/latest'
+        - null
       torch:
         - 'https://pytorch.org/docs/stable/'
         - null
