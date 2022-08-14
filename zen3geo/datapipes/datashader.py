@@ -251,7 +251,7 @@ class XarrayCanvasIterDataPipe(IterDataPipe[Union[xr.DataArray, xr.Dataset]]):
 
     Parameters
     ----------
-    source_datapipe : IterDataPipe[xr.DataArray]
+    source_datapipe : IterDataPipe[xarrray.DataArray]
         A DataPipe that contains :py:class:`xarray.DataArray` or
         :py:class:`xarray.Dataset` objects. These data objects need to have
         both a ``.rio.x_dim`` and ``.rio.y_dim`` attribute, which is present
