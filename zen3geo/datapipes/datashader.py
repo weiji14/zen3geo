@@ -133,10 +133,24 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
         ):
             # If canvas has no CRS attribute, set one to prevent AttributeError
             canvas.crs = getattr(canvas, "crs", None)
+            if canvas.crs is None:
+                raise ValueError(
+                    "Missing crs information for datashader.Canvas with "
+                    f"x_range: {canvas.x_range} and y_range: {canvas.y_range}. "
+                    "Please set crs using e.g. `canvas.crs = 'EPSG:4326'`."
+                )
+
             # Reproject vector geometries to coordinate reference system
             # of the raster canvas if both are different
-            if vector.crs != canvas.crs:
-                vector = vector.to_crs(crs=canvas.crs)
+            try:
+                if vector.crs != canvas.crs:
+                    vector = vector.to_crs(crs=canvas.crs)
+            except (AttributeError, ValueError) as e:
+                raise ValueError(
+                    f"Missing crs information for input {vector.__class__} object "
+                    f"with the following bounds: \n {vector.bounds} \n"
+                    f"Please set crs using e.g. `vector = vector.set_crs(epsg=4326)."
+                ) from e
 
             # Convert vector to spatialpandas format to allow datashader's
             # rasterization methods to work

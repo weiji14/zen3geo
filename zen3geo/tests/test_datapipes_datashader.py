@@ -57,6 +57,41 @@ def test_datashader_canvas_dataset():
     assert hasattr(canvas, "raster")
 
 
+def test_datashader_rasterize_missing_crs(geometries):
+    """
+    Ensure that DatashaderRasterizer raises a ValueError when either of the
+    datashader.Canvas or geopandas.GeoDataFrame has no crs attribute.
+    """
+    gpd = pytest.importorskip("geopandas")
+
+    vector = gpd.GeoDataFrame(data={"geometry": geometries})
+    dp_vector = IterableWrapper(iterable=[vector])
+
+    # When datashader.Canvas has no crs
+    canvas = datashader.Canvas(
+        plot_width=2, plot_height=3, x_range=(0, 2), y_range=(3, 6)
+    )
+    dp = IterableWrapper(iterable=[canvas])
+    dp_datashader = dp.rasterize_with_datashader(vector_datapipe=dp_vector)
+
+    assert len(dp_datashader) == 1
+    it = iter(dp_datashader)
+    with pytest.raises(
+        ValueError, match="Missing crs information for datashader.Canvas"
+    ):
+        raster = next(it)
+
+    # When geopandas.GeoDataFrame has no crs
+    canvas.crs = "EPSG:4326"
+    dp_canvas2 = IterableWrapper(iterable=[canvas])
+    dp_datashader2 = dp_canvas2.rasterize_with_datashader(vector_datapipe=dp_vector)
+
+    assert len(dp_datashader2) == 1
+    it = iter(dp_datashader2)
+    with pytest.raises(ValueError, match="Missing crs information for input"):
+        raster = next(it)
+
+
 def test_datashader_rasterize_vector_geometrycollection(geometries):
     """
     Ensure that DatashaderRasterizer raises a ValueError when an unsupported
@@ -67,9 +102,11 @@ def test_datashader_rasterize_vector_geometrycollection(geometries):
     canvas = datashader.Canvas(
         plot_width=10, plot_height=5, x_range=(0, 10), y_range=(0, 5)
     )
+    canvas.crs = "EPSG:4326"
     dp = IterableWrapper(iterable=[canvas])
 
     geocollection = gpd.GeoSeries(data=geometries)
+    geocollection = geocollection.set_crs(epsg=4326)
     dp_vector = IterableWrapper(iterable=[geocollection])
 
     # Using class constructors
