@@ -1,9 +1,5 @@
 # API Reference
 
-```{contents}
-:local:
-```
-
 ## DataPipes
 
 ```{eval-rst}

@@ -31,6 +31,9 @@ sphinx:
   config:
     autodoc_typehints: 'description'
     html_show_copyright: false
+    html_theme_options:
+      # https://sphinx-book-theme.readthedocs.io/en/stable/customize/sidebar-secondary.html
+      show_toc_level: 3
     intersphinx_mapping:
       datashader:
         - 'https://datashader.org/'
