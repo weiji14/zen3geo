@@ -22,7 +22,7 @@ class XbatcherSlicerIterDataPipe(IterDataPipe[Union[xr.DataArray, xr.Dataset]]):
 
     Parameters
     ----------
-    source_datapipe : IterDataPipe[xr.DataArray]
+    source_datapipe : IterDataPipe[xarray.DataArray]
         A DataPipe that contains :py:class:`xarray.DataArray` or
         :py:class:`xarray.Dataset` objects.
 
