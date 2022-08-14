@@ -85,6 +85,12 @@ class XbatcherSlicerIterDataPipe(IterDataPipe[Union[xr.DataArray, xr.Dataset]]):
         input_dims: Dict[Hashable, int],
         **kwargs: Optional[Dict[str, Any]]
     ) -> None:
+        if xbatcher is None:
+            raise ModuleNotFoundError(
+                "Package `xbatcher` is required to be installed to use this datapipe. "
+                "Please use `pip install xbatcher` "
+                "to install the package"
+            )
         self.source_datapipe: IterDataPipe[
             Union[xr.DataArray, xr.Dataset]
         ] = source_datapipe
@@ -105,5 +111,5 @@ class XbatcherSlicerIterDataPipe(IterDataPipe[Union[xr.DataArray, xr.Dataset]]):
             ):
                 yield chip
 
-        # def __len__(self) -> int:
-        #     return len(self.source_datapipe)
+    # def __len__(self) -> int:
+    #     return len(self.source_datapipe)
