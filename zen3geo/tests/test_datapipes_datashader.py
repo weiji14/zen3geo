@@ -11,21 +11,36 @@ from zen3geo.datapipes import DatashaderRasterizer, XarrayCanvas
 datashader = pytest.importorskip("datashader")
 
 # %%
-@pytest.fixture(scope="module", name="geometries")
-def fixture_geoms():
+@pytest.fixture(scope="function", name="canvas")
+def fixture_canvas():
     """
-    Collection of shapely.geometry objects to use in the tests.
+    The blank datashader.Canvas to use in the tests.
     """
+    canvas = datashader.Canvas(
+        plot_width=14, plot_height=10, x_range=(1, 8), y_range=(0, 5)
+    )
+    canvas.crs = "EPSG:4326"
+    return canvas
+
+
+@pytest.fixture(scope="module", name="geodataframe")
+def fixture_geodataframe():
+    """
+    A geopandas.GeoDataFrame containing a collection of shapely.geometry
+    objects to use in the tests.
+    """
+    gpd = pytest.importorskip("geopandas")
     shapely = pytest.importorskip("shapely")
 
-    geometries = shapely.geometry.GeometryCollection(
-        geoms=[
-            shapely.geometry.MultiPoint([(4.5, 4.5), (3.5, 1), (6, 3.5)]),
-            shapely.geometry.LineString([(3, 5), (5, 3), (3, 2), (5, 0)]),
-            shapely.geometry.Polygon([(6, 5), (3.5, 2.5), (6, 0), (6, 2.5), (5, 2.5)]),
-        ]
-    )
-    return geometries
+    geometries: list = [
+        shapely.geometry.MultiPoint([(4.5, 4.5), (3.5, 1), (6, 3.5)]),
+        shapely.geometry.LineString([(3, 5), (5, 3), (3, 2), (5, 0)]),
+        shapely.geometry.Polygon([(6, 5), (3.5, 2.5), (6, 0), (6, 2.5), (5, 2.5)]),
+    ]
+    geodataframe = gpd.GeoDataFrame(data={"geometry": geometries})
+    geodataframe = geodataframe.set_crs(epsg=4326)
+
+    return geodataframe
 
 
 # %%
@@ -55,32 +70,26 @@ def test_datashader_canvas_dataset():
 
     assert canvas.plot_height == 12
     assert canvas.plot_width == 8
+    assert hasattr(canvas, "crs")
     assert hasattr(canvas, "raster")
 
 
 @pytest.mark.parametrize(
     ("geom_type", "sum_val"), [("Point", 3), ("Line", 13), ("Polygon", 15)]
 )
-def test_datashader_rasterize_vector_geometry(geometries, geom_type, sum_val):
+def test_datashader_rasterize_vector_geometry(canvas, geodataframe, geom_type, sum_val):
     """
-    Ensure that DatashaderRasterizer works to rasterize a geopandas.GeoSeries
-    object of point, line or polygon type into an xarray.DataArray grid.
+    Ensure that DatashaderRasterizer works to rasterize a
+    geopandas.GeoDataFrame of point, line or polygon type into an
+    xarray.DataArray grid.
     """
-    gpd = pytest.importorskip("geopandas")
-
-    canvas = datashader.Canvas(
-        plot_width=14, plot_height=10, x_range=(1, 8), y_range=(0, 5)
-    )
-    canvas.crs = "EPSG:4326"
     dp = IterableWrapper(iterable=[canvas])
 
-    geoms = [geom for geom in geometries.geoms if geom_type in geom.type]
-    vector = gpd.GeoSeries(data=geoms)
-    vector = vector.set_crs(epsg=4326)
+    vector = geodataframe[geodataframe.type.str.contains(geom_type)]
     dp_vector = IterableWrapper(iterable=[vector])
 
     # Using class constructors
-    dp_canvas = DatashaderRasterizer(source_datapipe=dp, vector_datapipe=dp_vector)
+    dp_datashader = DatashaderRasterizer(source_datapipe=dp, vector_datapipe=dp_vector)
     # Using functional form (recommended)
     dp_datashader = dp.rasterize_with_datashader(vector_datapipe=dp_vector)
 
@@ -95,22 +104,15 @@ def test_datashader_rasterize_vector_geometry(geometries, geom_type, sum_val):
     assert dataarray.rio.transform().e == -0.5
 
 
-def test_datashader_rasterize_missing_crs(geometries):
+def test_datashader_rasterize_canvas_missing_crs(canvas, geodataframe):
     """
-    Ensure that DatashaderRasterizer raises a ValueError when either the input
-    datashader.Canvas or geopandas.GeoDataFrame has no crs attribute.
+    Ensure that DatashaderRasterizer raises an AttributeError when the
+    input datashader.Canvas has no crs attribute.
     """
-    gpd = pytest.importorskip("geopandas")
-
-    vector = gpd.GeoDataFrame(data={"geometry": geometries})
-    dp_vector = IterableWrapper(iterable=[vector])
-
-    # When datashader.Canvas has no crs
-    canvas = datashader.Canvas(
-        plot_width=2, plot_height=3, x_range=(0, 2), y_range=(3, 6)
-    )
-    dp = IterableWrapper(iterable=[canvas])
-    dp_datashader = dp.rasterize_with_datashader(vector_datapipe=dp_vector)
+    canvas.crs = None
+    dp_canvas = IterableWrapper(iterable=[canvas])
+    dp_vector = IterableWrapper(iterable=[geodataframe.geometry])
+    dp_datashader = dp_canvas.rasterize_with_datashader(vector_datapipe=dp_vector)
 
     assert len(dp_datashader) == 1
     it = iter(dp_datashader)
@@ -119,37 +121,37 @@ def test_datashader_rasterize_missing_crs(geometries):
     ):
         raster = next(it)
 
-    # When geopandas.GeoDataFrame has no crs
-    canvas.crs = "EPSG:4326"
-    dp_canvas2 = IterableWrapper(iterable=[canvas])
-    dp_datashader2 = dp_canvas2.rasterize_with_datashader(vector_datapipe=dp_vector)
 
-    assert len(dp_datashader2) == 1
-    it = iter(dp_datashader2)
+def test_datashader_rasterize_vector_missing_crs(canvas, geodataframe):
+    """
+    Ensure that DatashaderRasterizer raises an AttributeError when the
+    input geopandas.GeoSeries has no crs attribute.
+    """
+    vector = geodataframe.geometry
+    vector.crs = None
+    dp_canvas = IterableWrapper(iterable=[canvas])
+    dp_vector = IterableWrapper(iterable=[vector])
+    dp_datashader = dp_canvas.rasterize_with_datashader(vector_datapipe=dp_vector)
+
+    assert len(dp_datashader) == 1
+    it = iter(dp_datashader)
     with pytest.raises(AttributeError, match="Missing crs information for input"):
         raster = next(it)
 
 
-def test_datashader_rasterize_vector_geometrycollection(geometries):
+def test_datashader_rasterize_vector_geometrycollection(canvas, geodataframe):
     """
     Ensure that DatashaderRasterizer raises a ValueError when an unsupported
     vector type like GeometryCollection is used.
     """
     gpd = pytest.importorskip("geopandas")
 
-    canvas = datashader.Canvas(
-        plot_width=10, plot_height=5, x_range=(0, 10), y_range=(0, 5)
-    )
-    canvas.crs = "EPSG:4326"
-    dp = IterableWrapper(iterable=[canvas])
-
-    geocollection = gpd.GeoSeries(data=geometries)
+    # Merge points, lines and polygons into a single GeometryCollection
+    geocollection = gpd.GeoSeries(data=geodataframe.unary_union)
     geocollection = geocollection.set_crs(epsg=4326)
-    dp_vector = IterableWrapper(iterable=[geocollection])
 
-    # Using class constructors
-    dp_canvas = DatashaderRasterizer(source_datapipe=dp, vector_datapipe=dp_vector)
-    # Using functional form (recommended)
+    dp = IterableWrapper(iterable=[canvas])
+    dp_vector = IterableWrapper(iterable=[geocollection])
     dp_datashader = dp.rasterize_with_datashader(vector_datapipe=dp_vector)
 
     assert len(dp_datashader) == 1
