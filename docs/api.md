@@ -7,12 +7,14 @@
     :members:
 ```
 
-### Rioxarray
+### Datashader
 
 ```{eval-rst}
-.. automodule:: zen3geo.datapipes.rioxarray
-.. autoclass:: zen3geo.datapipes.RioXarrayReader
-.. autoclass:: zen3geo.datapipes.rioxarray.RioXarrayReaderIterDataPipe
+.. automodule:: zen3geo.datapipes.datashader
+.. autoclass:: zen3geo.datapipes.DatashaderRasterizer
+.. autoclass:: zen3geo.datapipes.datashader.DatashaderRasterizerIterDataPipe
+.. autoclass:: zen3geo.datapipes.XarrayCanvas
+.. autoclass:: zen3geo.datapipes.datashader.XarrayCanvasIterDataPipe
     :show-inheritance:
 ```
 
@@ -22,6 +24,15 @@
 .. automodule:: zen3geo.datapipes.pyogrio
 .. autoclass:: zen3geo.datapipes.PyogrioReader
 .. autoclass:: zen3geo.datapipes.pyogrio.PyogrioReaderIterDataPipe
+    :show-inheritance:
+```
+
+### Rioxarray
+
+```{eval-rst}
+.. automodule:: zen3geo.datapipes.rioxarray
+.. autoclass:: zen3geo.datapipes.RioXarrayReader
+.. autoclass:: zen3geo.datapipes.rioxarray.RioXarrayReaderIterDataPipe
     :show-inheritance:
 ```
 

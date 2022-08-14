@@ -7,7 +7,7 @@ author: The zen3geo Team
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
 execute:
-  execute_notebooks: force
+  execute_notebooks: cache
 
 # Define the name of the latex output file for PDF builds
 latex:
@@ -31,7 +31,13 @@ sphinx:
   config:
     autodoc_typehints: 'description'
     html_show_copyright: false
+    html_theme_options:
+      # https://sphinx-book-theme.readthedocs.io/en/stable/customize/sidebar-secondary.html
+      show_toc_level: 3
     intersphinx_mapping:
+      datashader:
+        - 'https://datashader.org/'
+        - null
       geopandas:
         - 'https://geopandas.org/en/latest/'
         - null
@@ -46,6 +52,9 @@ sphinx:
         - null
       rioxarray:
         - 'https://corteva.github.io/rioxarray/stable/'
+        - null
+      shapely:
+        - 'https://shapely.readthedocs.io/en/latest'
         - null
       torch:
         - 'https://pytorch.org/docs/stable/'
