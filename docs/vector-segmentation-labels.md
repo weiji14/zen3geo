@@ -145,8 +145,8 @@ da_clip.isel(band=0).plot.imshow(figsize=(11.5, 9), cmap="Blues_r", vmin=18, vma
 Notice how the darker blue areas tend to correlate more with water features
 like the meandering rivers and the sea on the NorthEast. This is because the
 SAR signal which is side looking reflects off flat water bodies like a mirror,
-with very little energy getting reflected back directly to the sensor (hence
-it looks darker).
+with little energy getting reflected back directly to the sensor (hence why it
+looks darker).
 
 ### Load and visualize cloud-hosted vector files 💠
 
@@ -169,7 +169,8 @@ shape_urls = [
 
 So there are two shapefiles containing polygons of the mapped water extent.
 Let's put this list into a DataPipe called
-{py:class}`zen3geo.datapipes.PyogrioReader`.
+{py:class}`zen3geo.datapipes.PyogrioReader` (functional form
+``read_from_pyogrio``).
 
 ```{code-cell}
 dp = torchdata.datapipes.iter.IterableWrapper(iterable=shape_urls)
@@ -198,12 +199,12 @@ geodataframe1.dropna(axis="columns")
 Cool, and we can also visualize the polygons 🔷 on a 2D map. To align the
 coordinates with the Sentinel-1 image above, we'll first use
 {py:meth}`geopandas.GeoDataFrame.to_crs` to reproject the vector from EPSG:4326
-(longitude/latitude) to EPSG:32649 (UTM Zone 49N).
+(longitude/latitude) to EPSG:32648 (UTM Zone 48N).
 
 ```{code-cell}
 print(f"Original bounds in EPSG:4326:\n{geodataframe1.bounds}")
-gdf = geodataframe1.to_crs(crs="EPSG:32649")
-print(f"New bounds in EPSG:32649:\n{gdf.bounds}")
+gdf = geodataframe1.to_crs(crs="EPSG:32648")
+print(f"New bounds in EPSG:32648:\n{gdf.bounds}")
 ```
 
 Plot it with {py:meth}`geopandas.GeoDataFrame.plot`. This vector map should
@@ -211,4 +212,54 @@ correspond to the zoomed in Sentinel-1 image plotted earlier above.
 
 ```{code-cell}
 gdf.plot(figsize=(11.5, 9))
+```
+
+
+## 1️⃣ Create a canvas to paint on 🎨
+
+In this section, we'll work on converting the flood water 🌊 polygons above
+from a 🚩 vector to a 🌈 raster format, i.e. rasterization. This will be done
+in two steps 📶:
+
+1. Defining a blank canvas 🎞️
+2. Paint the polygons onto this blank canvas 🧑‍🎨
+
+For this, we'll be using tools from {py:meth}`zen3geo.datapipes.datashader`.
+Let's see how this can be done.
+
+### Blank canvas from template raster 🖼️
+
+A canvas represents a 2D area with a height and a width 📏. For us, we'll be
+using a {py:class}`datashader.Canvas`, which also defines the range of y-values
+(ymin to ymax) and x-values (xmin to xmax), essentially coordinates for
+every unit 🇾 height and 🇽 width.
+
+Since we already have a Sentinel-1 🛰️ raster grid with defined height/width
+and y/x coordinates, let's use it as a 📄 template to define our canvas. This
+is done via {py:class}`zen3geo.datapipes.XarrayCanvas` (functional form
+``canvas_from_xarray``).
+
+```{code-cell}
+dp_canvas = dp_decibel.canvas_from_xarray()
+dp_canvas
+```
+
+Cool, and here's a quick inspection 👀 of the canvas dimensions and metadata.
+
+```{code-cell}
+it = iter(dp_canvas)
+canvas = next(it)
+print(f"Canvas height: {canvas.plot_height}, width: {canvas.plot_width}")
+print(f"Y-range: {canvas.y_range}")
+print(f"X-range: {canvas.x_range}")
+print(f"Coordinate reference system: {canvas.crs}")
+```
+
+This information should match the template the Sentinel-1 dataarray 🏁.
+
+```{code-cell}
+print(f"Dimensions: {dict(dataarray.sizes)}")
+print(f"Affine transform: {dataarray.rio.transform()}")
+print(f"Bounding box: {dataarray.rio.bounds()}")
+print(f"Coordinate reference system: {dataarray.rio.crs}")
 ```
