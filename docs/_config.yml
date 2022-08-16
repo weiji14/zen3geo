@@ -8,6 +8,8 @@ author: The zen3geo Team
 # See https://jupyterbook.org/content/execute.html
 execute:
   execute_notebooks: force
+  # https://jupyterbook.org/en/latest/content/execute.html#setting-execution-timeout
+  timeout: 300
 
 # Define the name of the latex output file for PDF builds
 latex:
