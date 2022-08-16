@@ -4,7 +4,7 @@
 title: zen3geo
 author: The zen3geo Team
 
-# Force re-execution of notebooks on each build.
+# Cache execution outputs of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
 execute:
   execute_notebooks: cache
