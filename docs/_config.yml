@@ -63,7 +63,7 @@ sphinx:
         - 'https://pytorch.org/data/main'
         - null
       xarray:
-        - 'https://xarray.pydata.org/en/latest/'
+        - 'https://docs.xarray.dev/en/latest/'
         - null
       xbatcher:
         - 'https://xbatcher.readthedocs.io/en/latest/'
