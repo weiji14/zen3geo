@@ -28,6 +28,7 @@ spatialpandas = {version = ">=0.4.0", optional = true}
 xbatcher = {version = ">=0.1.0", optional = true}
 # Docs
 jupyter-book = {version="*", optional=true}
+matplotlib = {version = "^3.5.3", optional = true}
 planetary-computer = {version="*", optional=true}
 pystac = {version="*", optional=true}
 
@@ -39,6 +40,7 @@ pytest = "*"
 docs = [
     "datashader",
     "jupyter-book",
+    "matplotlib",
     "planetary-computer",
     "pyogrio",
     "pystac",
