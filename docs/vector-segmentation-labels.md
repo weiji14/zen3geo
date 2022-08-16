@@ -148,7 +148,7 @@ SAR signal which is side looking reflects off flat water bodies like a mirror,
 with very little energy getting reflected back directly to the sensor (hence
 it looks darker).
 
-### Loading cloud-hosted vector files 💠
+### Load and visualize cloud-hosted vector files 💠
 
 Let's now load some vector data from the web. These are polygons of the
 segmented water extent digitized by UNOSAT's AI Based Rapid Mapping Service.
@@ -167,14 +167,48 @@ shape_urls = [
 ]
 ```
 
-There are two shapefiles containing polygons of the mapped water extent.
+So there are two shapefiles containing polygons of the mapped water extent.
+Let's put this list into a DataPipe called
+{py:class}`zen3geo.datapipes.PyogrioReader`.
 
 ```{code-cell}
-geodataframe0 = pyogrio.read_dataframe(shape_urls[0])
+dp = torchdata.datapipes.iter.IterableWrapper(iterable=shape_urls)
+dp_pyogrio = dp.read_from_pyogrio()
+```
+
+This will take care of loading each shapefile into a
+{py:class}`geopandas.GeoDataFrame` object. Let's take a look at the data table
+to see what attributes are inside.
+
+```{code-cell}
+# Iterate through the datapipe one by one
+it = iter(dp_pyogrio)
+geodataframe0 = next(it)  # 1st shapefile
+geodataframe1 = next(it)  # 2nd shapefile
+```
+
+```{code-cell}
 geodataframe0.dropna(axis="columns")
 ```
 
 ```{code-cell}
-geodataframe1 = pyogrio.read_dataframe(shape_urls[1])
 geodataframe1.dropna(axis="columns")
+```
+
+Cool, and we can also visualize the polygons 🔷 on a 2D map. To align the
+coordinates with the Sentinel-1 image above, we'll first use
+{py:meth}`geopandas.GeoDataFrame.to_crs` to reproject the vector from EPSG:4326
+(longitude/latitude) to EPSG:32649 (UTM Zone 49N).
+
+```{code-cell}
+print(f"Original bounds in EPSG:4326:\n{geodataframe1.bounds}")
+gdf = geodataframe1.to_crs(crs="EPSG:32649")
+print(f"New bounds in EPSG:32649:\n{gdf.bounds}")
+```
+
+Plot it with {py:meth}`geopandas.GeoDataFrame.plot`. This vector map should
+correspond to the zoomed in Sentinel-1 image plotted earlier above.
+
+```{code-cell}
+gdf.plot(figsize=(11.5, 9))
 ```
