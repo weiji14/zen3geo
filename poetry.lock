@@ -2649,7 +2649,7 @@ docs = ["sphinx", "jaraco.packaging (>=9)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "jaraco-itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)"]
 
 [extras]
-docs = ["datashader", "jupyter-book", "matplotlib", "planetary-computer", "pyogrio", "pystac", "xbatcher"]
+docs = ["datashader", "jupyter-book", "matplotlib", "planetary-computer", "pyogrio", "pystac", "spatialpandas", "xbatcher"]
 raster = ["xbatcher"]
 spatial = ["datashader", "spatialpandas"]
 vector = ["pyogrio"]
@@ -2657,7 +2657,7 @@ vector = ["pyogrio"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8, <3.12"
-content-hash = "ce2909bb2a6c5592ae130eeafd9ed76c0349dcdf74524c5def53ca752af80536"
+content-hash = "a2c86d2f66e2cb513c00e584e29a96e8f44fa6bd600afd34756019660213b19c"
 
 [metadata.files]
 affine = [

@@ -31,6 +31,7 @@ These are the tools 🛠️ you'll need.
 
 ```{code-cell}
 import numpy as np
+import pandas as pd
 import planetary_computer
 import pyogrio
 import pystac
@@ -169,7 +170,7 @@ shape_urls = [
 
 So there are two shapefiles containing polygons of the mapped water extent.
 Let's put this list into a DataPipe called
-{py:class}`zen3geo.datapipes.PyogrioReader` (functional form
+{py:class}`zen3geo.datapipes.PyogrioReader` (functional name:
 ``read_from_pyogrio``).
 
 ```{code-cell}
@@ -236,7 +237,7 @@ every unit 🇾 height and 🇽 width.
 
 Since we already have a Sentinel-1 🛰️ raster grid with defined height/width
 and y/x coordinates, let's use it as a 📄 template to define our canvas. This
-is done via {py:class}`zen3geo.datapipes.XarrayCanvas` (functional form
+is done via {py:class}`zen3geo.datapipes.XarrayCanvas` (functional name:
 ``canvas_from_xarray``).
 
 ```{code-cell}
@@ -262,4 +263,69 @@ print(f"Dimensions: {dict(dataarray.sizes)}")
 print(f"Affine transform: {dataarray.rio.transform()}")
 print(f"Bounding box: {dataarray.rio.bounds()}")
 print(f"Coordinate reference system: {dataarray.rio.crs}")
+```
+
+### Rasterize vector polygons onto canvas 🖌️
+
+Now's the time to paint or rasterize the
+vector {py:class}`geopandas.GeoDataFrame` polygons 🔷 onto the blank
+{py:class}`zen3geo.datapipes.XarrayCanvas`! This would enable us to have a
+direct pixel-wise X -> Y mapping ↔️ between the Sentinel-1 image (X) and target
+flood label (Y).
+
+Before we do that, let's first 🤝 merge the two
+{py:class}`geopandas.GeoDataFrame` objects in the ``dp_pyogrio`` datapipe into
+one single {py:class}`geopandas.GeoDataFrame` with two rows. This is because we
+want a 1:1 mapping between the Sentinel-1 🛰️ image and the raster 💧 flood
+mask, instead of a 1:2 mapping. We'll do this in an ad-hoc manner using
+{py:class}`torchdata.datapipes.iter.BatchMapper` (functional name:
+``map_batches``).
+
+```{code-cell}
+def concat_geodataframes(batch):
+    """
+    Concatenate all the geopandas.GeoDataFrame objects in the batch row-wise.
+    """
+    return pd.concat(objs=[geodataframe for geodataframe in batch], axis="index")
+```
+
+```{code-cell}
+dp_vector = dp_pyogrio.map_batches(fn=concat_geodataframes, batch_size=2)
+dp_vector
+```
+
+```{caution}
+In this case, merging two vector objects into one is ok, because they don't
+spatially overlap or intersect each other. Alternatively, we could also have
+split the single {py:class}`xarray.DataArray` Sentinel-1 image into two
+separate regions for each {py:class}`geopandas.GeoDataFrame` object to get a
+2x 1:1 mapping.
+
+The point is, understand your raster and vector datasets well first! Open the
+files up in your favourite Geographic Information System (GIS) tool, see how
+they actually look like spatially. Then you'll have a better idea to decide on
+how to create your data pipeline. The zen3geo way puts you as the Master in
+control.
+```
+
+Next, the vector can be rasterized or painted 🖌️ onto the template canvas using
+{py:class}`zen3geo.datapipes.DatashaderRasterizer` (functional name:
+``rasterize_with_datashader``).
+
+```{code-cell}
+dp_datashader = dp_canvas.rasterize_with_datashader(vector_datapipe=dp_vector)
+dp_datashader
+```
+
+This will turn the vector {py:class}`geopandas.GeoDataFrame` into a
+raster {py:class}`xarray.DataArray` grid, with the spatial coordinates and
+bounds matching exactly with the template Sentinel-1 image 😎.
+
+```{seealso}
+For more details on how rasterization of polygons work behind the scenes 🎦,
+check out {doc}`Datashader <datashader:index>`'s documentation on:
+
+- {doc}`The datashader pipeline <getting_started/Pipeline>` (especially section
+  on Aggregation).
+- {doc}`Rendering large collections of polygons <user_guide/Polygons>`
 ```

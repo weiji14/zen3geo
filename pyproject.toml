@@ -44,6 +44,7 @@ docs = [
     "planetary-computer",
     "pyogrio",
     "pystac",
+    "spatialpandas",
     "xbatcher"
 ]
 raster = ["xbatcher"]
