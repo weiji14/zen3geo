@@ -30,6 +30,7 @@ this tutorial will cover:
 These are the tools 🛠️ you'll need.
 
 ```{code-cell}
+import matplotlib.pyplot as plt
 import numpy as np
 import planetary_computer
 import pyogrio
@@ -75,8 +76,8 @@ To keep things simple, we'll load just the VV channel into a DataPipe via
 ```{code-cell}
 url = signed_item.assets["vv"].href
 dp = torchdata.datapipes.iter.IterableWrapper(iterable=[url])
-# Reading lower resolution grid using overview_level=2
-dp_rioxarray = dp.read_from_rioxarray(overview_level=2)
+# Reading lower resolution grid using overview_level=3
+dp_rioxarray = dp.read_from_rioxarray(overview_level=3)
 dp_rioxarray
 ```
 
@@ -85,7 +86,7 @@ geographic coordinates by default (EPSG:4326). To make the pixels more equal
 area, we can project it to a local projected coordinate system instead.
 
 ```{code-cell}
-def reproject_to_local_utm(dataarray: xr.DataArray, resolution: float=80.0) -> xr.DataArray:
+def reproject_to_local_utm(dataarray: xr.DataArray, resolution: float=100.0) -> xr.DataArray:
     """
     Reproject an xarray.DataArray grid from EPSG;4326 to a local UTM coordinate
     reference system.
@@ -169,8 +170,8 @@ put it into a DataPipe called {py:class}`zen3geo.datapipes.PyogrioReader`
 (functional name: ``read_from_pyogrio``).
 
 ```{code-cell}
-dp = torchdata.datapipes.iter.IterableWrapper(iterable=[shape_url])
-dp_pyogrio = dp.read_from_pyogrio()
+dp_shapes = torchdata.datapipes.iter.IterableWrapper(iterable=[shape_url])
+dp_pyogrio = dp_shapes.read_from_pyogrio()
 ```
 
 This will take care of loading the shapefile into a
@@ -305,4 +306,84 @@ check out {doc}`Datashader <datashader:index>`'s documentation on:
 - {doc}`The datashader pipeline <getting_started/Pipeline>` (especially the
   section on Aggregation).
 - {doc}`Rendering large collections of polygons <user_guide/Polygons>`
+```
+
+
+## 2️⃣ Stack, slice and split 🥪
+
+At this point, we've got two datapipes that should be 🧑‍🤝‍🧑 paired up in an X -> Y
+manner:
+
+1. The pre-processed Sentinel-1 🌈 raster image in ``dp_decibel``
+2. The rasterized 💧 flood segmentation masks in ``dp_datashader``
+
+One way to get these two pieces in a Machine Learning ready chip format is via
+a stack, slice and split ™️ approach. Think of it like a sandwich, we first
+stack the bread 🍞 and lettuce 🥬, and then slice the pieces 🍕 through the
+layers once. Ok, that was a bad analogy, let's just stick with tensors 🤪.
+
+### Stacking the raster layers 🥞
+
+Each of our 🌈 raster inputs are {py:class}`xarray.DataArray` objects with the
+same spatial resolution and extent 🪟, so these can be stacked into an
+{py:class}`xarray.Dataset` with multiple data variables. First, we'll zip 🤐
+the two datapipes together using {py:class}`torchdata.datapipes.iter.Zipper`
+(functional name: ``zip``)
+
+```{code-cell}
+dp_zip = dp_decibel.zip(dp_datashader)
+dp_zip
+```
+
+This will result in a DataPipe where each item is a tuple of (X, Y) pairs 🧑‍🤝‍🧑.
+Just to illustrate what we've done so far, we can use
+{py:class}`torchdata.datapipes.utils.to_graph` to visualize the data pipeline
+⛓️.
+
+```{code-cell}
+torchdata.datapipes.utils.to_graph(dp=dp_zip)
+```
+
+Next, let's combine 🖇️ the two (X, Y) {py:class}`xarray.DataArray` objects in
+the tuple into an {py:class}`xarray.Dataset` using
+{py:class}`torchdata.datapipes.iter.Collator`. We'll also ✂️ clip the dataset to
+a bounding box area where the target water mask has no 0 or NaN values.
+
+```{code-cell}
+def xr_collate_fn(image_and_mask: tuple) -> xr.Dataset:
+    """
+    Combine a pair of xarray.DataArray (image, mask) inputs into an
+    xarray.Dataset with two data variables named 'image' and 'mask'.
+    """
+    # Turn 2 xr.DataArray objects into 1 xr.Dataset with multiple data vars
+    image, mask = image_and_mask
+    dataset: xr.Dataset = image.isel(band=0).to_dataset(name="image")
+    dataset["mask"] = mask
+
+    # Clip dataset to bounding box extent of where labels are
+    mask_extent: tuple = mask.where(cond=mask == 1, drop=True).rio.bounds()
+    clipped_dataset: xr.Dataset = dataset.rio.clip_box(*mask_extent)
+
+    return clipped_dataset
+```
+
+```{code-cell}
+dp_dataset = dp_zip.collate(collate_fn=xr_collate_fn)
+dp_dataset
+```
+
+Double check to see that resulting {py:class}`xarray.Dataset`'s image and mask
+looks ok 🙆‍♂️.
+
+```{code-cell}
+it = iter(dp_dataset)
+dataset = next(it)
+
+# Create subplot with VV image on the left and Water mask on the right
+fig, axs = plt.subplots(ncols=2, figsize=(11.5, 4.5), sharey=True)
+dataset.image.plot.imshow(ax=axs[0], cmap="Blues_r")
+axs[0].set_title("Sentinel-1 VV channel")
+dataset.mask.plot.imshow(ax=axs[1], cmap="Blues")
+axs[1].set_title("Water mask")
+plt.show()
 ```
