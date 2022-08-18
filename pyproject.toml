@@ -27,7 +27,9 @@ pyogrio = {version = ">=0.4.0", extras = ["geopandas"], optional = true}
 spatialpandas = {version = ">=0.4.0", optional = true}
 xbatcher = {version = ">=0.1.0", optional = true}
 # Docs
+graphviz = {version = "*", optional = true}
 jupyter-book = {version="*", optional=true}
+matplotlib = {version = "*", optional = true}
 planetary-computer = {version="*", optional=true}
 pystac = {version="*", optional=true}
 
@@ -38,9 +40,13 @@ pytest = "*"
 [tool.poetry.extras]
 docs = [
     "datashader",
+    "graphviz",
     "jupyter-book",
+    "matplotlib",
     "planetary-computer",
+    "pyogrio",
     "pystac",
+    "spatialpandas",
     "xbatcher"
 ]
 raster = ["xbatcher"]

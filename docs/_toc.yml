@@ -9,6 +9,8 @@ chapters:
     sections:
       - title: 🀄 Chipping and Batching
         file: chipping
+      - title: 🫧 Vector Segmentation Masks
+        file: vector-segmentation-masks
   - title: 📖 API Reference
     file: api
   - title: 📆 Changelog

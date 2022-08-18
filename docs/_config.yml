@@ -4,10 +4,12 @@
 title: zen3geo
 author: The zen3geo Team
 
-# Force re-execution of notebooks on each build.
+# Cache execution outputs of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
 execute:
   execute_notebooks: cache
+  # https://jupyterbook.org/en/latest/content/execute.html#setting-execution-timeout
+  timeout: 300
 
 # Define the name of the latex output file for PDF builds
 latex:
@@ -30,6 +32,7 @@ html:
 sphinx:
   config:
     autodoc_typehints: 'description'
+    execution_show_tb: True
     html_show_copyright: false
     html_theme_options:
       # https://sphinx-book-theme.readthedocs.io/en/stable/customize/sidebar-secondary.html
@@ -63,7 +66,7 @@ sphinx:
         - 'https://pytorch.org/data/main'
         - null
       xarray:
-        - 'https://xarray.pydata.org/en/latest/'
+        - 'https://docs.xarray.dev/en/latest/'
         - null
       xbatcher:
         - 'https://xbatcher.readthedocs.io/en/latest/'
