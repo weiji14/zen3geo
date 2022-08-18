@@ -31,7 +31,6 @@ These are the tools 🛠️ you'll need.
 
 ```{code-cell}
 import numpy as np
-import pandas as pd
 import planetary_computer
 import pyogrio
 import pystac
@@ -132,8 +131,8 @@ dp_decibel = dp_reprojected.map(fn=linear_to_decibel)
 dp_decibel
 ```
 
-Now to visualize the transformed Sentinel-1 image. Let's zoom in to one of the
-analysis extent areas we'll be working on later.
+Now to visualize the transformed Sentinel-1 image 🖼️. Let's zoom in 🔭 to one
+of the analysis extent areas we'll be working on later.
 
 ```{code-cell}
 it = iter(dp_decibel)
@@ -151,9 +150,9 @@ looks darker).
 
 ### Load and visualize cloud-hosted vector files 💠
 
-Let's now load some vector data from the web. These are polygons of the
-segmented water extent digitized by UNOSAT's AI Based Rapid Mapping Service.
-We'll be converting these vector polygons to raster masks later.
+Let's now load some vector data from the web 🕸️. These are polygons of the
+segmented 🌊 water extent digitized by UNOSAT's AI Based Rapid Mapping Service.
+We'll be converting these vector polygons to 🌈 raster masks later.
 
 🔗 Links:
 - https://github.com/UNITAR-UNOSAT/UNOSAT-AI-Based-Rapid-Mapping-Service
@@ -162,57 +161,52 @@ We'll be converting these vector polygons to raster masks later.
 
 ```{code-cell}
 # https://gdal.org/user/virtual_file_systems.html#vsizip-zip-archives
-shape_urls = [
-    "/vsizip/vsicurl/https://unosat-maps.web.cern.ch/MY/FL20191217MYS/FL20191217MYS_SHP.zip/ST1_20191215_WaterExtent_Johor_AOI1.shp",
-    "/vsizip/vsicurl/https://unosat-maps.web.cern.ch/MY/FL20191217MYS/FL20191217MYS_SHP.zip/ST1_20191215_WaterExtent_Johor_AOI2.shp",
-]
+shape_url = "/vsizip/vsicurl/https://unosat-maps.web.cern.ch/MY/FL20191217MYS/FL20191217MYS_SHP.zip/ST1_20191215_WaterExtent_Johor_AOI2.shp"
 ```
 
-So there are two shapefiles containing polygons of the mapped water extent.
-Let's put this list into a DataPipe called
-{py:class}`zen3geo.datapipes.PyogrioReader` (functional name:
-``read_from_pyogrio``).
+This is a shapefile containing 🔷 polygons of the mapped water extent. Let's
+put it into a DataPipe called {py:class}`zen3geo.datapipes.PyogrioReader`
+(functional name: ``read_from_pyogrio``).
 
 ```{code-cell}
-dp = torchdata.datapipes.iter.IterableWrapper(iterable=shape_urls)
+dp = torchdata.datapipes.iter.IterableWrapper(iterable=[shape_url])
 dp_pyogrio = dp.read_from_pyogrio()
 ```
 
-This will take care of loading each shapefile into a
+This will take care of loading the shapefile into a
 {py:class}`geopandas.GeoDataFrame` object. Let's take a look at the data table
 to see what attributes are inside.
 
 ```{code-cell}
-# Iterate through the datapipe one by one
 it = iter(dp_pyogrio)
-geodataframe0 = next(it)  # 1st shapefile
-geodataframe1 = next(it)  # 2nd shapefile
-```
-
-```{code-cell}
-geodataframe0.dropna(axis="columns")
-```
-
-```{code-cell}
-geodataframe1.dropna(axis="columns")
+geodataframe = next(it)
+geodataframe.dropna(axis="columns")
 ```
 
 Cool, and we can also visualize the polygons 🔷 on a 2D map. To align the
-coordinates with the Sentinel-1 image above, we'll first use
-{py:meth}`geopandas.GeoDataFrame.to_crs` to reproject the vector from EPSG:4326
-(longitude/latitude) to EPSG:32648 (UTM Zone 48N).
+coordinates with the 🛰️ Sentinel-1 image above, we'll first use
+{py:meth}`geopandas.GeoDataFrame.to_crs` to reproject the vector from 🌐
+EPSG:4326 (longitude/latitude) to 🌏 EPSG:32648 (UTM Zone 48N).
 
 ```{code-cell}
-print(f"Original bounds in EPSG:4326:\n{geodataframe1.bounds}")
-gdf = geodataframe1.to_crs(crs="EPSG:32648")
+print(f"Original bounds in EPSG:4326:\n{geodataframe.bounds}")
+gdf = geodataframe.to_crs(crs="EPSG:32648")
 print(f"New bounds in EPSG:32648:\n{gdf.bounds}")
 ```
 
-Plot it with {py:meth}`geopandas.GeoDataFrame.plot`. This vector map should
+Plot it with {py:meth}`geopandas.GeoDataFrame.plot`. This vector map 🗺️ should
 correspond to the zoomed in Sentinel-1 image plotted earlier above.
 
 ```{code-cell}
 gdf.plot(figsize=(11.5, 9))
+```
+
+```{tip}  
+Make sure to understand your raster and vector datasets well first! Open the
+files up in your favourite 🌐 Geographic Information System (GIS) tool, see how
+they actually look like spatially. Then you'll have a better idea to decide on
+how to create your data pipeline. The zen3geo way puts you as the Master 🧙 in
+control.
 ```
 
 
@@ -273,47 +267,12 @@ vector {py:class}`geopandas.GeoDataFrame` polygons 🔷 onto the blank
 direct pixel-wise X -> Y mapping ↔️ between the Sentinel-1 image (X) and target
 flood label (Y).
 
-Before we do that, let's first 🤝 merge the two
-{py:class}`geopandas.GeoDataFrame` objects in the ``dp_pyogrio`` datapipe into
-one single {py:class}`geopandas.GeoDataFrame` with two rows. This is because we
-want a 1:1 mapping between the Sentinel-1 🛰️ image and the raster 💧 flood
-mask, instead of a 1:2 mapping. We'll do this in an ad-hoc manner using
-{py:class}`torchdata.datapipes.iter.BatchMapper` (functional name:
-``map_batches``).
-
-```{code-cell}
-def concat_geodataframes(batch):
-    """
-    Concatenate all the geopandas.GeoDataFrame objects in the batch row-wise.
-    """
-    return pd.concat(objs=[geodataframe for geodataframe in batch], axis="index")
-```
-
-```{code-cell}
-dp_vector = dp_pyogrio.map_batches(fn=concat_geodataframes, batch_size=2)
-dp_vector
-```
-
-```{caution}
-In this case, merging two vector objects into one is ok, because they don't
-spatially overlap or intersect each other. Alternatively, we could also have
-split the single {py:class}`xarray.DataArray` Sentinel-1 image into two
-separate regions for each {py:class}`geopandas.GeoDataFrame` object to get a
-2x 1:1 mapping.
-
-The point is, understand your raster and vector datasets well first! Open the
-files up in your favourite Geographic Information System (GIS) tool, see how
-they actually look like spatially. Then you'll have a better idea to decide on
-how to create your data pipeline. The zen3geo way puts you as the Master in
-control.
-```
-
-Next, the vector can be rasterized or painted 🖌️ onto the template canvas using
-{py:class}`zen3geo.datapipes.DatashaderRasterizer` (functional name:
+The vector polygons can be rasterized or painted 🖌️ onto the template canvas
+using {py:class}`zen3geo.datapipes.DatashaderRasterizer` (functional name:
 ``rasterize_with_datashader``).
 
 ```{code-cell}
-dp_datashader = dp_canvas.rasterize_with_datashader(vector_datapipe=dp_vector)
+dp_datashader = dp_canvas.rasterize_with_datashader(vector_datapipe=dp_pyogrio)
 dp_datashader
 ```
 
@@ -321,11 +280,29 @@ This will turn the vector {py:class}`geopandas.GeoDataFrame` into a
 raster {py:class}`xarray.DataArray` grid, with the spatial coordinates and
 bounds matching exactly with the template Sentinel-1 image 😎.
 
+```{note}
+Since we have just one Sentinel-1 🛰️ image and one raster 💧 flood
+mask, we have an easy 1:1 mapping. There are two other scenarios supported by
+{py:class}`zen3geo.datapipes.DatashaderRasterizer`:
+
+1. N:1 - Many {py:class}`datashader.Canvas` objects to one vector
+   {py:class}`geopandas.GeoDataFrame`. The single vector geodataframe will be
+   broadcasted to match the length of the canvas list. This is useful for
+   situations when you have a 🌐 'global' vector database that you want to pair
+   with multiple 🛰️ satellite images.
+2. N:N - Many {py:class}`datashader.Canvas` objects to many vector
+   {py:class}`geopandas.GeoDataFrame` objects. In this case, the list of grids
+   **must** ❗ have the same length as the list of vector geodataframes. E.g.
+   if you have 5 grids, there must also be 5 vector files. This is so that a
+   1:1 pairing can be done, useful when each raster tile 🖽 has its own
+   associated vector annotation.
+```
+
 ```{seealso}
 For more details on how rasterization of polygons work behind the scenes 🎦,
 check out {doc}`Datashader <datashader:index>`'s documentation on:
 
-- {doc}`The datashader pipeline <getting_started/Pipeline>` (especially section
-  on Aggregation).
+- {doc}`The datashader pipeline <getting_started/Pipeline>` (especially the
+  section on Aggregation).
 - {doc}`Rendering large collections of polygons <user_guide/Polygons>`
 ```
