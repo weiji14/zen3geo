@@ -121,6 +121,7 @@ poetry install --extras "raster spatial vector"
 
 ```
 poetry install --extras=docs  # or `pip install .[docs]`
+sudo apt install graphviz  # if rendering graphviz plots
 jupyter-book build docs/
 ```
 
