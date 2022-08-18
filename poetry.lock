@@ -580,6 +580,19 @@ python-versions = ">=3.7"
 gitdb = ">=4.0.1,<5"
 
 [[package]]
+name = "graphviz"
+version = "0.20.1"
+description = "Simple Python interface for Graphviz"
+category = "main"
+optional = true
+python-versions = ">=3.7"
+
+[package.extras]
+dev = ["tox (>=3)", "flake8", "pep8-naming", "wheel", "twine"]
+docs = ["sphinx (>=5)", "sphinx-autodoc-typehints", "sphinx-rtd-theme"]
+test = ["pytest (>=7)", "pytest-mock (>=3)", "mock (>=4)", "pytest-cov", "coverage"]
+
+[[package]]
 name = "greenlet"
 version = "1.1.2"
 description = "Lightweight in-process concurrent programming"
@@ -2649,7 +2662,7 @@ docs = ["sphinx", "jaraco.packaging (>=9)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "jaraco-itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)"]
 
 [extras]
-docs = ["datashader", "jupyter-book", "matplotlib", "planetary-computer", "pyogrio", "pystac", "spatialpandas", "xbatcher"]
+docs = ["datashader", "graphviz", "jupyter-book", "matplotlib", "planetary-computer", "pyogrio", "pystac", "spatialpandas", "xbatcher"]
 raster = ["xbatcher"]
 spatial = ["datashader", "spatialpandas"]
 vector = ["pyogrio"]
@@ -2657,7 +2670,7 @@ vector = ["pyogrio"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8, <3.12"
-content-hash = "a2c86d2f66e2cb513c00e584e29a96e8f44fa6bd600afd34756019660213b19c"
+content-hash = "ce71899fd3579a202d8da58540cfac40ea1f35f124f072e79641a37a078ff2e8"
 
 [metadata.files]
 affine = [
@@ -2939,6 +2952,10 @@ gitdb = [
 gitpython = [
     {file = "GitPython-3.1.27-py3-none-any.whl", hash = "sha256:5b68b000463593e05ff2b261acff0ff0972df8ab1b70d3cdbd41b546c8b8fc3d"},
     {file = "GitPython-3.1.27.tar.gz", hash = "sha256:1c885ce809e8ba2d88a29befeb385fcea06338d3640712b59ca623c220bb5704"},
+]
+graphviz = [
+    {file = "graphviz-0.20.1-py3-none-any.whl", hash = "sha256:587c58a223b51611c0cf461132da386edd896a029524ca61a1462b880bf97977"},
+    {file = "graphviz-0.20.1.zip", hash = "sha256:8c58f14adaa3b947daf26c19bc1e98c4e0702cdc31cf99153e6f06904d492bf8"},
 ]
 greenlet = [
     {file = "greenlet-1.1.2-cp27-cp27m-macosx_10_14_x86_64.whl", hash = "sha256:58df5c2a0e293bf665a51f8a100d3e9956febfbf1d9aaf8c0677cf70218910c6"},
