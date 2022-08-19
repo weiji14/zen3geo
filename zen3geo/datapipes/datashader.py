@@ -75,6 +75,12 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
         If ``spatialpandas`` is not installed. Please install it (e.g. via
         ``pip install spatialpandas``) before using this class.
 
+    ValueError
+        If either the length of the ``vector_datapipe`` is not 1, or if the
+        length of the ``vector_datapipe`` is not equal to the length of the
+        ``source_datapipe``. I.e. the ratio of vector:canvas must be 1:N or
+        be exactly N:N.
+
     AttributeError
         If either the canvas in ``source_datapipe`` or vector geometry in
         ``vector_datapipe`` is missing a ``.crs`` attribute. Please set the
@@ -84,7 +90,7 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
         :py:class:`geopandas.GeoSeries` or :py:class:`geopandas.GeoDataFrame`
         input) before passing them into the datapipe.
 
-    ValueError
+    NotImplementedError
         If the input vector geometry type to ``vector_datapipe`` is not
         supported, typically when a
         :py:class:`shapely.geometry.GeometryCollection` is used. Supported
@@ -167,14 +173,23 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
         self.agg: Optional = agg  # Datashader Aggregation/Reduction function
         self.kwargs = kwargs
 
+        len_vector_datapipe: int = len(self.vector_datapipe)
+        len_canvas_datapipe: int = len(self.source_datapipe)
+        if len_vector_datapipe != 1 or len_vector_datapipe != len_canvas_datapipe:
+            raise ValueError(
+                f"Unmatched lengths for the canvas datapipe ({self.source_datapipe}) "
+                f"and vector datapipe ({self.vector_datapipe}). \n"
+                f"The vector datapipe's length ({len_vector_datapipe}) should either "
+                f"be (1) to allow for broadcasting, or match the canvas datapipe's "
+                f"length of ({len_canvas_datapipe})."
+            )
+
     def __iter__(self) -> Iterator[xr.DataArray]:
         # Broadcast vector iterator to match length of raster iterator
-        fill_value: Optional = (
-            list(self.vector_datapipe).pop() if len(self.vector_datapipe) == 1 else None
-        )
         for canvas, vector in self.source_datapipe.zip_longest(
-            self.vector_datapipe, fill_value=fill_value
+            self.vector_datapipe, fill_value=list(self.vector_datapipe).pop()
         ):
+            # print(canvas, vector)
             # If canvas has no CRS attribute, set one to prevent AttributeError
             canvas.crs = getattr(canvas, "crs", None)
             if canvas.crs is None:
@@ -202,7 +217,7 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
                 columns = ["geometry"] if not hasattr(vector, "columns") else None
                 _vector = spatialpandas.GeoDataFrame(data=vector, columns=columns)
             except ValueError as e:
-                raise ValueError(
+                raise NotImplementedError(
                     f"Unsupported geometry type(s) {set(vector.geom_type)} detected, "
                     "only point, line or polygon vector geometry types are supported."
                 ) from e
