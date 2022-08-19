@@ -1,5 +1,34 @@
 # Changelog
 
+## Release v0.3.0 (2022/08/19)
+
+### 💫 Highlights
+
+* 🎉 **Third release of zen3geo** 🎉
+* 🚸 Walkthrough on rasterizing vector polygons into label masks ([#31](https://github.com/weiji14/zen3geo/pull/31))
+
+### 🚀 Features
+
+* ✨ DatashaderRasterizer for burning vector shapes to xarray grids ([#35](https://github.com/weiji14/zen3geo/pull/35))
+* ✨ XarrayCanvasIterDataPipe for creating blank datashader canvas ([#34](https://github.com/weiji14/zen3geo/pull/34))
+* ♻️ Let PyogrioReader return geodataframe only instead of tuple ([#33](https://github.com/weiji14/zen3geo/pull/33))
+
+### 🐛 Bug Fixes
+
+* ♻️ Refactor DatashaderRasterizer to be up front about datapipe lengths ([#39](https://github.com/weiji14/zen3geo/pull/39))
+* 🩹 Raise ModuleNotFoundError when xbatcher not installed ([#37](https://github.com/weiji14/zen3geo/pull/37))
+
+### 📖 Documentation
+
+* 📝 Improve pip install zen3geo instructions with extras dependencies ([#40](https://github.com/weiji14/zen3geo/pull/40))
+* 🔍 Show more levels for the in-page table of contents ([#36](https://github.com/weiji14/zen3geo/pull/36))
+
+### 🧑‍🤝‍🧑 Contributors
+
+@weiji14
+
+---
+
 ## Release v0.2.0 (2022/07/17)
 
 ### 💫 Highlights
