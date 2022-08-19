@@ -139,10 +139,23 @@ def test_datashader_rasterize_vector_missing_crs(canvas, geodataframe):
         raster = next(it)
 
 
+def test_datashader_rasterize_unmatched_lengths(canvas, geodataframe):
+    """
+    Ensure that DatashaderRasterizer raises a ValueError when the length of the
+    canvas datapipe is unmatched with the length of the vector datapipe.
+    """
+    # Canvas:Vector ratio of 3:2
+    dp_canvas = IterableWrapper(iterable=[canvas, canvas, canvas])
+    dp_vector = IterableWrapper(iterable=[geodataframe, geodataframe])
+
+    with pytest.raises(ValueError, match="Unmatched lengths for the"):
+        dp_datashader = dp_canvas.rasterize_with_datashader(vector_datapipe=dp_vector)
+
+
 def test_datashader_rasterize_vector_geometrycollection(canvas, geodataframe):
     """
-    Ensure that DatashaderRasterizer raises a ValueError when an unsupported
-    vector type like GeometryCollection is used.
+    Ensure that DatashaderRasterizer raises a NotImplementedError when an
+    unsupported vector type like GeometryCollection is used.
     """
     gpd = pytest.importorskip("geopandas")
 
@@ -156,5 +169,5 @@ def test_datashader_rasterize_vector_geometrycollection(canvas, geodataframe):
 
     assert len(dp_datashader) == 1
     it = iter(dp_datashader)
-    with pytest.raises(ValueError, match="Unsupported geometry type"):
+    with pytest.raises(NotImplementedError, match="Unsupported geometry type"):
         raster = next(it)
