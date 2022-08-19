@@ -21,6 +21,8 @@ To install the development version from GitHub, do:
 
     pip install git+https://github.com/weiji14/zen3geo.git
 
-Or from [TestPyPI](https://test.pypi.org/project/zen3geo):
+Or the stable version from [PyPI](https://pypi.org/project/zen3geo):
 
-    pip install --pre --extra-index-url https://test.pypi.org/simple/ zen3geo
+    pip install zen3geo
+
+More detailed instructions at https://zen3geo.readthedocs.io/en/latest/#installation

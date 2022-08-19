@@ -94,6 +94,7 @@ but we welcome folks from across the world! Please reach out if you have experie
 
 ---
 
+(contributing:running:locally)=
 ## 🏠 Running things locally
 
 This project uses [``poetry``](https://python-poetry.org/docs/master/) for
