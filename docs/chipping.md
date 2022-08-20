@@ -110,7 +110,8 @@ dp_rioxarray
 To create the chips, we'll be using ``xbatcher`` which allows slicing 🔪 of an
 n-dimensional datacube along any dimension (e.g. longitude, latitude, time 🕛).
 This ``xbatcher`` library is integrated into ☯ ``zen3geo`` as a DataPipe called
-{py:class}`zen3geo.datapipes.XbatcherSlicer`, which can be used as follows:
+{py:class}`zen3geo.datapipes.XbatcherSlicer` (functional name:
+`slice_with_xbatcher`), which can be used as follows:
 
 ```{code-cell}
 dp_xbatcher = dp_rioxarray.slice_with_xbatcher(input_dims={"y": 512, "x": 512})
@@ -152,11 +153,35 @@ sample = chips[0]
 sample
 ```
 
+```{danger}
+Please do not use overlapping strides (i.e. `input_overlap` < `input_dim`) if
+you will be 🪓 splitting your chips into training, validation and test sets
+later! If you have say 60 overlapping chips and then go on to divide those 🍪
+chips randomly into train/val/test sets of 30/20/10, you will have information
+leakage 🚰 between the 30 training chips and 20 validation plus 10 test chips,
+so your model's reported validation and test metrics 📈 will be overestimating
+the actual performance 😲!
+
+Ideally, your train/val/test chips should be situated independently within
+spatially contiguous blocks 🧱. See these links for more information on why:
+
+- Kattenborn, T., Schiefer, F., Frey, J., Feilhauer, H., Mahecha, M. D., &
+  Dormann, C. F. (2022). Spatially autocorrelated training and validation
+  samples inflate performance assessment of convolutional neural networks.
+  ISPRS Open Journal of Photogrammetry and Remote Sensing, 5, 100018.
+  https://doi.org/10.1016/j.ophoto.2022.100018
+- https://github.com/pangeo-data/xbatcher/discussions/78#discussioncomment-3387295
+
+Yes, spatial statistics 🧮 matter, geography is special 🤓.
+```
+
+
 ## 2️⃣ Pool chips into mini-batches ⚙️
 
-In total, we now have a set of 30 chips of size 512 x 512 pixels each.
+In total, we now have a set of 30 🍪 chips of size 512 x 512 pixels each.
 These chips can be divided into batches that are of a reasonable size.
-Let's use {py:func}`torchdata.datapipes.iter.Batcher` to do so.
+Let's use {py:class}`torchdata.datapipes.iter.Batcher`
+(functional name: `batch`) to do so.
 
 ```{code-cell}
 dp_batch = dp_xbatcher.batch(batch_size=10)
