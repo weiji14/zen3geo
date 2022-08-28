@@ -19,7 +19,7 @@ def fixture_canvas():
     canvas = datashader.Canvas(
         plot_width=14, plot_height=10, x_range=(1, 8), y_range=(0, 5)
     )
-    canvas.crs = "EPSG:4326"
+    canvas.crs = "OGC:CRS84"
     return canvas
 
 
@@ -38,7 +38,7 @@ def fixture_geodataframe():
         shapely.geometry.Polygon([(6, 5), (3.5, 2.5), (6, 0), (6, 2.5), (5, 2.5)]),
     ]
     geodataframe = gpd.GeoDataFrame(data={"geometry": geometries})
-    geodataframe = geodataframe.set_crs(epsg=4326)
+    geodataframe = geodataframe.set_crs(crs="OGC:CRS84")
 
     return geodataframe
 
@@ -99,7 +99,7 @@ def test_datashader_rasterize_vector_geometry(canvas, geodataframe, geom_type, s
 
     assert dataarray.data.sum() == sum_val
     assert dataarray.dims == ("y", "x")
-    assert dataarray.rio.crs == "EPSG:4326"
+    assert dataarray.rio.crs == "OGC:CRS84"
     assert dataarray.rio.shape == (10, 14)
     assert dataarray.rio.transform().e == -0.5
 
@@ -161,7 +161,7 @@ def test_datashader_rasterize_vector_geometrycollection(canvas, geodataframe):
 
     # Merge points, lines and polygons into a single GeometryCollection
     geocollection = gpd.GeoSeries(data=geodataframe.unary_union)
-    geocollection = geocollection.set_crs(epsg=4326)
+    geocollection = geocollection.set_crs(crs="OGC:CRS84")
 
     dp = IterableWrapper(iterable=[canvas])
     dp_vector = IterableWrapper(iterable=[geocollection])
