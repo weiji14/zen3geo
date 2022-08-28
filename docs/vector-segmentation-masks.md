@@ -84,18 +84,18 @@ dp_rioxarray
 ```
 
 The Sentinel-1 image from Planetary Computer comes in longitude/latitude 🌐
-geographic coordinates by default (EPSG:4326). To make the pixels more equal 🔲
+geographic coordinates by default (OGC:CRS84). To make the pixels more equal 🔲
 area, we can project it to a 🌏 local projected coordinate system instead.
 
 ```{code-cell}
 def reproject_to_local_utm(dataarray: xr.DataArray, resolution: float=100.0) -> xr.DataArray:
     """
-    Reproject an xarray.DataArray grid from EPSG;4326 to a local UTM coordinate
+    Reproject an xarray.DataArray grid from OGC:CRS84 to a local UTM coordinate
     reference system.
     """
     # Estimate UTM coordinate reference from a single pixel
     pixel = dataarray.isel(y=slice(0, 1), x=slice(0,1))
-    new_crs = dataarray.rio.reproject(dst_crs="EPSG:4326").rio.estimate_utm_crs()
+    new_crs = dataarray.rio.reproject(dst_crs="OGC:CRS84").rio.estimate_utm_crs()
 
     return dataarray.rio.reproject(dst_crs=new_crs, resolution=resolution)
 ```
@@ -111,6 +111,16 @@ distributed in a UTM coordinate reference system, and UTM is typically a close
 enough 🤏 approximation to the local geographic area, or at least it won't
 matter much when we're looking at spatial resolutions over several 10s of
 metres 🙂.
+```
+
+```{hint}
+For those wondering what `OGC:CRS84` is, it is the longitude/latitude version
+of [`EPSG:4326`](https://epsg.io/4326) 🌐 (latitude/longitude). I.e., it's a
+matter of axis order, with `OGC:CRS84` being x/y and `EPSG:4326` being y/x.
+
+🔖 References:
+- https://gis.stackexchange.com/questions/54073/what-is-crs84-projection
+- https://github.com/opengeospatial/geoparquet/issues/52
 ```
 
 ### Transform and visualize raster data 🔎
@@ -201,10 +211,11 @@ geodataframe.dropna(axis="columns")
 Cool, and we can also visualize the polygons 🔷 on a 2D map. To align the
 coordinates with the 🛰️ Sentinel-1 image above, we'll first use
 {py:meth}`geopandas.GeoDataFrame.to_crs` to reproject the vector from 🌐
-EPSG:4326 (longitude/latitude) to 🌏 EPSG:32648 (UTM Zone 48N).
+EPSG:9707 (WGS 84 + EGM96 height, latitude/longitude) to 🌏 EPSG:32648 (UTM
+Zone 48N).
 
 ```{code-cell}
-print(f"Original bounds in EPSG:4326:\n{geodataframe.bounds}")
+print(f"Original bounds in EPSG:9707:\n{geodataframe.bounds}")
 gdf = geodataframe.to_crs(crs="EPSG:32648")
 print(f"New bounds in EPSG:32648:\n{gdf.bounds}")
 ```
