@@ -84,9 +84,9 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
     AttributeError
         If either the canvas in ``source_datapipe`` or vector geometry in
         ``vector_datapipe`` is missing a ``.crs`` attribute. Please set the
-        coordinate reference system (e.g. using ``canvas.crs = 'EPSG:4326'``
+        coordinate reference system (e.g. using ``canvas.crs = 'OGC:CRS84'``
         for the :py:class:`datashader.Canvas` input or
-        ``vector = vector.set_crs(epsg=4326)`` for the
+        ``vector = vector.set_crs(crs='OGC:CRS84')`` for the
         :py:class:`geopandas.GeoSeries` or :py:class:`geopandas.GeoDataFrame`
         input) before passing them into the datapipe.
 
@@ -113,7 +113,7 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
     ...     "https://github.com/geopandas/pyogrio/raw/v0.4.0/pyogrio/tests/fixtures/test_gpkg_nulls.gpkg",
     ...     read_geometry=True,
     ... )
-    >>> assert geodataframe.crs == "EPSG:4326"  # longitude/latitude coords
+    >>> assert geodataframe.crs == "EPSG:4326"  # latitude/longitude coords
     >>> dp_vector = IterableWrapper(iterable=[geodataframe])
     ...
     >>> # Setup blank raster canvas where we will burn vector geometries onto
@@ -196,7 +196,7 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
                 raise AttributeError(
                     "Missing crs information for datashader.Canvas with "
                     f"x_range: {canvas.x_range} and y_range: {canvas.y_range}. "
-                    "Please set crs using e.g. `canvas.crs = 'EPSG:4326'`."
+                    "Please set crs using e.g. `canvas.crs = 'OGC:CRS84'`."
                 )
 
             # Reproject vector geometries to coordinate reference system
@@ -208,7 +208,7 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
                 raise AttributeError(
                     f"Missing crs information for input {vector.__class__} object "
                     f"with the following bounds: \n {vector.bounds} \n"
-                    f"Please set crs using e.g. `vector = vector.set_crs(epsg=4326)`."
+                    f"Please set crs using e.g. `vector = vector.set_crs(crs='OGC:CRS84')`."
                 ) from e
 
             # Convert vector to spatialpandas format to allow datashader's
