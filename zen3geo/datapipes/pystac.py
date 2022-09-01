@@ -3,7 +3,10 @@ DataPipes for :doc:`pystac <pystac:index>`.
 """
 from typing import Any, Dict, Iterator, Optional
 
-import pystac
+try:
+    import pystac
+except ImportError:
+    pystac = None
 from torchdata.datapipes import functional_datapipe
 from torchdata.datapipes.iter import IterDataPipe
 
@@ -28,6 +31,13 @@ class PySTACItemReaderIterDataPipe(IterDataPipe):
     stream_obj : pystac.item.Item
         An :py:class:`pystac.item.Item` object containing the specific
         STACObject implementation class represented in a JSON format.
+
+    Raises
+    ------
+    ModuleNotFoundError
+        If ``pystac`` is not installed. See
+        :doc:`install instructions for pystac <pystac:installation>`, (e.g. via
+        ``pip install pystac``) before using this class.
 
     Example
     -------
@@ -64,6 +74,13 @@ class PySTACItemReaderIterDataPipe(IterDataPipe):
     def __init__(
         self, source_datapipe: IterDataPipe[str], **kwargs: Optional[Dict[str, Any]]
     ) -> None:
+        if pystac is None:
+            raise ModuleNotFoundError(
+                "Package `pystac` is required to be installed to use this datapipe. "
+                "Please use `pip install pystac` or "
+                "`conda install -c conda-forge pystac` "
+                "to install the package"
+            )
         self.source_datapipe: IterDataPipe[str] = source_datapipe
         self.kwargs = kwargs
 
