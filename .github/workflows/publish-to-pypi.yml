@@ -39,7 +39,7 @@ jobs:
 
       - name: Install Poetry and dynamic-versioning plugin
         run: |
-          pip install poetry==1.2.0rc1
+          pip install poetry==1.2.0
           poetry self add poetry-dynamic-versioning-plugin
           poetry show
 
