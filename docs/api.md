@@ -27,6 +27,15 @@
     :show-inheritance:
 ```
 
+### PySTAC
+
+```{eval-rst}
+.. automodule:: zen3geo.datapipes.pystac
+.. autoclass:: zen3geo.datapipes.PySTACItemReader
+.. autoclass:: zen3geo.datapipes.pystac.PySTACItemReaderIterDataPipe
+    :show-inheritance:
+```
+
 ### Rioxarray
 
 ```{eval-rst}

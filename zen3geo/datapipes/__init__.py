@@ -7,5 +7,6 @@ from zen3geo.datapipes.datashader import (
     XarrayCanvasIterDataPipe as XarrayCanvas,
 )
 from zen3geo.datapipes.pyogrio import PyogrioReaderIterDataPipe as PyogrioReader
+from zen3geo.datapipes.pystac import PySTACItemReaderIterDataPipe as PySTACItemReader
 from zen3geo.datapipes.rioxarray import RioXarrayReaderIterDataPipe as RioXarrayReader
 from zen3geo.datapipes.xbatcher import XbatcherSlicerIterDataPipe as XbatcherSlicer
