@@ -303,6 +303,24 @@ tests = ["flake8", "keyring", "nbsmoke (>=0.2.6)", "pytest (>=2.8.5)", "pytest-c
 tests_extra = ["flake8", "keyring", "nbsmoke (>=0.2.6)", "pytest (>=2.8.5)", "pytest-cov", "pytest-mpl", "rfc3986", "twine"]
 
 [[package]]
+name = "contextily"
+version = "1.2.0"
+description = "Context geo-tiles in Python"
+category = "main"
+optional = true
+python-versions = ">=3.6"
+
+[package.dependencies]
+geopy = "*"
+joblib = "*"
+matplotlib = "*"
+mercantile = "*"
+pillow = "*"
+rasterio = "*"
+requests = "*"
+xyzservices = "*"
+
+[[package]]
 name = "cycler"
 version = "0.11.0"
 description = "Composable style cycles"
@@ -543,6 +561,14 @@ ssh = ["paramiko"]
 tqdm = ["tqdm"]
 
 [[package]]
+name = "geographiclib"
+version = "1.52"
+description = "The geodesic routines from GeographicLib"
+category = "main"
+optional = true
+python-versions = "*"
+
+[[package]]
 name = "geopandas"
 version = "0.11.0"
 description = "Geographic pandas extensions"
@@ -556,6 +582,26 @@ packaging = "*"
 pandas = ">=1.0.0"
 pyproj = ">=2.6.1.post1"
 shapely = ">=1.7,<2"
+
+[[package]]
+name = "geopy"
+version = "2.2.0"
+description = "Python Geocoding Toolbox"
+category = "main"
+optional = true
+python-versions = ">=3.5"
+
+[package.dependencies]
+geographiclib = ">=1.49,<2"
+
+[package.extras]
+aiohttp = ["aiohttp"]
+dev = ["async-generator", "coverage", "flake8 (>=3.8.0,<3.9.0)", "isort (>=5.6.0,<5.7.0)", "pytest (>=3.10)", "pytest-aiohttp", "readme-renderer", "sphinx", "sphinx-issues", "sphinx-rtd-theme (>=0.5.0)"]
+dev-docs = ["readme-renderer", "sphinx", "sphinx-issues", "sphinx-rtd-theme (>=0.5.0)"]
+dev-lint = ["async-generator", "flake8 (>=3.8.0,<3.9.0)", "isort (>=5.6.0,<5.7.0)"]
+dev-test = ["async-generator", "coverage", "pytest (>=3.10)", "pytest-aiohttp", "sphinx"]
+requests = ["requests (>=2.16.2)", "urllib3 (>=1.24.2)"]
+timezone = ["pytz"]
 
 [[package]]
 name = "gitdb"
@@ -781,6 +827,14 @@ MarkupSafe = ">=2.0"
 
 [package.extras]
 i18n = ["Babel (>=2.7)"]
+
+[[package]]
+name = "joblib"
+version = "1.1.0"
+description = "Lightweight pipelining with Python functions"
+category = "main"
+optional = true
+python-versions = ">=3.6"
 
 [[package]]
 name = "jsonschema"
@@ -1089,6 +1143,21 @@ markdown-it-py = ">=1.0,<2.0"
 code_style = ["pre-commit (==2.6)"]
 rtd = ["myst-parser (==0.14.0a3)", "sphinx-book-theme (>=0.1.0,<0.2.0)"]
 testing = ["coverage", "pytest (>=3.6,<4)", "pytest-cov", "pytest-regressions"]
+
+[[package]]
+name = "mercantile"
+version = "1.2.1"
+description = "Web mercator XYZ tile utilities"
+category = "main"
+optional = true
+python-versions = "*"
+
+[package.dependencies]
+click = ">=3.0"
+
+[package.extras]
+dev = ["check-manifest"]
+test = ["hypothesis", "pytest"]
 
 [[package]]
 name = "mistune"
@@ -2639,6 +2708,14 @@ numpy = "*"
 xarray = "*"
 
 [[package]]
+name = "xyzservices"
+version = "2022.6.0"
+description = "Source of XYZ tiles providers"
+category = "main"
+optional = true
+python-versions = ">=3.7"
+
+[[package]]
 name = "zict"
 version = "2.2.0"
 description = "Mutable mapping tools"
@@ -2662,7 +2739,7 @@ docs = ["jaraco.packaging (>=9)", "rst.linker (>=1.9)", "sphinx"]
 testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.0.1)", "pytest-flake8", "pytest-mypy (>=0.9.1)"]
 
 [extras]
-docs = ["datashader", "graphviz", "jupyter-book", "matplotlib", "planetary-computer", "pyogrio", "pystac", "spatialpandas", "xbatcher"]
+docs = ["contextily", "datashader", "graphviz", "jupyter-book", "matplotlib", "planetary-computer", "pyogrio", "pystac", "spatialpandas", "xbatcher"]
 raster = ["xbatcher"]
 spatial = ["datashader", "spatialpandas"]
 vector = ["pyogrio"]
@@ -2670,7 +2747,7 @@ vector = ["pyogrio"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8, <3.12"
-content-hash = "ce71899fd3579a202d8da58540cfac40ea1f35f124f072e79641a37a078ff2e8"
+content-hash = "16e3f12370f11bf3c5c2ca11a45b858ea8a6ca72fcc8c602bd2f2c6c35b19afd"
 
 [metadata.files]
 affine = [
@@ -2857,6 +2934,10 @@ colorcet = [
     {file = "colorcet-3.0.0-py2.py3-none-any.whl", hash = "sha256:074027a442921813d4328f03c200a55c8ac73d19901919abcd0c6fb67fa79664"},
     {file = "colorcet-3.0.0.tar.gz", hash = "sha256:21c522346a7aa81a603729f2996c22ac3f7822f4c8c303c59761e27d2dfcf3db"},
 ]
+contextily = [
+    {file = "contextily-1.2.0-py3-none-any.whl", hash = "sha256:f3c63082b6b2c4c7cfb58bbd0db8c57140d88eb829654bf3e04e5c53b4c5b17d"},
+    {file = "contextily-1.2.0.tar.gz", hash = "sha256:234705b3f03dfa1fcb5fabe765a4a7f72be91dafe2a6e18df270be391ae355dd"},
+]
 cycler = [
     {file = "cycler-0.11.0-py3-none-any.whl", hash = "sha256:3a27e95f763a428a739d2add979fa7494c912a32c17c4c38c4d5f082cad165a3"},
     {file = "cycler-0.11.0.tar.gz", hash = "sha256:9c87405839a19696e837b3b818fed3f5f69f16f1eec1a1ad77e043dcea9c772f"},
@@ -2941,9 +3022,17 @@ fsspec = [
     {file = "fsspec-2022.5.0-py3-none-any.whl", hash = "sha256:2c198c50eb541a80bbd03540b07602c4a957366f3fb416a1f270d34bd4ff0926"},
     {file = "fsspec-2022.5.0.tar.gz", hash = "sha256:7a5459c75c44e760fbe6a3ccb1f37e81e023cde7da8ba20401258d877ec483b4"},
 ]
+geographiclib = [
+    {file = "geographiclib-1.52-py3-none-any.whl", hash = "sha256:8f441c527b0b8a26cd96c965565ff0513d1e4d9952b704bf449409e5015c77b7"},
+    {file = "geographiclib-1.52.tar.gz", hash = "sha256:ac400d672b8954b0306bca890b088bb8ba2a757dc8133cca0b878f34b33b2740"},
+]
 geopandas = [
     {file = "geopandas-0.11.0-py3-none-any.whl", hash = "sha256:0991f279d4f9e3a04e3666f32b1ac64d6ba439933da3d9654a26031e0ccea5dc"},
     {file = "geopandas-0.11.0.tar.gz", hash = "sha256:562fe7dc19a6e0f61532d654c4752f7bf46e0714990c5844fe3de3f9c99cb873"},
+]
+geopy = [
+    {file = "geopy-2.2.0-py3-none-any.whl", hash = "sha256:8f1f949082b964385de61fcc3a667a6a9a6e242beb1ae8972449f164b2ba0e89"},
+    {file = "geopy-2.2.0.tar.gz", hash = "sha256:58b7edf526b8c32e33126570b5f4fcdfaa29d4416506064777ae8d84cd103fdd"},
 ]
 gitdb = [
     {file = "gitdb-4.0.9-py3-none-any.whl", hash = "sha256:8033ad4e853066ba6ca92050b9df2f89301b8fc8bf7e9324d412a63f8bf1a8fd"},
@@ -3061,6 +3150,10 @@ jedi = [
 jinja2 = [
     {file = "Jinja2-3.1.2-py3-none-any.whl", hash = "sha256:6088930bfe239f0e6710546ab9c19c9ef35e29792895fed6e6e31a023a182a61"},
     {file = "Jinja2-3.1.2.tar.gz", hash = "sha256:31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852"},
+]
+joblib = [
+    {file = "joblib-1.1.0-py2.py3-none-any.whl", hash = "sha256:f21f109b3c7ff9d95f8387f752d0d9c34a02aa2f7060c2135f465da0e5160ff6"},
+    {file = "joblib-1.1.0.tar.gz", hash = "sha256:4158fcecd13733f8be669be0683b96ebdbbd38d23559f54dca7205aea1bf1e35"},
 ]
 jsonschema = [
     {file = "jsonschema-3.2.0-py2.py3-none-any.whl", hash = "sha256:4e5b3cf8216f577bee9ce139cbe72eca3ea4f292ec60928ff24758ce626cd163"},
@@ -3304,6 +3397,10 @@ matplotlib-inline = [
 mdit-py-plugins = [
     {file = "mdit-py-plugins-0.2.8.tar.gz", hash = "sha256:5991cef645502e80a5388ec4fc20885d2313d4871e8b8e320ca2de14ac0c015f"},
     {file = "mdit_py_plugins-0.2.8-py3-none-any.whl", hash = "sha256:1833bf738e038e35d89cb3a07eb0d227ed647ce7dd357579b65343740c6d249c"},
+]
+mercantile = [
+    {file = "mercantile-1.2.1-py3-none-any.whl", hash = "sha256:30f457a73ee88261aab787b7069d85961a5703bb09dc57a170190bc042cd023f"},
+    {file = "mercantile-1.2.1.tar.gz", hash = "sha256:fa3c6db15daffd58454ac198b31887519a19caccee3f9d63d17ae7ff61b3b56b"},
 ]
 mistune = [
     {file = "mistune-0.8.4-py2.py3-none-any.whl", hash = "sha256:88a1051873018da288eee8538d476dffe1262495144b33ecb586c4ab266bb8d4"},
@@ -4408,6 +4505,10 @@ xarray = [
 xbatcher = [
     {file = "xbatcher-0.1.0-py3-none-any.whl", hash = "sha256:811dbdc5e17a8a42284419a8033adc631998d87d5e3fd502726fe7784d004954"},
     {file = "xbatcher-0.1.0.tar.gz", hash = "sha256:f09badd59a8821f8976a303f68ca74371a0b29703dc1e70032ff05d38fb5218f"},
+]
+xyzservices = [
+    {file = "xyzservices-2022.6.0-py3-none-any.whl", hash = "sha256:eb493eb69bde966788f482e1c3608af99ff18fea8885d795ed1ca3b1a8d2e0ec"},
+    {file = "xyzservices-2022.6.0.tar.gz", hash = "sha256:1fbd37d7f725bdceefe857b3b1f8121e50a038bbae496944668c67fffd54dd0f"},
 ]
 zict = [
     {file = "zict-2.2.0-py2.py3-none-any.whl", hash = "sha256:dabcc8c8b6833aa3b6602daad50f03da068322c1a90999ff78aed9eecc8fa92c"},
