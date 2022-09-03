@@ -49,7 +49,7 @@ import matplotlib.pyplot as plt
 
 Let's take a look at buildings over
 [Kampong Ayer](https://en.wikipedia.org/wiki/Kampong_Ayer), Brunei 🇧🇳! We'll
-use {py:meth}`contextily.bounds2img` to get some 4-band RGBA
+use {py:func}`contextily.bounds2img` to get some 4-band RGBA
 🌈 [optical imagery](https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9)
 in a {py:class}`numpy.ndarray` format.
 
@@ -78,3 +78,58 @@ For more raster basemaps, check out:
 - https://xyzservices.readthedocs.io/en/stable/introduction.html#overview-of-built-in-providers
 - https://leaflet-extras.github.io/leaflet-providers/preview/
 ```
+
+### Load cloud-native vector files 💠
+
+Now to pull in some building footprints 🛖. Let's make a STAC API query to get
+a [GeoParquet](https://github.com/opengeospatial/geoparquet) file (a
+cloud-native columnar 🀤 geospatial vector file format) over our study area.
+
+```{code-cell}
+catalog = pystac_client.Client.open(
+    url="https://planetarycomputer.microsoft.com/api/stac/v1"
+)
+items = catalog.search(
+    collections=["ms-buildings"], query={"msbuildings:region": {"eq": "Brunei"}}
+)
+item = next(items.get_items())
+item
+```
+
+Next, we'll sign 🔏 the URL to the STAC Item Asset, and load ⤵️ the GeoParquet
+file using {py:func}`geopandas.read_parquet`.
+
+```{code-cell}
+asset = planetary_computer.sign(item.assets["data"])
+
+geodataframe = gpd.read_parquet(
+    path=asset.href, storage_options=asset.extra_fields["table:storage_options"]
+)
+geodataframe
+```
+
+This {py:class}`geopandas.GeoDataFrame` contains building outlines across
+Brunei 🇧🇳. Let's do a spatial subset ✂️ to just the Kampong Ayer study area
+using {py:attr}`geopandas.GeoDataFrame.cx`, and reproject it using
+{py:meth}`geopandas.GeoDataFrame.to_crs` to match the coordinate reference
+system of the optical image.
+
+```{code-cell}
+_gdf_kpgayer = geodataframe.cx[114.94:114.95, 4.88:4.89]
+gdf_kpgayer = _gdf_kpgayer.to_crs(crs="EPSG:3857")
+gdf_kpgayer
+```
+
+Preview 👀 the building footprints to check that things are in the right place.
+
+```{code-cell}
+ax = gdf_kpgayer.plot(figsize=(9, 9))
+contextily.add_basemap(
+    ax=ax,
+    source=contextily.providers.Stamen.TonerLite,
+    crs=gdf_kpgayer.crs.to_string(),
+)
+ax
+```
+
+Hmm, seems like the Stamen basemap doesn't know the buildings are on water 😂.
