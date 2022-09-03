@@ -27,6 +27,7 @@ pyogrio = {version = ">=0.4.0", extras = ["geopandas"], optional = true}
 spatialpandas = {version = ">=0.4.0", optional = true}
 xbatcher = {version = ">=0.1.0", optional = true}
 # Docs
+adlfs = {version = "*", optional = true}
 contextily = {version = "*", optional = true}
 graphviz = {version = "*", optional = true}
 jupyter-book = {version="*", optional=true}
@@ -40,6 +41,7 @@ pytest = "*"
 
 [tool.poetry.extras]
 docs = [
+    "adlfs",
     "contextily",
     "datashader",
     "graphviz",
