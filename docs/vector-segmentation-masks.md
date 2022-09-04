@@ -327,9 +327,9 @@ mask, we have an easy 1:1 mapping. There are two other scenarios supported by
 For more details on how rasterization of polygons work behind the scenes 🎦,
 check out {doc}`Datashader <datashader:index>`'s documentation on:
 
-- {doc}`The datashader pipeline <getting_started/Pipeline>` (especially the
-  section on Aggregation).
-- {doc}`Rendering large collections of polygons <user_guide/Polygons>`
+- {doc}`The datashader pipeline <datashader:getting_started/Pipeline>`
+  (especially the section on Aggregation).
+- {doc}`Rendering large collections of polygons <datashader:user_guide/Polygons>`
 ```
 
 
