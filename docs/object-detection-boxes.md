@@ -39,10 +39,13 @@ These are the tools 🛠️ you'll need.
 
 ```{code-cell}
 import contextily
-import pystac_client
-import planetary_computer
+import numpy as np
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import planetary_computer
+import pystac_client
+import rioxarray
+import xarray as xr
 ```
 
 ## 0️⃣ Find high-resolution imagery and building footprints 🌇
@@ -54,7 +57,7 @@ use {py:func}`contextily.bounds2img` to get some 4-band RGBA
 in a {py:class}`numpy.ndarray` format.
 
 ```{code-cell}
-img, extent = contextily.bounds2img(
+image, extent = contextily.bounds2img(
     w=114.94,
     s=4.88,
     e=114.95,
@@ -63,20 +66,55 @@ img, extent = contextily.bounds2img(
     source=contextily.providers.Esri.WorldImagery,
 )
 print(f"Spatial extent in EPSG:3857: {extent}")
-print(f"Image dimensions (height, width, channels): {img.shape}")
+print(f"Image dimensions (height, width, channels): {image.shape}")
 ```
 
 This is how Brunei's 🚣 Venice of the East looks like from above.
 
 ```{code-cell}
 fig, ax = plt.subplots(nrows=1, figsize=(9, 9))
-plt.imshow(X=img, extent=extent)
+plt.imshow(X=image, extent=extent)
 ```
 
 ```{tip}
 For more raster basemaps, check out:
 - https://xyzservices.readthedocs.io/en/stable/introduction.html#overview-of-built-in-providers
 - https://leaflet-extras.github.io/leaflet-providers/preview/
+```
+
+### Georeference image using rioxarray 🌐
+
+To enable slicing 🔪 with xbatcher later, we'll need to turn the
+{py:class}`numpy.ndarray` image 🖼️ into a {py:class}`xarray.DataArray` grid
+with coordinates 🖼️. If you already have a georeferenced grid (e.g. from
+{py:class}`zen3geo.datapipes.RioXarrayReader`), this step can be skipped ⏭️.
+
+
+```{code-cell}
+# Turn RGBA image from channel-last to channel-first and get 3-band RGB only
+_image = image.transpose(2, 0, 1)  # Change image from (H, W, C) to (C, H, W)
+rgb_image = _image[0:3, :, :]  # Get just RGB by dropping RGBA's alpha channel
+print(f"RGB image shape: {rgb_image.shape}")
+```
+
+Georeferencing is done by putting the 🚦 RGB image into an
+{py:class}`xarray.DataArray` object with (band, y, x) coordinates, and then
+setting a coordinate reference system 📐 using
+{py:meth}`rioxarray.rioxarray.XRasterBase.set_crs`.
+
+```{code-cell}
+left, right, bottom, top = extent  # xmin, xmax, ymin, ymax
+dataarray = xr.DataArray(
+    data=rgb_image,
+    coords=dict(
+        band=[0, 1, 2],  # Red, Green, Blue
+        y=np.linspace(start=top, stop=bottom, num=rgb_image.shape[1]),
+        x=np.linspace(start=left, stop=right, num=rgb_image.shape[2]),
+    ),
+    dims=("band", "y", "x"),
+)
+dataarray = dataarray.rio.set_crs(input_crs="EPSG:3857")
+dataarray
 ```
 
 ### Load cloud-native vector files 💠
