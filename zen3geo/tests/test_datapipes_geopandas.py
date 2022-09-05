@@ -53,8 +53,8 @@ def fixture_dataset():
 def test_geopandas_rectangle_clipper_geoseries_dataset(geodataframe, dataset):
     """
     Ensure that GeoPandasRectangleClipper works to clip a geopandas.GeoSeries
-    vector with an xarray.Dataset raster and outputs a tuple made up of a
-    spatially subsetted geopandas.GeoSeries and the xarray.Dataset raster mask.
+    vector with xarray.Dataset rasters and outputs a tuple made up of a
+    spatially subsetted geopandas.GeoSeries and an xarray.Dataset raster mask.
     """
     dp_vector = IterableWrapper(iterable=[geodataframe.geometry])
     dp_raster = IterableWrapper(
@@ -88,6 +88,72 @@ def test_geopandas_rectangle_clipper_geoseries_dataset(geodataframe, dataset):
     assert raster_chip.dims == {"band": 1, "y": 2, "x": 3}
     assert raster_chip.rio.bounds() == (2.5, 2.5, 5.5, 4.5)
     assert raster_chip.rio.crs == "OGC:CRS84"
+
+
+def test_geopandas_rectangle_clipper_different_crs(geodataframe, dataset):
+    """
+    Ensure that GeoPandasRectangleClipper works to clip a geopandas.GeoSeries
+    vector with xarray.Dataset rasters which have different coordinate
+    reference systems, and outputs a tuple made up of a spatially subsetted
+    geopandas.GeoSeries and an xarray.Dataset raster mask that both have the
+    same coordinate reference system.
+    """
+    dp_vector = IterableWrapper(iterable=[geodataframe.geometry])
+
+    dataset_3857 = dataset.rio.clip_box(minx=-1, miny=0, maxx=1, maxy=1).rio.reproject(
+        "EPSG:3857"
+    )
+    dataset_32631 = dataset.rio.clip_box(minx=3, miny=3, maxx=5, maxy=4).rio.reproject(
+        "EPSG:32631"
+    )
+    dp_raster = IterableWrapper(iterable=[dataset_3857, dataset_32631])
+
+    # Using class constructors
+    dp_clipped = GeoPandasRectangleClipper(
+        source_datapipe=dp_vector, mask_datapipe=dp_raster
+    )
+    # Using functional form (recommended)
+    dp_clipped = dp_vector.clip_vector_with_rectangle(mask_datapipe=dp_raster)
+
+    assert len(dp_clipped) == 2
+    it = iter(dp_clipped)
+
+    clipped_geoseries, raster_chip = next(it)
+    assert clipped_geoseries.crs == "EPSG:3857"
+    assert all(clipped_geoseries.geom_type == "Polygon")
+    assert clipped_geoseries.shape == (1,)
+    assert clipped_geoseries[0].bounds == (
+        0.0,
+        0.0,
+        166988.3675623712,
+        166998.31375292226,
+    )
+    assert raster_chip.dims == {"band": 1, "y": 2, "x": 3}
+    assert raster_chip.rio.bounds() == (
+        -166979.23618991036,
+        -55646.75541526544,
+        166988.3675623712,
+        166998.31375292226,
+    )
+    assert raster_chip.rio.crs == "EPSG:3857"
+
+    clipped_geoseries, raster_chip = next(it)
+    assert clipped_geoseries.crs == "EPSG:32631"
+    assert clipped_geoseries.shape == (1,)
+    assert clipped_geoseries[1].bounds == (
+        444414.4114896285,
+        276009.81064532325,
+        611163.137304327,
+        442194.9725083875,
+    )
+    assert raster_chip.dims == {"band": 1, "y": 2, "x": 3}
+    assert raster_chip.rio.bounds() == (
+        444414.4114896285,
+        276009.81064532325,
+        777205.5384580799,
+        497870.56195762416,
+    )
+    assert raster_chip.rio.crs == "EPSG:32631"
 
 
 def test_geopandas_rectangle_clipper_incorrect_length(geodataframe, dataset):

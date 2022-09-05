@@ -24,20 +24,28 @@ class GeoPandasRectangleClipperIterDataPipe(IterDataPipe):
     :py:class:`xarray.Dataset` raster object used as the clip mask (functional
     name: ``clip_vector_with_rectangle``).
 
-    Note that this uses the rectangular clip algorithm of
-    :py:func:`geopandas.clip`, with the bounding box rectangle (minx, miny,
-    maxx, maxy) derived from input raster mask's bounding box extent.
+    Uses the rectangular clip algorithm of :py:func:`geopandas.clip`, with the
+    bounding box rectangle (minx, miny, maxx, maxy) derived from input raster
+    mask's bounding box extent.
+
+    Note
+    ----
+    If the input vector's coordinate reference system (``crs``) is different to
+    the raster mask's coordinate reference system (``rio.crs``), the vector
+    will be reprojected using :py:meth:`geopandas.GeoDataFrame.to_crs` to match
+    the raster's coordinate reference system.
 
     Parameters
     ----------
     source_datapipe : IterDataPipe[geopandas.GeoDataFrame]
         A DataPipe that contains :py:class:`geopandas.GeoSeries` or
-        :py:class:`geopandas.GeoDataFrame` vector geometries with a ``.crs``
-        attribute.
+        :py:class:`geopandas.GeoDataFrame` vector geometries with a
+        :py:attr:`.crs <geopandas.GeoDataFrame.crs>` property.
 
     mask_datapipe : IterDataPipe[xarray.DataArray]
         A DataPipe that contains :py:class:`xarray.DataArray` or
         :py:class:`xarray.Dataset` objects with a
+        :py:attr:`.rio.crs <rioxarray.rioxarray.XRasterBase.crs>` property and
         :py:meth:`.rio.bounds <rioxarray.rioxarray.XRasterBase.bounds>` method.
 
     kwargs : Optional
@@ -150,12 +158,18 @@ class GeoPandasRectangleClipperIterDataPipe(IterDataPipe):
             )
 
     def __iter__(self) -> Iterator:
-        it = iter(self.source_datapipe)
-        geodataframe = next(it)
+        geodataframe = list(self.source_datapipe).pop()
 
         for raster in self.mask_datapipe:
             mask = raster.rio.bounds()
-            clipped_geodataframe = geodataframe.clip(mask=mask, **self.kwargs)
+
+            try:
+                assert geodataframe.crs == raster.rio.crs
+                _geodataframe = geodataframe
+            except AssertionError:
+                _geodataframe = geodataframe.to_crs(crs=raster.rio.crs)
+
+            clipped_geodataframe = _geodataframe.clip(mask=mask, **self.kwargs)
 
             yield clipped_geodataframe, raster
 
