@@ -12,6 +12,10 @@ kernelspec:
 
 # Chipping and batching data
 
+> What is separation?
+>
+> What isn't?
+
 Following on from the previous tutorial,
 let's 🧑‍🎓 learn more about creating a more complicated 🌈 raster data pipeline.
 Specifically, we'll go through the following:
