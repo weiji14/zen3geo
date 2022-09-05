@@ -18,6 +18,15 @@
     :show-inheritance:
 ```
 
+### Geopandas
+
+```{eval-rst}
+.. automodule:: zen3geo.datapipes.geopandas
+.. autoclass:: zen3geo.datapipes.GeoPandasRectangleClipper
+.. autoclass:: zen3geo.datapipes.geopandas.GeoPandasRectangleClipperIterDataPipe
+    :show-inheritance:
+```
+
 ### Pyogrio
 
 ```{eval-rst}
