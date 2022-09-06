@@ -41,7 +41,9 @@ These are the tools 🛠️ you'll need.
 import contextily
 import numpy as np
 import geopandas as gpd
+import matplotlib.patches
 import matplotlib.pyplot as plt
+import pandas as pd
 import planetary_computer
 import pystac_client
 import rioxarray
@@ -257,4 +259,132 @@ The optical 🛰️ imagery shown here is **not** the imagery used to digitize t
 [building footprints](https://planetarycomputer.microsoft.com/dataset/ms-buildings)
 🏢! This is an example tutorial using two different data sources, that we just
 so happened to have plotted in the same geographic space 😝.
+```
+
+### From polygons in geographic coordinates to boxes in image coordinates ↕️
+
+Up to this point, we still have the actual 🛖 building footprint polygons. In
+this step 📶, we'll convert these polygons into a format suitable for 'basic'
+object detection 🥅 models in computer vision. Specifically:
+
+1. The polygons 🌙 (with multiple vertices) will be simplified to a horizontal
+   bounding box 🔲 with 4 corner vertices only.
+2. The 🌐 geographic coordinates of the box which use lower left corner and
+   upper right corner (i.e. y increases from South to North ⬆️) will be
+   converted to 🖼️ image coordinates (0-128) which use the top left corner and
+   bottom right corner (i.e y increases from Top to Bottom ⬇️).
+
+Let's start by using {py:attr}`geopandas.GeoSeries.bounds` to get the
+geographic bounds 🗺️ of each building footprint geometry 📐 in each 128x128
+chip.
+
+```{code-cell}
+def polygon_to_bbox(geom_and_chip) -> (gpd.GeoDataFrame, xr.Dataset):
+    """
+    Get bounding box (minx, miny, maxx, maxy) coordinates for each geometry in
+    a geopandas.GeoDataFrame.
+
+                          (maxx,maxy)
+               ul-------ur
+             ^  |       |
+             |  |  geo  |    y increases going up, x increases going right
+             y  |       |
+               ll-------lr
+    (minx,miny)    x-->
+
+    """
+    gdf, chip = geom_and_chip
+    bounds: gpd.GeoDataFrame = gdf.bounds
+    assert tuple(bounds.columns) == ("minx", "miny", "maxx", "maxy")
+
+    return bounds, chip
+```
+
+```{code-cell}
+dp_bbox = dp_clipped.map(fn=polygon_to_bbox)
+```
+
+Next, the geographic 🗺️ bounding box coordinates (in EPSG:3857) will be
+converted to image 🖼️ or pixel coordinates (0-128 scale). The y-direction will
+be flipped 🤸 upside down, and we'll be using the spatial bounds (or corner
+coordinates) of the 128x128 image chip as a reference 📍.
+
+```{code-cell}
+def geobox_to_imgbox(bbox_and_chip) -> (pd.DataFrame, xr.Dataset):
+    """
+    Convert bounding boxes in a pandas.DataFrame from geographic coordinates
+    (minx, miny, maxx, maxy) to image coordinates (x1, y1, x2, y2) based on the
+    spatial extent of a raster image chip.
+
+        (x1,y1)
+               ul-------ur
+             y  |       |
+             |  |  img  |    y increases going down, x increases going right
+             v  |       |
+               ll-------lr
+                   x-->    (x2,y2)
+
+    """
+    geobox, chip = bbox_and_chip
+
+    x_res, y_res = chip.rio.resolution()
+    assert y_res < 0
+
+    left, bottom, right, top = chip.rio.bounds()
+    assert top > bottom
+
+    imgbox = pd.DataFrame()
+    imgbox["x1"] = (geobox.minx - left) / x_res  # left
+    imgbox["y1"] = (top - geobox.maxy) / -y_res  # top
+    imgbox["x2"] = (geobox.maxx - left) / x_res  # right
+    imgbox["y2"] = (top - geobox.miny) / -y_res  # bottom
+
+    assert all(imgbox.x2 > imgbox.x1)
+    assert all(imgbox.y2 > imgbox.y1)
+
+    return imgbox, chip
+```
+
+```{code-cell}
+dp_ibox = dp_bbox.map(fn=geobox_to_imgbox)
+```
+
+Now to plot 🎨 and double check that the boxes are positioned correctly in
+image space 🌌.
+
+```{code-cell}
+# Get one chip with over 10 building footprint geometries
+for ibox, ichip in dp_ibox:
+    if len(ibox) > 10:
+        break
+```
+
+```{code-cell}
+fig, ax = plt.subplots(ncols=2, figsize=(18, 9), sharex=True, sharey=True)
+ax[0].imshow(X=ichip.__xarray_dataarray_variable__.transpose("y", "x", "band"))
+for i, row in ibox.iterrows():
+    rectangle = matplotlib.patches.Rectangle(
+        xy=(row.x1, row.y1),
+        width=row.x2 - row.x1,
+        height=row.y2 - row.y1,
+        edgecolor="blue",
+        linewidth=1,
+        facecolor="none",
+    )
+    ax[1].add_patch(rectangle)
+```
+
+Cool, the 🟦 bounding boxes on the right subplot are correctly positioned 🧭
+(compare it with the figure in the previous subsection).
+
+```{hint}
+Instead of a bounding box 🥡 object detection task, you can also use the
+building polygons 🏘️ for a segmentation task 🧑‍🎨 following
+{doc}`./vector-segmentation-masks`.
+
+If you still prefer doing object detection 🕵️, but want a different box format
+(see options in {py:func}`torchvision.ops.box_convert`),
+like 🎌 centre-based coordinates with width and height (`cxcywh`), or
+📨 oriented/rotated bounding box coordinates, feel free to implement your own
+function and DataPipe for it 🤗!
 ```

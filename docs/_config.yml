@@ -69,7 +69,10 @@ sphinx:
         - 'https://pytorch.org/docs/stable/'
         - null
       torchdata:
-        - 'https://pytorch.org/data/main'
+        - 'https://pytorch.org/data/main/'
+        - null
+      torchvision:
+        - 'https://pytorch.org/vision/main/'
         - null
       xarray:
         - 'https://docs.xarray.dev/en/latest/'
