@@ -45,7 +45,9 @@ import matplotlib.pyplot as plt
 import planetary_computer
 import pystac_client
 import rioxarray
+import torchdata
 import xarray as xr
+import zen3geo
 ```
 
 ## 0️⃣ Find high-resolution imagery and building footprints 🌇
@@ -85,7 +87,7 @@ For more raster basemaps, check out:
 ### Georeference image using rioxarray 🌐
 
 To enable slicing 🔪 with xbatcher later, we'll need to turn the
-{py:class}`numpy.ndarray` image 🖼️ into a {py:class}`xarray.DataArray` grid
+{py:class}`numpy.ndarray` image 🖼️ into an {py:class}`xarray.DataArray` grid
 with coordinates 🖼️. If you already have a georeferenced grid (e.g. from
 {py:class}`zen3geo.datapipes.RioXarrayReader`), this step can be skipped ⏭️.
 
@@ -113,7 +115,7 @@ dataarray = xr.DataArray(
     ),
     dims=("band", "y", "x"),
 )
-dataarray = dataarray.rio.set_crs(input_crs="EPSG:3857")
+dataarray = dataarray.rio.write_crs(input_crs="EPSG:3857")
 dataarray
 ```
 
@@ -170,4 +172,89 @@ contextily.add_basemap(
 ax
 ```
 
-Hmm, seems like the Stamen basemap doesn't know the buildings are on water 😂.
+Hmm, seems like the Stamen basemap doesn't know that some of the buildings are
+on water 😂.
+
+
+## 1️⃣ Pair image chips with bounding boxes 🧑‍🤝‍🧑
+
+Here comes the fun 🛝 part! This section is all about generating 128x128 chips
+🫶 paired with bounding boxes. Let's go 🚲!
+
+### Create 128x128 raster chips and clip vector geometries with it ✂️
+
+From the large 1280x1280 scene 🖽️, we will first slice out a hundred 128x128
+chips 🍕 using {py:class}`zen3geo.datapipes.XbatcherSlicer` (functional name:
+`slice_with_xbatcher`).
+
+```{code-cell}
+dp_raster = torchdata.datapipes.iter.IterableWrapper(iterable=[dataarray])
+dp_xbatcher = dp_raster.slice_with_xbatcher(input_dims={"y": 128, "x": 128})
+dp_xbatcher
+```
+
+For each 128x128 chip 🍕, we'll then find the vector geometries 🌙 that fit
+within the chip's spatial extent. This will be 🤸 done using
+{py:class}`zen3geo.datapipes.GeoPandasRectangleClipper` (functional name:
+`clip_vector_with_rectangle`).
+
+```{code-cell}
+dp_vector = torchdata.datapipes.iter.IterableWrapper(iterable=[gdf_kpgayer])
+dp_clipped = dp_vector.clip_vector_with_rectangle(mask_datapipe=dp_xbatcher)
+dp_clipped
+```
+
+```{important}
+When using {py:class}`zen3geo.datapipes.GeoPandasRectangleClipper` 💇, there
+should only be one 'global' 🌐 vector {py:class}`geopandas.GeoSeries` or
+{py:class}`geopandas.GeoDataFrame`.
+
+If your raster DataPipe has chips 🍕 with different coordinate reference
+systems (e.g. multiple UTM Zones 🌏🌍🌎),
+{py:class}`zen3geo.datapipes.GeoPandasRectangleClipper` will actually reproject
+🔄 the 'global' vector to the coordinate reference system of each chip, and
+clip ✂️ the geometries accordingly to the chip's bounding box extent 😎.
+```
+
+This ``dp_clipped`` DataPipe will yield 🤲 a tuple of ``(vector, raster)``
+objects for each 128x128 chip. Let's inspect 🧐 one to see how they look like.
+
+```{code-cell}
+# Get one chip with over 10 building footprint geometries
+for vector, raster in dp_clipped:
+    if len(vector) > 10:
+        break
+```
+
+These are the spatially subsetted vector geometries 🌙 in one 128x128 chip.
+
+```{code-cell}
+vector
+```
+
+This is the raster chip/mask 🤿 used to clip the vector.
+
+```{code-cell}
+raster
+```
+
+And here's a side by side visualization of the 🌈 RGB chip image (left) and
+🔷 vector building footprint polygons (right).
+
+```{code-cell}
+fig, ax = plt.subplots(ncols=2, figsize=(18, 9), sharex=True, sharey=True)
+raster.__xarray_dataarray_variable__.plot.imshow(ax=ax[0])
+vector.plot(ax=ax[1])
+```
+
+Cool, these buildings are part of the 🏬
+[Yayasan Shopping Complex](https://web.archive.org/web/20220906020248/http://www.yayasancomplex.com)
+in Bandar Seri Begawan 🌆. We can see that the raster image 🖼️ on the left
+aligns ok with the vector polygons 💠 on the right.
+
+```{note}
+The optical 🛰️ imagery shown here is **not** the imagery used to digitize the
+[building footprints](https://planetarycomputer.microsoft.com/dataset/ms-buildings)
+🏢! This is an example tutorial using two different data sources, that we just
+so happened to have plotted in the same geographic space 😝.
+```
