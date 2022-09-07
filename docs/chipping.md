@@ -230,7 +230,7 @@ def xr_collate_fn(samples) -> torch.Tensor:
 ```
 
 Then, pass this collate function to
-{py:class}`torchdata.datapipes.iter.Collator`.
+{py:class}`torchdata.datapipes.iter.Collator` (functional name: `collate`).
 
 ```{code-cell}
 dp_collate = dp_batch.collate(collate_fn=xr_collate_fn)

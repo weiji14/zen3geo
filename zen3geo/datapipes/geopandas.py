@@ -1,7 +1,7 @@
 """
 DataPipes for :doc:`geopandas <geopandas:index>`.
 """
-from typing import Any, Dict, Iterator, Optional
+from typing import Any, Dict, Iterator, Optional, Union
 
 try:
     import geopandas as gpd
@@ -134,7 +134,7 @@ class GeoPandasRectangleClipperIterDataPipe(IterDataPipe):
     def __init__(
         self,
         source_datapipe: IterDataPipe,
-        mask_datapipe: IterDataPipe[xr.DataArray],
+        mask_datapipe: IterDataPipe[Union[xr.DataArray, xr.Dataset]],
         **kwargs: Optional[Dict[str, Any]],
     ) -> None:
         if gpd is None:

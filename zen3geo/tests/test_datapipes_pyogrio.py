@@ -11,8 +11,8 @@ pyogrio = pytest.importorskip("pyogrio")
 # %%
 def test_pyogrio_reader():
     """
-    Ensure that PyogrioReader works to read in a GeoTIFF file and outputs a
-    tuple made up of a filename and an xarray.DataArray object.
+    Ensure that PyogrioReader works to read in a GeoPackage file and outputs a
+    geopandas.GeoDataFrame object.
     """
     file_url: str = "https://github.com/geopandas/pyogrio/raw/v0.4.0/pyogrio/tests/fixtures/test_gpkg_nulls.gpkg"
     dp = IterableWrapper(iterable=[file_url])

@@ -17,8 +17,8 @@ class PyogrioReaderIterDataPipe(IterDataPipe[StreamWrapper]):
     """
     Takes vector files (e.g. FlatGeoBuf, GeoPackage, GeoJSON) from local disk
     or URLs (as long as they can be read by pyogrio) and yields
-    :py:class:`geopandas.GeoDataFrame` objects
-    (functional name: ``read_from_pyogrio``).
+    :py:class:`geopandas.GeoDataFrame` objects (functional name:
+    ``read_from_pyogrio``).
 
     Based on
     https://github.com/pytorch/data/blob/v0.4.0/torchdata/datapipes/iter/load/iopath.py#L42-L97
