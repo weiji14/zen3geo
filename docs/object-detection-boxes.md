@@ -47,6 +47,9 @@ import pandas as pd
 import planetary_computer
 import pystac_client
 import rioxarray
+import shapely.affinity
+import shapely.geometry
+import torch
 import torchdata
 import xarray as xr
 import zen3geo
@@ -350,13 +353,14 @@ dp_ibox = dp_bbox.map(fn=geobox_to_imgbox)
 ```
 
 Now to plot 🎨 and double check that the boxes are positioned correctly in
-image space 🌌.
+0-128 image space 🌌.
 
 ```{code-cell}
 # Get one chip with over 10 building footprint geometries
 for ibox, ichip in dp_ibox:
     if len(ibox) > 10:
         break
+ibox
 ```
 
 ```{code-cell}
@@ -388,3 +392,129 @@ like 🎌 centre-based coordinates with width and height (`cxcywh`), or
 📨 oriented/rotated bounding box coordinates, feel free to implement your own
 function and DataPipe for it 🤗!
 ```
+
+
+## 2️⃣ There and back again 🧙
+
+What follows on from here requires focus 🤫. To start, we'll pool the hundred
+💯 128x128 chips into 10 batches (10 chips per batch) using
+{py:class}`torchdata.datapipes.iter.Batcher` (functional name: `batch`).
+
+```{code-cell}
+dp_batch = dp_ibox.batch(batch_size=10)
+print(f"Number of items in first batch: {len(list(dp_batch)[0])}")
+```
+
+### Batch boxes with variable lengths 📏
+
+Next, we'll stack 🥞 all the image chips into a single tensor (recall
+{doc}`./chipping`), and concatenate 📚 the bounding boxes into a list of
+tensors using {py:class}`torchdata.datapipes.iter.Collator` (functional name:
+`collate`).
+
+```{code-cell}
+def boximg_collate_fn(samples) -> (list[torch.Tensor], torch.Tensor, list[dict]):
+    """
+    Converts bounding boxes and raster images to tensor objects and keeps
+    geographic metadata (spatial extent, coordinate reference system and
+    spatial resolution).
+
+    Specifically, the bounding boxes in pandas.DataFrame format are each
+    converted to a torch.Tensor and collated into a list, while the raster
+    images in xarray.Dataset format are converted to a torch.Tensor (int16
+    dtype) and stacked into a single torch.Tensor.
+    """
+    box_tensors: list[torch.Tensor] = [
+        torch.as_tensor(sample[0].to_numpy(dtype=np.float32)) for sample in samples
+    ]
+
+    tensors: list[torch.Tensor] = [
+        torch.as_tensor(
+            data=sample[1]
+            .data_vars.get(key="__xarray_dataarray_variable__")
+            .data.astype("int16"),
+        )
+        for sample in samples
+    ]
+    img_tensors = torch.stack(tensors=tensors)
+
+    metadata: list[dict] = [
+        {
+            "bbox": sample[1].rio.bounds(),
+            "crs": sample[1].rio.crs,
+            "resolution": sample[1].rio.resolution(),
+        }
+        for sample in samples
+    ]
+
+    return box_tensors, img_tensors, metadata
+```
+
+```{code-cell}
+dp_collate = dp_batch.collate(collate_fn=boximg_collate_fn)
+print(f"Number of mini-batches: {len(list(dp_collate))}")
+mini_batch_box, mini_batch_img, mini_batch_metadata = list(dp_collate)[1]
+print(f"Mini-batch image tensor shape: {mini_batch_img.shape}")
+print(f"Mini-batch box tensors: {mini_batch_box}")
+print(f"Mini-batch metadata: {mini_batch_metadata}")
+```
+
+The DataPipe is complete 🙌, let's visualize the entire data pipeline graph.
+
+```{code-cell}
+torchdata.datapipes.utils.to_graph(dp=dp_collate)
+```
+
+### Into a DataLoader 🏋️
+
+Loop over the DataPipe using {py:class}`torch.utils.data.DataLoader` ⚙️!
+
+```{code-cell}
+dataloader = torch.utils.data.DataLoader2(dataset=dp_collate, batch_size=None)
+for i, batch in enumerate(dataloader):
+    box, img, metadata = batch
+    print(f"Batch {i} - img: {img.shape}, box sizes: {[len(b) for b in box]}")
+```
+
+There's probably hundreds of models you can 🍜 feed this data into, from
+mmdetection's {doc}`mmdetection:model_zoo` 🐼 to torchvision's
+{doc}`torchvision:models`). But are we out of the woods yet?
+
+### Georeference image boxes 📍
+
+To turn the model's predicted bounding boxes in image space 🌌 back to
+geographic coordinates 🌐, you'll need to use an
+[affine transform](https://web.archive.org/web/20210506173651/https://www.perrygeo.com/python-affine-transforms.html).
+Assuming you've kept your 🏷️ metadata intact, here's an example on how to do
+the georeferencing:
+
+```{code-cell}
+for batch in dataloader:
+    pred_boxes, images, metadata = batch
+
+    objs: list = []
+    for idx in range(0, len(images)):
+        left, bottom, right, top = metadata[idx]["bbox"]
+        crs = metadata[idx]["crs"]
+        x_res, y_res = metadata[idx]["resolution"]
+
+        gdf = gpd.GeoDataFrame(
+            geometry=[
+                shapely.affinity.affine_transform(
+                    geom=shapely.geometry.box(*coords),
+                    matrix=[x_res, 0, 0, y_res, left, top],
+                )
+                for coords in pred_boxes[idx]
+            ],
+            crs=crs,
+        )
+        objs.append(gdf.to_crs(crs=crs))
+
+    geodataframe: gpd.GeoDataFrame = pd.concat(objs=objs, ignore_index=True)
+    geodataframe.set_crs(crs=crs, inplace=True)
+    break
+
+geodataframe
+```
+
+Back at square one, or are we?

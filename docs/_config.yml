@@ -47,6 +47,9 @@ sphinx:
       geopandas:
         - 'https://geopandas.org/en/latest/'
         - null
+      mmdetection:
+        - 'https://mmdetection.readthedocs.io/zh_CN/latest/'
+        - null
       numpy:
         - 'https://numpy.org/doc/stable'
         - null
