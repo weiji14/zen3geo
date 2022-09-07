@@ -38,11 +38,20 @@ sphinx:
       # https://sphinx-book-theme.readthedocs.io/en/stable/customize/sidebar-secondary.html
       show_toc_level: 3
     intersphinx_mapping:
+      contextily:
+        - 'https://contextily.readthedocs.io/en/latest/'
+        - null
       datashader:
         - 'https://datashader.org/'
         - null
       geopandas:
         - 'https://geopandas.org/en/latest/'
+        - null
+      mmdetection:
+        - 'https://mmdetection.readthedocs.io/zh_CN/latest/'
+        - null
+      numpy:
+        - 'https://numpy.org/doc/stable'
         - null
       pyogrio:
         - 'https://pyogrio.readthedocs.io/en/latest/'
@@ -63,7 +72,10 @@ sphinx:
         - 'https://pytorch.org/docs/stable/'
         - null
       torchdata:
-        - 'https://pytorch.org/data/main'
+        - 'https://pytorch.org/data/main/'
+        - null
+      torchvision:
+        - 'https://pytorch.org/vision/main/'
         - null
       xarray:
         - 'https://docs.xarray.dev/en/latest/'

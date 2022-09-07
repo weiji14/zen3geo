@@ -11,6 +11,8 @@ chapters:
         file: chipping
       - title: 🫧 Vector Segmentation Masks
         file: vector-segmentation-masks
+      - title: 🥡 Object Detection Boxes
+        file: object-detection-boxes
   - title: 📖 API Reference
     file: api
   - title: 📆 Changelog
