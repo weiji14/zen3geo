@@ -188,7 +188,7 @@ def fn(da):
     return torch.as_tensor(da.data)
 ```
 
-Using {py:class}`torchdata.datapipes.iter.Mapper`,
+Using {py:class}`torchdata.datapipes.iter.Mapper` (functional name: `map`),
 we'll apply the tensor conversion function to each dataarray in the DataPipe.
 
 ```{code-cell}
