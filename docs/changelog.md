@@ -1,5 +1,33 @@
 # Changelog
 
+## Release v0.4.0 (2022/09/08)
+
+### 💫 Highlights
+
+* 🎉 **Fourth release of zen3geo** 🎉
+* 🚸 Walkthrough on object detection with bounding boxes ([#49](https://github.com/weiji14/zen3geo/pull/49))
+
+### 🚀 Features
+
+* ✨ GeoPandasRectangleClipper for spatially subsetting vectors ([#52](https://github.com/weiji14/zen3geo/pull/52))
+
+### 📖 Documentation
+
+* 📝 Add install from conda-forge instructions ([#55](https://github.com/weiji14/zen3geo/pull/55))
+* ✏️ Edit docs to use OGC:CRS84 lon/lat instead of EPSG:4326 ([#45](https://github.com/weiji14/zen3geo/pull/45))
+* 💡 Warn about overlapping strides if followed by train/val split ([#43](https://github.com/weiji14/zen3geo/pull/43))
+
+### 🧰 Maintenance
+
+* ⬆️ Bump poetry from 1.2.0rc1 to 1.2.0 ([#47](https://github.com/weiji14/zen3geo/pull/47))
+* ⬆️ Bump poetry from 1.2.0b3 to 1.2.0rc1 ([#44](https://github.com/weiji14/zen3geo/pull/44))
+
+### 🧑‍🤝‍🧑 Contributors
+
+[@dependabot[bot]](https://github.com/dependabot-bot) and [@weiji14](https://github.com/weiji14)
+
+---
+
 ## Release v0.3.0 (2022/08/19)
 
 ### 💫 Highlights
@@ -25,7 +53,7 @@
 
 ### 🧑‍🤝‍🧑 Contributors
 
-@weiji14
+[@weiji14](https://github.com/weiji14)
 
 ---
 
@@ -55,7 +83,7 @@
 
 ### 🧑‍🤝‍🧑 Contributors
 
-@weiji14
+[@weiji14](https://github.com/weiji14)
 
 ---
 
