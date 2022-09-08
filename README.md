@@ -25,4 +25,8 @@ Or the stable version from [PyPI](https://pypi.org/project/zen3geo):
 
     pip install zen3geo
 
-More detailed instructions at https://zen3geo.readthedocs.io/en/latest/#installation
+If instead, [conda-forge](https://anaconda.org/conda-forge/zen3geo) you desire:
+
+    mamba install --channel conda-forge zen3geo
+
+Other instructions, see https://zen3geo.readthedocs.io/en/latest/#installation
