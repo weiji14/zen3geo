@@ -12,6 +12,10 @@ kernelspec:
 
 # Chipping and batching data
 
+> What is separation?
+>
+> What isn't?
+
 Following on from the previous tutorial,
 let's 🧑‍🎓 learn more about creating a more complicated 🌈 raster data pipeline.
 Specifically, we'll go through the following:
@@ -226,7 +230,7 @@ def xr_collate_fn(samples) -> torch.Tensor:
 ```
 
 Then, pass this collate function to
-{py:class}`torchdata.datapipes.iter.Collator`.
+{py:class}`torchdata.datapipes.iter.Collator` (functional name: `collate`).
 
 ```{code-cell}
 dp_collate = dp_batch.collate(collate_fn=xr_collate_fn)

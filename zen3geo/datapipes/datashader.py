@@ -10,12 +10,12 @@ except ImportError:
 try:
     import spatialpandas
     from spatialpandas.geometry import (
-        PointDtype,
-        MultiPointDtype,
         LineDtype,
         MultiLineDtype,
-        PolygonDtype,
+        MultiPointDtype,
         MultiPolygonDtype,
+        PointDtype,
+        PolygonDtype,
     )
 except ImportError:
     spatialpandas = None
@@ -43,8 +43,8 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
 
     vector_datapipe : IterDataPipe[geopandas.GeoDataFrame]
         A DataPipe that contains :py:class:`geopandas.GeoSeries` or
-        :py:class:`geopandas.GeoDataFrame` vector geometries with a ``.crs``
-        attribute.
+        :py:class:`geopandas.GeoDataFrame` vector geometries with a
+        :py:attr:`.crs <geopandas.GeoDataFrame.crs>` property.
 
     agg : Optional[datashader.reductions.Reduction]
         Reduction operation to compute. Default depends on the input vector

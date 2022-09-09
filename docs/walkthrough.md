@@ -132,7 +132,7 @@ dp_rioxarray
 
 Note that both ways are equivalent (they produce the same IterDataPipe output),
 but the latter (functional) form is preferred, see also
-https://pytorch.org/data/0.4.0/tutorial.html#registering-datapipes-with-the-functional-api
+https://pytorch.org/data/0.4/tutorial.html#registering-datapipes-with-the-functional-api
 
 What if you don't want the whole Sentinel-2 scene at the full 10m resolution?
 Since we're using Cloud-Optimized GeoTIFFs, you could set an ``overview_level``
@@ -188,7 +188,7 @@ def fn(da):
     return torch.as_tensor(da.data)
 ```
 
-Using {py:class}`torchdata.datapipes.iter.Mapper`,
+Using {py:class}`torchdata.datapipes.iter.Mapper` (functional name: `map`),
 we'll apply the tensor conversion function to each dataarray in the DataPipe.
 
 ```{code-cell}
@@ -211,8 +211,8 @@ And so it begins 🌄
 
 That’s all 🎉! For more information on how to use DataPipes, check out:
 
-- Tutorial at https://pytorch.org/data/0.4.0/tutorial.html
-- Usage examples at https://pytorch.org/data/0.4.0/examples.html
+- {doc}`TorchData Tutorials <torchdata:tutorial>`
+- {doc}`TorchData Usage Examples <torchdata:examples>`
 
 If you have any questions 🙋, feel free to ask us anything at
 https://github.com/weiji14/zen3geo/discussions or visit the Pytorch forums at
