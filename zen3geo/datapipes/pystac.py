@@ -41,6 +41,9 @@ class PySTACItemReaderIterDataPipe(IterDataPipe):
 
     Example
     -------
+    >>> import pytest
+    >>> pystac = pytest.importorskip("pystac")
+    ...
     >>> from torchdata.datapipes.iter import IterableWrapper
     >>> from zen3geo.datapipes import PySTACItemReader
     ...
