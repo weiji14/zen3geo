@@ -56,6 +56,9 @@ sphinx:
       pyogrio:
         - 'https://pyogrio.readthedocs.io/en/latest/'
         - null
+      pystac:
+        - 'https://pystac.readthedocs.io/en/latest/'
+        - null
       python:
         - 'https://docs.python.org/3/'
         - null

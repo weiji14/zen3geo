@@ -3028,13 +3028,13 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [extras]
 docs = ["adlfs", "contextily", "datashader", "graphviz", "jupyter-book", "matplotlib", "planetary-computer", "pyogrio", "pystac", "spatialpandas", "xbatcher"]
 raster = ["xbatcher"]
-spatial = ["datashader", "spatialpandas"]
+spatial = ["datashader", "pystac", "spatialpandas"]
 vector = ["pyogrio"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8, <3.12"
-content-hash = "cff276bd73fe7f69a254054f0268ba12de8b091d2b0f71bccbbfb126918f6b58"
+content-hash = "b744418325d07994b7c83d3ee468fddea0996e18a27a5222ac09c275e69f9130"
 
 [metadata.files]
 adal = [
