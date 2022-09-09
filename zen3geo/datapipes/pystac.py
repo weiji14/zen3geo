@@ -11,12 +11,12 @@ from torchdata.datapipes import functional_datapipe
 from torchdata.datapipes.iter import IterDataPipe
 
 
-@functional_datapipe("read_from_pystac_item")
+@functional_datapipe("read_to_pystac_item")
 class PySTACItemReaderIterDataPipe(IterDataPipe):
     """
     Takes files from local disk or URLs (as long as they can be read by pystac)
-    and yields :py:class:`pystac.item.Item` objects (functional name:
-    ``read_from_pystac_item``).
+    and yields :py:class:`pystac.Item` objects (functional name:
+    ``read_to_pystac_item``).
 
     Parameters
     ----------
@@ -28,9 +28,9 @@ class PySTACItemReaderIterDataPipe(IterDataPipe):
 
     Yields
     ------
-    stream_obj : pystac.item.Item
-        An :py:class:`pystac.item.Item` object containing the specific
-        STACObject implementation class represented in a JSON format.
+    stac_item : pystac.Item
+        An :py:class:`pystac.Item` object containing the specific STACObject
+        implementation class represented in a JSON format.
 
     Raises
     ------
@@ -47,7 +47,7 @@ class PySTACItemReaderIterDataPipe(IterDataPipe):
     >>> # Read in STAC Item using DataPipe
     >>> item_url: str = "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20220115T032101_R118_T48NUG_20220115T170435"
     >>> dp = IterableWrapper(iterable=[item_url])
-    >>> dp_pystac = dp.read_from_pystac_item()
+    >>> dp_pystac = dp.read_to_pystac_item()
     ...
     >>> # Loop or iterate over the DataPipe stream
     >>> it = iter(dp_pystac)
