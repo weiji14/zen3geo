@@ -2094,7 +2094,7 @@ validation = ["jsonschema (>=3.0)"]
 
 [[package]]
 name = "pystac-client"
-version = "0.3.5"
+version = "0.4.0"
 description = "Python library for working with Spatiotemporal Asset Catalog (STAC)."
 category = "main"
 optional = true
@@ -2106,7 +2106,7 @@ python-dateutil = ">=2.7.0"
 requests = ">=2.25"
 
 [package.extras]
-validation = ["jsonschema (==3.2.0)"]
+validation = ["jsonschema (>=4.5.1)"]
 
 [[package]]
 name = "pytest"
@@ -3028,13 +3028,13 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [extras]
 docs = ["adlfs", "contextily", "datashader", "graphviz", "jupyter-book", "matplotlib", "planetary-computer", "pyogrio", "pystac", "spatialpandas", "xbatcher"]
 raster = ["xbatcher"]
-spatial = ["datashader", "pystac", "spatialpandas"]
+spatial = ["datashader", "pystac", "pystac-client", "spatialpandas"]
 vector = ["pyogrio"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8, <3.12"
-content-hash = "b744418325d07994b7c83d3ee468fddea0996e18a27a5222ac09c275e69f9130"
+content-hash = "0adafb59178301ac166b0b488b7db2f1799252fcef681cca7ad47d9fd2de37ba"
 
 [metadata.files]
 adal = [
@@ -4574,8 +4574,8 @@ pystac = [
     {file = "pystac-1.4.0.tar.gz", hash = "sha256:6ec43e1c6bec50fbfbdede49c3ccb83ecd112072a938001b5c9c581fc2945e83"},
 ]
 pystac-client = [
-    {file = "pystac-client-0.3.5.tar.gz", hash = "sha256:42b64c7322096c53cc13b9ef77025edf5d718b9e872a101712649a4ae8d5e0d0"},
-    {file = "pystac_client-0.3.5-py3-none-any.whl", hash = "sha256:8a8dc068933c222cabc56801b8c21cdb1ae31e06544ea83ca92973c76b4f547b"},
+    {file = "pystac-client-0.4.0.tar.gz", hash = "sha256:8e014f669a88d55c7902a9c1a839048ee87939576060b2d3cc9f6d17cf879056"},
+    {file = "pystac_client-0.4.0-py3-none-any.whl", hash = "sha256:3c88c9f0473b29cec463ed9fd7b963f3c428efbea678a3804978b38dc9745ed0"},
 ]
 pytest = [
     {file = "pytest-7.1.2-py3-none-any.whl", hash = "sha256:13d0e3ccfc2b6e26be000cb6568c832ba67ba32e719443bfe725814d3c42433c"},
