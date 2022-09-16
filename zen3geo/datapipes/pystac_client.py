@@ -110,8 +110,6 @@ class PySTACAPISearchIterDataPipe(IterDataPipe):
         for query in self.source_datapipe:
             search = catalog.search(**query, **self.kwargs)
             yield search
-            for item in search.items():
-                print(item)
 
     def __len__(self) -> int:
         return len(self.source_datapipe)
