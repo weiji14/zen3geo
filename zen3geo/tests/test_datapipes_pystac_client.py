@@ -17,19 +17,17 @@ def test_pystac_client_item_search():
     query: dict = dict(
         bbox=[150.9, -34.36, 151.3, -33.46],
         datetime=["2000-01-01T00:00:00Z", "2020-12-31T00:00:00Z"],
+        collections=["nidem"],
     )
     dp = IterableWrapper(iterable=[query])
 
     # Using class constructors
     dp_pystac_client = PySTACAPISearch(
-        source_datapipe=dp,
-        catalog_url="https://explorer.sandbox.dea.ga.gov.au/stac/",
-        collections=["nidem"],
+        source_datapipe=dp, catalog_url="https://explorer.sandbox.dea.ga.gov.au/stac/"
     )
     # Using functional form (recommended)
     dp_pystac_client = dp.search_for_pystac_item(
-        catalog_url="https://explorer.sandbox.dea.ga.gov.au/stac/",
-        collections=["nidem"],
+        catalog_url="https://explorer.sandbox.dea.ga.gov.au/stac/"
     )
 
     assert len(dp_pystac_client) == 1

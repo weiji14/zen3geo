@@ -24,7 +24,19 @@ class PySTACAPISearchIterDataPipe(IterDataPipe):
     source_datapipe : IterDataPipe[dict]
         A DataPipe that contains STAC API query parameters in the form of a
         Python dictionary to pass to :py:meth:`pystac_client.Client.search`.
-        The arguments for each query parameter in the iterable can be unique.
+        For example:
+
+        - **bbox** -  A list, tuple, or iterator representing a bounding box of
+          2D or 3D coordinates. Results will be filtered to only those
+          intersecting the bounding box.
+        - **datetime** - Either a single datetime or datetime range used to
+          filter results. You may express a single datetime using a
+          :py:class:`datetime.datetime` instance, a
+          `RFC 3339-compliant <https://tools.ietf.org/html/rfc3339>`_
+          timestamp, or a simple date string.
+        - **collections** - List of one or more Collection IDs or
+          :py:class:`pystac.Collection` instances. Only Items in one of the
+          provided Collections will be searched.
 
     catalog_url : str
         The URL of a STAC Catalog. If not specified, this will use the
@@ -32,8 +44,16 @@ class PySTACAPISearchIterDataPipe(IterDataPipe):
 
     kwargs : Optional
         Extra keyword arguments to pass to
-        :py:meth:`pystac_client.Client.search`. These arguments will be used
-        for every STAC API query, so it is best to set common arguments here.
+        :py:meth:`pystac_client.Client.open`. For example:
+
+        - **headers** - A dictionary of additional headers to use in all
+          requests made to any part of this Catalog/API.
+        - **parameters** - Optional dictionary of query string parameters to
+          include in all requests.
+        - **modifier** - A callable that modifies the children collection and
+          items returned by this Client. This can be useful for injecting
+          authentication parameters into child assets to access data from
+          non-public sources.
 
     Yields
     ------
@@ -61,11 +81,12 @@ class PySTACAPISearchIterDataPipe(IterDataPipe):
     >>> query = dict(
     ...     bbox=[174.5, -41.37, 174.9, -41.19],
     ...     datetime=["2012-02-20T00:00:00Z", "2022-12-22T00:00:00Z"],
+    ...     collections=["cop-dem-glo-30"],
     ... )
     >>> dp = IterableWrapper(iterable=[query])
     >>> dp_pystac_client = dp.search_for_pystac_item(
     ...     catalog_url="https://planetarycomputer.microsoft.com/api/stac/v1",
-    ...     collections=["cop-dem-glo-30"],
+    ...     # modifier=planetary_computer.sign_inplace,
     ... )
     >>> # Loop or iterate over the DataPipe stream
     >>> it = iter(dp_pystac_client)
@@ -105,10 +126,10 @@ class PySTACAPISearchIterDataPipe(IterDataPipe):
         self.kwargs = kwargs
 
     def __iter__(self) -> Iterator:
-        catalog = pystac_client.Client.open(url=self.catalog_url)
+        catalog = pystac_client.Client.open(url=self.catalog_url, **self.kwargs)
 
         for query in self.source_datapipe:
-            search = catalog.search(**query, **self.kwargs)
+            search = catalog.search(**query)
             yield search
 
     def __len__(self) -> int:
