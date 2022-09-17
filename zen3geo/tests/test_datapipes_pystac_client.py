@@ -55,3 +55,36 @@ def test_pystac_client_item_search():
         "cubedash:region_code": None,
     }
     assert stac_item.assets["nidem"].extra_fields["eo:bands"] == [{"name": "nidem"}]
+
+
+def test_pystac_client_item_search_open_parameters():
+    """
+    Ensure that PySTACAPISearch works to query a STAC API /search/ endpoint
+    with parameters passed to pystac_client.Client.open.
+    """
+    query: dict = dict(
+        bbox=[150.9, -34.36, 151.3, -33.46],
+        datetime=["2020-01-01T00:00:00Z", "2022-12-31T00:00:00Z"],
+    )
+    dp = IterableWrapper(iterable=[query])
+
+    # Using class constructors
+    dp_pystac_client = PySTACAPISearch(
+        source_datapipe=dp,
+        catalog_url="https://api.radiant.earth/mlhub/v1/",
+        parameters={"key": "ANON_MLHUB_API_KEY"},
+    )
+    # Using functional form (recommended)
+    dp_pystac_client = dp.search_for_pystac_item(
+        catalog_url="https://api.radiant.earth/mlhub/v1/",
+        parameters={"key": "ANON_MLHUB_API_KEY"},
+    )
+
+    assert len(dp_pystac_client) == 1
+    it = iter(dp_pystac_client)
+    stac_item_search = next(it)
+    assert stac_item_search.client.title == "Radiant MLHub API"
+    assert stac_item_search.client.description == "stac-fastapi"
+    assert stac_item_search.client.validate() == [
+        "https://schemas.stacspec.org/v1.0.0/catalog-spec/json-schema/catalog.json"
+    ]
