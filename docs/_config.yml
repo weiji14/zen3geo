@@ -59,6 +59,9 @@ sphinx:
       pystac:
         - 'https://pystac.readthedocs.io/en/latest/'
         - null
+      pystac_client:
+        - 'https://pystac-client.readthedocs.io/en/latest/'
+        - null
       python:
         - 'https://docs.python.org/3/'
         - null
