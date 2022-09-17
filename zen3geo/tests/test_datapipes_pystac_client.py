@@ -85,6 +85,3 @@ def test_pystac_client_item_search_open_parameters():
     stac_item_search = next(it)
     assert stac_item_search.client.title == "Radiant MLHub API"
     assert stac_item_search.client.description == "stac-fastapi"
-    assert stac_item_search.client.validate() == [
-        "https://schemas.stacspec.org/v1.0.0/catalog-spec/json-schema/catalog.json"
-    ]
