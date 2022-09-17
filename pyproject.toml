@@ -58,9 +58,11 @@ docs = [
 raster = ["xbatcher"]
 spatial = [
     "datashader",
-    "pystac",
-    "pystac_client",
     "spatialpandas"
+]
+stac = [
+    "pystac",
+    "pystac_client"
 ]
 vector = ["pyogrio"]
 
