@@ -9,7 +9,7 @@ Get what you need, not more, not less:
 | `pip install zen3geo`          | rioxarray, torchdata |
 | `pip install zen3geo[raster]`  | rioxarray, torchdata, xbatcher |
 | `pip install zen3geo[spatial]` | rioxarray, torchdata, datashader, spatialpandas |
-| `pip install zen3geo[stac]`    | rioxarray, torchdata, pystac, pystac-client |
+| `pip install zen3geo[stac]`    | rioxarray, torchdata, pystac, pystac-client, stackstac |
 | `pip install zen3geo[vector]`  | rioxarray, torchdata, pyogrio[geopandas] |
 
 Retrieve more ['extras'](https://github.com/weiji14/zen3geo/blob/main/pyproject.toml) using
