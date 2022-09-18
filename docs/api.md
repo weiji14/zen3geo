@@ -63,6 +63,15 @@
     :show-inheritance:
 ```
 
+### Stackstac
+
+```{eval-rst}
+.. automodule:: zen3geo.datapipes.stackstac
+.. autoclass:: zen3geo.datapipes.StackSTACStacker
+.. autoclass:: zen3geo.datapipes.stackstac.StackSTACStackerIterDataPipe
+    :show-inheritance:
+```
+
 ### Xbatcher
 
 ```{eval-rst}
