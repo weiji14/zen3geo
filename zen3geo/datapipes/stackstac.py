@@ -3,6 +3,8 @@ DataPipes for :doc:`stackstac <stackstac:index>`.
 """
 from typing import Any, Dict, Iterator, Optional
 
+import xarray as xr
+
 try:
     import stackstac
 except ImportError:
@@ -12,7 +14,7 @@ from torchdata.datapipes.iter import IterDataPipe
 
 
 @functional_datapipe("stack_stac_items")
-class StackSTACStackerIterDataPipe(IterDataPipe):
+class StackSTACStackerIterDataPipe(IterDataPipe[xr.DataArray]):
     """
     Takes :py:class:`pystac.Item` objects, reprojects them to the same grid
     and stacks them along time, to yield :py:class:`xarray.DataArray` objects
@@ -28,7 +30,7 @@ class StackSTACStackerIterDataPipe(IterDataPipe):
 
     Yields
     ------
-    stac_item : xarray.DataArray
+    datacube : xarray.DataArray
         An :py:class:`xarray.DataArray` backed by a
         :py:class:`dask.array.Array` containing the time-series datacube. The
         dimensions will be ("time", "band", "y", "x").
@@ -87,7 +89,7 @@ class StackSTACStackerIterDataPipe(IterDataPipe):
         self.source_datapipe: IterDataPipe = source_datapipe
         self.kwargs = kwargs
 
-    def __iter__(self) -> Iterator:
+    def __iter__(self) -> Iterator[xr.DataArray]:
         for stac_items in self.source_datapipe:
             yield stackstac.stack(items=stac_items, **self.kwargs)
 
