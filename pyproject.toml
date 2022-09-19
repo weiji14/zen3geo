@@ -36,6 +36,7 @@ matplotlib = {version = "*", optional = true}
 planetary-computer = {version="*", optional=true}
 pystac = {version="*", optional=true}
 pystac-client = {version = "*", optional = true}
+stackstac = {version = "*", optional = true}
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
@@ -62,7 +63,8 @@ spatial = [
 ]
 stac = [
     "pystac",
-    "pystac_client"
+    "pystac_client",
+    "stackstac"
 ]
 vector = ["pyogrio"]
 

@@ -484,7 +484,7 @@ cloudpickle = ">=1.1.1"
 distributed = {version = "2022.6.1", optional = true, markers = "extra == \"complete\""}
 fsspec = ">=0.6.0"
 jinja2 = {version = "*", optional = true, markers = "extra == \"complete\""}
-numpy = {version = ">=1.18", optional = true, markers = "extra == \"complete\""}
+numpy = {version = ">=1.18", optional = true, markers = "extra == \"array\""}
 packaging = ">=20.0"
 pandas = {version = ">=1.0", optional = true, markers = "extra == \"complete\""}
 partd = ">=0.3.10"
@@ -2767,6 +2767,23 @@ pure-eval = "*"
 tests = ["cython", "littleutils", "pygments", "pytest", "typeguard"]
 
 [[package]]
+name = "stackstac"
+version = "0.4.3"
+description = "Load a STAC collection into xarray with dask"
+category = "main"
+optional = true
+python-versions = ">=3.8,<4.0"
+
+[package.dependencies]
+dask = {version = ">=2022.1.1", extras = ["array"]}
+pyproj = ">=3.0.0,<4.0.0"
+rasterio = ">=1.3.0,<2.0.0"
+xarray = ">=0.18"
+
+[package.extras]
+viz = ["Pillow (>=9.0.1,<10.0.0)", "aiohttp (>=3.7.4,<4.0.0)", "cachetools (>=4.2.2,<5.0.0)", "distributed (>=2022.1.1)", "ipyleaflet (>=0.13.6,<1.0.0)", "ipywidgets (>=7.6.3,<8.0.0)", "matplotlib (>=3.4.1)", "mercantile (>=1.1.6,<2.0.0)", "scipy (>=1.6.1,<2.0.0)"]
+
+[[package]]
 name = "tblib"
 version = "1.7.0"
 description = "Traceback serialization library."
@@ -3029,13 +3046,13 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 docs = ["adlfs", "contextily", "datashader", "graphviz", "jupyter-book", "matplotlib", "planetary-computer", "pyogrio", "pystac", "spatialpandas", "xbatcher"]
 raster = ["xbatcher"]
 spatial = ["datashader", "spatialpandas"]
-stac = ["pystac", "pystac-client"]
+stac = ["pystac", "pystac-client", "stackstac"]
 vector = ["pyogrio"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8, <3.12"
-content-hash = "ae212704d211197f6701436fc0127e9024775ec50de69bf639e282d81f56d316"
+content-hash = "37f5f1ade25c98838cac73546a42bc3f3b679fc72f6f9bea2b922747aaed1afb"
 
 [metadata.files]
 adal = [
@@ -5001,6 +5018,10 @@ sqlalchemy = [
 stack-data = [
     {file = "stack_data-0.2.0-py3-none-any.whl", hash = "sha256:999762f9c3132308789affa03e9271bbbe947bf78311851f4d485d8402ed858e"},
     {file = "stack_data-0.2.0.tar.gz", hash = "sha256:45692d41bd633a9503a5195552df22b583caf16f0b27c4e58c98d88c8b648e12"},
+]
+stackstac = [
+    {file = "stackstac-0.4.3-py3-none-any.whl", hash = "sha256:eea5aa1bb6d6575e65d48f5ae0650607408130bd3a601fbd5b1e6c2d028b77b4"},
+    {file = "stackstac-0.4.3.tar.gz", hash = "sha256:2a4137f590ab005e709078da199d666d2e357811abb8ea508c1e9d3b876cd76f"},
 ]
 tblib = [
     {file = "tblib-1.7.0-py2.py3-none-any.whl", hash = "sha256:289fa7359e580950e7d9743eab36b0691f0310fce64dee7d9c31065b8f723e23"},

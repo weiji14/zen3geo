@@ -41,6 +41,9 @@ sphinx:
       contextily:
         - 'https://contextily.readthedocs.io/en/latest/'
         - null
+      dask:
+        - 'https://docs.dask.org/en/latest/'
+        - null
       datashader:
         - 'https://datashader.org/'
         - null
@@ -51,7 +54,7 @@ sphinx:
         - 'https://mmdetection.readthedocs.io/zh_CN/latest/'
         - null
       numpy:
-        - 'https://numpy.org/doc/stable'
+        - 'https://numpy.org/doc/stable/'
         - null
       pyogrio:
         - 'https://pyogrio.readthedocs.io/en/latest/'
@@ -72,7 +75,10 @@ sphinx:
         - 'https://corteva.github.io/rioxarray/stable/'
         - null
       shapely:
-        - 'https://shapely.readthedocs.io/en/latest'
+        - 'https://shapely.readthedocs.io/en/latest/'
+        - null
+      stackstac:
+        - 'https://stackstac.readthedocs.io/en/latest/'
         - null
       torch:
         - 'https://pytorch.org/docs/stable/'
