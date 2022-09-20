@@ -1773,7 +1773,7 @@ tests = ["check-manifest", "coverage", "defusedxml", "markdown2", "olefile", "pa
 
 [[package]]
 name = "planetary-computer"
-version = "0.4.6"
+version = "0.4.7"
 description = "Planetary Computer SDK for Python"
 category = "main"
 optional = true
@@ -2094,7 +2094,7 @@ validation = ["jsonschema (>=3.0)"]
 
 [[package]]
 name = "pystac-client"
-version = "0.4.0"
+version = "0.5.0"
 description = "Python library for working with Spatiotemporal Asset Catalog (STAC)."
 category = "main"
 optional = true
@@ -2103,7 +2103,7 @@ python-versions = ">=3.7"
 [package.dependencies]
 pystac = ">=1.4.0"
 python-dateutil = ">=2.7.0"
-requests = ">=2.25"
+requests = ">=2.27.1"
 
 [package.extras]
 validation = ["jsonschema (>=4.5.1)"]
@@ -4323,8 +4323,8 @@ pillow = [
     {file = "Pillow-9.2.0.tar.gz", hash = "sha256:75e636fd3e0fb872693f23ccb8a5ff2cd578801251f3a4f6854c6a5d437d3c04"},
 ]
 planetary-computer = [
-    {file = "planetary-computer-0.4.6.tar.gz", hash = "sha256:1bfec27c6fd50ede4b5e36a781ebaa9827ca4114dbfc6840220594147c24e4fb"},
-    {file = "planetary_computer-0.4.6-py3-none-any.whl", hash = "sha256:e09bf84724e80d46ea5fdd64eec75425b8ec002509c904cfe43c49c4e0869c2a"},
+    {file = "planetary-computer-0.4.7.tar.gz", hash = "sha256:fcac7bd119f3efc8e5f808d6ff014e0c3aed2b4af9a9621604aebf0f867ab65c"},
+    {file = "planetary_computer-0.4.7-py3-none-any.whl", hash = "sha256:bfc674791f13404ad73f955fe942d2a964c0db3c12cabe2c37faeb94b9a71350"},
 ]
 platformdirs = [
     {file = "platformdirs-2.5.2-py3-none-any.whl", hash = "sha256:027d8e83a2d7de06bbac4e5ef7e023c02b863d7ea5d079477e722bb41ab25788"},
@@ -4592,8 +4592,8 @@ pystac = [
     {file = "pystac-1.4.0.tar.gz", hash = "sha256:6ec43e1c6bec50fbfbdede49c3ccb83ecd112072a938001b5c9c581fc2945e83"},
 ]
 pystac-client = [
-    {file = "pystac-client-0.4.0.tar.gz", hash = "sha256:8e014f669a88d55c7902a9c1a839048ee87939576060b2d3cc9f6d17cf879056"},
-    {file = "pystac_client-0.4.0-py3-none-any.whl", hash = "sha256:3c88c9f0473b29cec463ed9fd7b963f3c428efbea678a3804978b38dc9745ed0"},
+    {file = "pystac-client-0.5.0.tar.gz", hash = "sha256:cc45075c9fe6ae4c01db8099bf7ce70da9461d148c0dabe7e7e4a96ff2c82774"},
+    {file = "pystac_client-0.5.0-py3-none-any.whl", hash = "sha256:c4094222004ea369fd40a3c97bc85088bfea6c386d653678c673c4c2f6904155"},
 ]
 pytest = [
     {file = "pytest-7.1.2-py3-none-any.whl", hash = "sha256:13d0e3ccfc2b6e26be000cb6568c832ba67ba32e719443bfe725814d3c42433c"},
