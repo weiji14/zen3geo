@@ -46,7 +46,10 @@ Load up them libraries!
 import numpy as np
 import planetary_computer
 import pystac
+import rasterio
+import stackstac
 import torchdata
+import xarray as xr
 import zen3geo
 ```
 
@@ -227,13 +230,14 @@ dp_sen1_stack = dp_sen1_items.stack_stac_items(
 dp_sen1_stack
 ```
 
-The keyword arguments are passed to {py:func}`stackstac.stack` behind the
-scenes. The important parameters to set in this case are:
+The keyword arguments are 📨 passed to {py:func}`stackstac.stack` behind the
+scenes. The important❕parameters to set in this case are:
 
-- **assets**: The STAC item assets (typically the 'band' names)
-- **epsg**: The EPSG projection code, best if you know the native projection
-- **resolution**: Spatial resolution. The Sentinel-1 GRD is actually at 10m,
-  but we'll resample to 30m to keep things small and match the Copernicus DEM.
+- **assets**: The STAC item assets 🍱 (typically the 'band' names)
+- **epsg**: The 🌐 EPSG projection code, best if you know the native projection
+- **resolution**: Spatial resolution 📏. The Sentinel-1 GRD is actually at 10m,
+  but we'll resample to 30m to keep things small 🤏 and match the Copernicus
+  DEM.
 
 The result is a single {py:class}`xarray.DataArray` 'datacube' 🧊 with
 dimensions (time, band, y, x).
@@ -242,4 +246,89 @@ dimensions (time, band, y, x).
 it = iter(dp_sen1_stack)
 dataarray = next(it)
 dataarray
+```
+
+### Append single-band DEM to datacube 🧊
+
+Time for layer number 2 💕. Let's read the Copernicus DEM ⛰️ STAC Item into an
+{py:class}`xarray.DataArray` first, again via
+{py:class}`zen3geo.datapipes.StackSTACStacker` (functional name:
+`stack_stac_items`). We'll need to ensure ✔️ that the DEM is reprojected to the
+same 🌏 coordinate reference system and 📐 aligned to the same spatial extent
+as the Sentinel-1 time-series.
+
+```{code-cell}
+dp_copdem_stack = dp_copdem30_items.stack_stac_items(
+    assets=["data"],
+    epsg=32647,  # UTM Zone 47N
+    resolution=30,  # Spatial resolution of 30 metres
+    bounds_latlon=[99.933681, -0.009951, 100.065765, 0.147054], # W, S, E, N
+    xy_coords="center",  # pixel centroid coords instead of topleft corner
+    dtype=np.float16,  # Use a lightweight data type
+    resampling=rasterio.enums.Resampling.bilinear,  # Bilinear resampling
+)
+dp_copdem_stack
+```
+
+```{code-cell}
+it = iter(dp_copdem_stack)
+dataarray = next(it)
+dataarray
+```
+
+Great! The two {py:class}`xarray.DataArray` objects (Sentinel-1 and Copernicus
+DEM) can now be combined 🪢. First, use
+{py:class}`zen3geo.datapipes.iter.Zipper` (functional name: `zip`) to put the
+two {py:class}`xarray.DataArray` objects into a tuple 🎵.
+
+```{code-cell}
+dp_sen1_copdem = dp_sen1_stack.zip(dp_copdem_stack)
+dp_sen1_copdem
+```
+
+Next, use {py:class}`torchdata.datapipes.iter.Collator` (functional name:
+`collate`) to convert 🤸 the tuple of {py:class}`xarray.DataArray` objects into
+an {py:class}`xarray.Dataset` 🧊, similar to what was done in
+{doc}`./object-detection-boxes`.
+
+```{code-cell}
+def xr_collate_fn(sar_and_dem: tuple) -> xr.Dataset:
+    """
+    Combine a pair of xarray.DataArray (SAR, DEM) inputs into an
+    xarray.Dataset with data variables named 'vh', 'vv' and 'dem'.
+    """
+    # Turn 2 xr.DataArray objects into 1 xr.Dataset with multiple data vars
+    sar, dem = sar_and_dem
+
+    # Initialize xr.Dataset with VH and VV channels
+    dataset: xr.Dataset = sar.sel(band="vh").to_dataset(name="vh")
+    dataset["vv"] = sar.sel(band="vv")
+
+    # Add Copernicus DEM mosaic as another layer
+    dataset["dem"] = stackstac.mosaic(arr=dem).squeeze()
+
+    return dataset
+```
+
+```{code-cell}
+dp_vhvvdem_dataset = dp_sen1_copdem.collate(collate_fn=xr_collate_fn)
+dp_vhvvdem_dataset
+```
+
+Here's how the current {py:class}`xarray.Dataset` 🧱 is structured. Notice that
+VH and VV polarization channels 📡 are now two separate data variables, each
+with dimensions (time, y, x). The DEM ⛰️ data is not a time-series, so it has
+dimensions (y, x) only. All the 'band' dimensions have been removed ❌ and are
+now data variables within the {py:class}`xarray.Dataset` 😎.
+
+```{code-cell}
+it = iter(dp_vhvvdem_dataset)
+dataset = next(it)
+dataset
+```
+
+Visualize the DataPipe graph ⛓️ too for good measure.
+
+```{code-cell}
+torchdata.datapipes.utils.to_graph(dp=dp_vhvvdem_dataset)
 ```
