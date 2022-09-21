@@ -43,6 +43,7 @@ tutorial will cover the following topics:
 Load up them libraries!
 
 ```{code-cell}
+import numpy as np
 import planetary_computer
 import pystac
 import torchdata
@@ -60,9 +61,9 @@ Sentinel-1 Ground-Range Detected (GRD) SAR data 📡 obtained via a
 spatiotemporal query to a [STAC](https://stacspec.org) API.
 
 🔗 Links:
-- https://unosat.org/services
-- [UNOSAT satellite-detected landslide maps](https://unosat.org/products/3064)
-- [Microsoft Planetary Computer STAC Explorer](https://planetarycomputer.microsoft.com/explore?c=99.9822%2C0.0563&z=11.34&v=2&d=sentinel-1-grd&m=cql%3Ac3f87a557aa4e237d4820f413f9d33d8&r=VV%2C+VH+False-color+composite&s=false%3A%3A100%3A%3Atrue&ae=0)
+- [UNOSAT satellite-detected landslide maps over Pasaman, Indonesia](https://unosat.org/products/3064)
+- [Humanitarian Data Exchange link](https://data.humdata.org/dataset/landslide-analysis-in-mount-talakmau-in-pasaman-pasaman-barat-districts-indonesia-as-of-04)
+- [Microsoft Planetary Computer STAC Explorer](https://planetarycomputer.microsoft.com/explore?c=99.9823%2C0.0564&z=11.34&v=2&d=sentinel-1-grd%7C%7Ccop-dem-glo-30&m=cql%3A99108f1228c2543e04cad62d0a795c1a%7C%7CMost+recent&r=VV%2C+VH+False-color+composite%7C%7CElevation+%28terrain%29&s=false%3A%3A100%3A%3Atrue%7C%7Ctrue%3A%3A100%3A%3Atrue&ae=0)
 
 This is how the Sentinel-1 radar image looks like over Sumatra Barat, Indonesia
 on 23 February 2022, two days before the earthquake.
@@ -162,23 +163,77 @@ This query yields the following DEM tile 🀫.
 
 ![Copernicus 30m DEM over Sumatra Barat, Indonesia](https://planetarycomputer.microsoft.com/api/data/v1/item/preview.png?collection=cop-dem-glo-30&item=Copernicus_DSM_COG_10_N00_00_E099_00_DEM&assets=data&colormap_name=terrain&rescale=-1000%2C4000)
 
+### Landslide extent vector polygons 🔶
+
+Now for the target labels 🏷️. Following {doc}`./vector-segmentation-masks`,
+we'll first load the digitized landslide polygons from a vector file 📁 using
+{py:class}`zen3geo.datapipes.PyogrioReader` (functional name:
+``read_from_pyogrio``).
+
+```{code-cell}
+# https://gdal.org/user/virtual_file_systems.html#vsizip-zip-archives
+shape_url = "/vsizip/vsicurl/https://unosat-maps.web.cern.ch/ID/LS20220308IDN/LS20220308IDN_SHP.zip/LS20220308IDN_SHP/S2_20220304_LandslideExtent_MountTalakmau.shp"
+
+dp_shapes = torchdata.datapipes.iter.IterableWrapper(iterable=[shape_url])
+dp_pyogrio = dp_shapes.read_from_pyogrio()
+dp_pyogrio
+```
+
+Let's take a look at the {py:class}`geopandas.GeoDataFrame` data table
+📊 to see the attributes inside.
+
+```{code-cell}
+it = iter(dp_pyogrio)
+geodataframe = next(it)
+print(geodataframe.bounds)
+geodataframe.dropna(axis="columns")
+```
+
+We'll show you what the landslide segmentation masks 😷 look like after it's
+been rasterized later 😉.
+
 
 ## 1️⃣ Stack bands, append variables 📚
 
+There are now three layers 🍰 to handle, two rasters and a vector. This section
+will show you step by step 📶 instructions to
+{doc}`combine them using xarray <xarray:user-guide/combining>` like so:
+
+1. Stack the Sentinel-1 🛰️ time-series STAC Items (GeoTIFFs) into an
+   {py:class}`xarray.DataArray`.
+2. Combine the Sentinel-1 and Copernicus DEM ⛰️ {py:class}`xarray.DataArray`
+   layers into a single {py:class}`xarray.Dataset`.
+3. Using the {py:class}`xarray.Dataset` as a canvas template, rasterize the
+   landslide 🛝 polygon extents, and append the resulting segmentation mask as
+   another data variable 🗃️ in the {py:class}`xarray.Dataset`.
+
+### Stack multi-channel time-series GeoTIFFs 🗓️
+
 Each {py:class}`pystac.Item` in a {py:class}`pystac.ItemCollection` represents
-a 🛰️ Sentinel-1 GRD image captured at a particular datetime ⌚. Let's stack 🥞
-all of the items into 4D time-series tensor using
-{py:class}`zen3geo.datapipes.StackSTACStacker` (functional name:
-`stack_stac_items`)!
+a 🛰️ Sentinel-1 GRD image captured at a particular datetime ⌚. Let's subset
+the data to just the mountain area, and stack 🥞 all the STAC items into a 4D
+time-series tensor using {py:class}`zen3geo.datapipes.StackSTACStacker`
+(functional name: `stack_stac_items`)!
 
 ```{code-cell}
 dp_sen1_stack = dp_sen1_items.stack_stac_items(
     assets=["vh", "vv"],  # SAR polarizations
     epsg=32647,  # UTM Zone 47N
-    resolution=10,  # Spatial resolution of 10 metres
+    resolution=30,  # Spatial resolution of 30 metres
+    bounds_latlon=[99.933681, -0.009951, 100.065765, 0.147054], # W, S, E, N
+    xy_coords="center",  # pixel centroid coords instead of topleft corner
+    dtype=np.float16,  # Use a lightweight data type
 )
 dp_sen1_stack
 ```
+
+The keyword arguments are passed to {py:func}`stackstac.stack` behind the
+scenes. The important parameters to set in this case are:
+
+- **assets**: The STAC item assets (typically the 'band' names)
+- **epsg**: The EPSG projection code, best if you know the native projection
+- **resolution**: Spatial resolution. The Sentinel-1 GRD is actually at 10m,
+  but we'll resample to 30m to keep things small and match the Copernicus DEM.
 
 The result is a single {py:class}`xarray.DataArray` 'datacube' 🧊 with
 dimensions (time, band, y, x).
