@@ -160,7 +160,7 @@ dp_copdem30_items
 
 This query yields the following DEM tile 🀫.
 
-![Copernicus 30m DEM over ](https://planetarycomputer.microsoft.com/api/data/v1/item/preview.png?collection=cop-dem-glo-30&item=Copernicus_DSM_COG_10_N00_00_E099_00_DEM&assets=data&colormap_name=terrain&rescale=-1000%2C4000)
+![Copernicus 30m DEM over Sumatra Barat, Indonesia](https://planetarycomputer.microsoft.com/api/data/v1/item/preview.png?collection=cop-dem-glo-30&item=Copernicus_DSM_COG_10_N00_00_E099_00_DEM&assets=data&colormap_name=terrain&rescale=-1000%2C4000)
 
 
 ## 1️⃣ Stack bands, append variables 📚
@@ -172,19 +172,19 @@ all of the items into 4D time-series tensor using
 `stack_stac_items`)!
 
 ```{code-cell}
-dp_stackstac = dp_stac_items.stack_stac_items(
+dp_sen1_stack = dp_sen1_items.stack_stac_items(
     assets=["vh", "vv"],  # SAR polarizations
     epsg=32647,  # UTM Zone 47N
     resolution=10,  # Spatial resolution of 10 metres
 )
-dp_stackstac
+dp_sen1_stack
 ```
 
 The result is a single {py:class}`xarray.DataArray` 'datacube' 🧊 with
 dimensions (time, band, y, x).
 
 ```{code-cell}
-it = iter(dp_stackstac)
+it = iter(dp_sen1_stack)
 dataarray = next(it)
 dataarray
 ```
