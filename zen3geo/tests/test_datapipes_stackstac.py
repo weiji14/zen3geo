@@ -1,7 +1,9 @@
 """
 Tests for stackstac datapipes.
 """
+import numpy as np
 import pytest
+import xarray as xr
 from torchdata.datapipes.iter import IterableWrapper
 
 from zen3geo.datapipes import StackSTACStacker
@@ -10,6 +12,19 @@ pystac = pytest.importorskip("pystac")
 stackstac = pytest.importorskip("stackstac")
 
 # %%
+def test_stackstac_mosaic():
+    """
+    Ensure that StackSTACMosaic works to mosaic tiles within a 4D
+    xarray.DataArray to a 3D xarray.DataArray.
+    """
+    datacube: xr.DataArray = xr.DataArray(
+        data=np.ones(shape=(3, 1, 32, 32)), dims=["tile", "band", "y", "x"]
+    )
+    dataarray = stackstac.mosaic(arr=datacube, dim="tile")
+    assert dataarray.sizes == {"band": 1, "y": 32, "x": 32}
+    assert dataarray.sum() == 1 * 32 * 32
+
+
 def test_stackstac_stacker():
     """
     Ensure that StackSTACStacker works to stack multiple bands within a STAC
