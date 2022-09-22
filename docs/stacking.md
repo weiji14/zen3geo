@@ -90,7 +90,7 @@ dp = torchdata.datapipes.iter.IterableWrapper(iterable=[query])
 
 Then, search over a dynamic STAC Catalog 📚 for items matching the
 spatiotemporal query ❔ using
-{py:class}`zen3geo.datapipes.PySTACAPISearch` (functional name:
+{py:class}`zen3geo.datapipes.PySTACAPISearcher` (functional name:
 `search_for_pystac_item`).
 
 ```{code-cell}
@@ -108,7 +108,7 @@ Confused about which parameters go where 😕? Here's some clarification:
    `IterableWrapper(iterable=[query_area1, query_area2])`. The query
    dictionaries will be passed to {py:meth}`pystac_client.Client.search`.
 2. **Common** parameters to interact with the STAC API Client should go in
-   [`search_for_pystac_item()`](zen3geo.datapipes.PySTACAPISearch), e.g. the
+   [`search_for_pystac_item()`](zen3geo.datapipes.PySTACAPISearcher), e.g. the
    STAC API's URL (see https://stacindex.org/catalogs?access=public&type=api
    for a public list) and connection related parameters. These will be passed
    to {py:meth}`pystac_client.Client.open`.
@@ -162,7 +162,7 @@ dp_copdem30_items = dp_copdem30.search_for_pystac_item(
 dp_copdem30_items
 ```
 
-This query yields the following DEM tile 🀫.
+This is one of the two DEM tiles 🀫 that will be returned from the query.
 
 ![Copernicus 30m DEM over Sumatra Barat, Indonesia](https://planetarycomputer.microsoft.com/api/data/v1/item/preview.png?collection=cop-dem-glo-30&item=Copernicus_DSM_COG_10_N00_00_E099_00_DEM&assets=data&colormap_name=terrain&rescale=-1000%2C4000)
 
@@ -276,13 +276,25 @@ dataarray = next(it)
 dataarray
 ```
 
+Why are there 2 ⏳ time layers? Actually, the STAC query had returned two DEM
+tiles 🀫, and {py:func}`stackstac.stack` has stacked both of them along a
+dimension name 'time' (probably better named 'tile'). Fear not, the tiles can
+be joined 🍒 into a single terrain mosaic layer with dimensions ("band", "y",
+"x") using {py:class}`zen3geo.datapipes.StackSTACMosaicker` (functional name:
+`mosaic_dataarray`).
+
+```{code-cell}
+dp_copdem_mosaic = dp_copdem_stack.mosaic_dataarray()
+dp_copdem_mosaic
+```
+
 Great! The two {py:class}`xarray.DataArray` objects (Sentinel-1 and Copernicus
-DEM) can now be combined 🪢. First, use
-{py:class}`zen3geo.datapipes.iter.Zipper` (functional name: `zip`) to put the
+DEM mosaic) can now be combined 🪢. First, use
+{py:class}`torchdata.datapipes.iter.Zipper` (functional name: `zip`) to put the
 two {py:class}`xarray.DataArray` objects into a tuple 🎵.
 
 ```{code-cell}
-dp_sen1_copdem = dp_sen1_stack.zip(dp_copdem_stack)
+dp_sen1_copdem = dp_sen1_stack.zip(dp_copdem_mosaic)
 dp_sen1_copdem
 ```
 
@@ -305,7 +317,7 @@ def xr_collate_fn(sar_and_dem: tuple) -> xr.Dataset:
     dataset["vv"] = sar.sel(band="vv")
 
     # Add Copernicus DEM mosaic as another layer
-    dataset["dem"] = stackstac.mosaic(arr=dem).squeeze()
+    dataset["dem"] = dem.squeeze()
 
     return dataset
 ```
