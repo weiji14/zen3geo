@@ -67,6 +67,8 @@
 
 ```{eval-rst}
 .. automodule:: zen3geo.datapipes.stackstac
+.. autoclass:: zen3geo.datapipes.StackSTACMosaic
+.. autoclass:: zen3geo.datapipes.stackstac.StackSTACMosaicIterDataPipe
 .. autoclass:: zen3geo.datapipes.StackSTACStacker
 .. autoclass:: zen3geo.datapipes.stackstac.StackSTACStackerIterDataPipe
     :show-inheritance:
