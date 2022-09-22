@@ -4,15 +4,15 @@ Tests for pystac-client datapipes.
 import pytest
 from torchdata.datapipes.iter import IterableWrapper
 
-from zen3geo.datapipes import PySTACAPISearch
+from zen3geo.datapipes import PySTACAPISearcher
 
 pystac_client = pytest.importorskip("pystac_client")
 
 # %%
 def test_pystac_client_item_search():
     """
-    Ensure that PySTACAPISearch works to query a STAC API /search/ endpoint and
-    outputs a pystac_client.ItemSearch object.
+    Ensure that PySTACAPISearcher works to query a STAC API /search/ endpoint
+    and outputs a pystac_client.ItemSearch object.
     """
     query: dict = dict(
         bbox=[150.9, -34.36, 151.3, -33.46],
@@ -22,7 +22,7 @@ def test_pystac_client_item_search():
     dp = IterableWrapper(iterable=[query])
 
     # Using class constructors
-    dp_pystac_client = PySTACAPISearch(
+    dp_pystac_client = PySTACAPISearcher(
         source_datapipe=dp, catalog_url="https://explorer.sandbox.dea.ga.gov.au/stac/"
     )
     # Using functional form (recommended)
@@ -59,7 +59,7 @@ def test_pystac_client_item_search():
 
 def test_pystac_client_item_search_open_parameters():
     """
-    Ensure that PySTACAPISearch works to query a STAC API /search/ endpoint
+    Ensure that PySTACAPISearcher works to query a STAC API /search/ endpoint
     with parameters passed to pystac_client.Client.open.
     """
     query: dict = dict(
@@ -69,7 +69,7 @@ def test_pystac_client_item_search_open_parameters():
     dp = IterableWrapper(iterable=[query])
 
     # Using class constructors
-    dp_pystac_client = PySTACAPISearch(
+    dp_pystac_client = PySTACAPISearcher(
         source_datapipe=dp,
         catalog_url="https://api.radiant.earth/mlhub/v1/",
         parameters={"key": "ANON_MLHUB_API_KEY"},

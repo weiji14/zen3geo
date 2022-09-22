@@ -49,8 +49,8 @@
 
 ```{eval-rst}
 .. automodule:: zen3geo.datapipes.pystac_client
-.. autoclass:: zen3geo.datapipes.PySTACAPISearch
-.. autoclass:: zen3geo.datapipes.pystac_client.PySTACAPISearchIterDataPipe
+.. autoclass:: zen3geo.datapipes.PySTACAPISearcher
+.. autoclass:: zen3geo.datapipes.pystac_client.PySTACAPISearcherIterDataPipe
     :show-inheritance:
 ```
 
