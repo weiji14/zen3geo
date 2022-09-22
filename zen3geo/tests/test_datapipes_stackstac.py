@@ -12,9 +12,9 @@ pystac = pytest.importorskip("pystac")
 stackstac = pytest.importorskip("stackstac")
 
 # %%
-def test_stackstac_mosaic():
+def test_stackstac_mosaicker():
     """
-    Ensure that StackSTACMosaic works to mosaic tiles within a 4D
+    Ensure that StackSTACMosaicker works to mosaic tiles within a 4D
     xarray.DataArray to a 3D xarray.DataArray.
     """
     datacube: xr.DataArray = xr.DataArray(

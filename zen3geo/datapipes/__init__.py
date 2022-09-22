@@ -12,11 +12,11 @@ from zen3geo.datapipes.geopandas import (
 from zen3geo.datapipes.pyogrio import PyogrioReaderIterDataPipe as PyogrioReader
 from zen3geo.datapipes.pystac import PySTACItemReaderIterDataPipe as PySTACItemReader
 from zen3geo.datapipes.pystac_client import (
-    PySTACAPISearchIterDataPipe as PySTACAPISearch,
+    PySTACAPISearcherIterDataPipe as PySTACAPISearcher,
 )
 from zen3geo.datapipes.rioxarray import RioXarrayReaderIterDataPipe as RioXarrayReader
 from zen3geo.datapipes.stackstac import (
-    StackSTACMosaicIterDataPipe as StackSTACMosaic,
+    StackSTACMosaickerIterDataPipe as StackSTACMosaicker,
     StackSTACStackerIterDataPipe as StackSTACStacker,
 )
 from zen3geo.datapipes.xbatcher import XbatcherSlicerIterDataPipe as XbatcherSlicer

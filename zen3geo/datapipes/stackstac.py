@@ -14,7 +14,7 @@ from torchdata.datapipes.iter import IterDataPipe
 
 
 @functional_datapipe("mosaic_dataarray")
-class StackSTACMosaicIterDataPipe(IterDataPipe[xr.DataArray]):
+class StackSTACMosaickerIterDataPipe(IterDataPipe[xr.DataArray]):
     """
     Takes :py:class:`xarray.DataArray` objects, flattens a dimension by picking
     the first valid pixel, to yield mosaicked :py:class:`xarray.DataArray`
@@ -50,7 +50,7 @@ class StackSTACMosaicIterDataPipe(IterDataPipe[xr.DataArray]):
     >>> stackstac = pytest.importorskip("stackstac")
     ...
     >>> from torchdata.datapipes.iter import IterableWrapper
-    >>> from zen3geo.datapipes import StackSTACMosaic
+    >>> from zen3geo.datapipes import StackSTACMosaicker
     ...
     >>> # Get list of ALOS DEM tiles to mosaic together later
     >>> item_urls = [
