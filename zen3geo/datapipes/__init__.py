@@ -16,7 +16,7 @@ from zen3geo.datapipes.pystac_client import (
 )
 from zen3geo.datapipes.rioxarray import RioXarrayReaderIterDataPipe as RioXarrayReader
 from zen3geo.datapipes.stackstac import (
-    StackSTACMosaicIterDataPipe as StackSTACMosaic,
+    StackSTACMosaickerIterDataPipe as StackSTACMosaicker,
     StackSTACStackerIterDataPipe as StackSTACStacker,
 )
 from zen3geo.datapipes.xbatcher import XbatcherSlicerIterDataPipe as XbatcherSlicer
