@@ -59,9 +59,8 @@ class StackSTACMosaicIterDataPipe(IterDataPipe[xr.DataArray]):
     ... ]
     >>> stac_items = [pystac.Item.from_file(href=url) for url in item_urls]
     >>> dataarray = stackstac.stack(items=stac_items)
-    >>> print(dataarray.sizes)
-    Frozen({'time': 2, 'band': 1, 'y': 3600, 'x': 7200})
-    >>>
+    >>> assert dataarray.sizes == {'time': 2, 'band': 1, 'y': 3600, 'x': 7200}
+    ...
     >>> # Mosaic different tiles in an xarray.DataArray using DataPipe
     >>> dp = IterableWrapper(iterable=[dataarray])
     >>> dp_mosaic = dp.mosaic_dataarray()
