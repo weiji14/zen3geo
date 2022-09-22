@@ -49,8 +49,8 @@
 
 ```{eval-rst}
 .. automodule:: zen3geo.datapipes.pystac_client
-.. autoclass:: zen3geo.datapipes.PySTACAPISearch
-.. autoclass:: zen3geo.datapipes.pystac_client.PySTACAPISearchIterDataPipe
+.. autoclass:: zen3geo.datapipes.PySTACAPISearcher
+.. autoclass:: zen3geo.datapipes.pystac_client.PySTACAPISearcherIterDataPipe
     :show-inheritance:
 ```
 
@@ -67,6 +67,8 @@
 
 ```{eval-rst}
 .. automodule:: zen3geo.datapipes.stackstac
+.. autoclass:: zen3geo.datapipes.StackSTACMosaicker
+.. autoclass:: zen3geo.datapipes.stackstac.StackSTACMosaickerIterDataPipe
 .. autoclass:: zen3geo.datapipes.StackSTACStacker
 .. autoclass:: zen3geo.datapipes.stackstac.StackSTACStackerIterDataPipe
     :show-inheritance:

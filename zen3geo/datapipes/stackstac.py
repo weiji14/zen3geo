@@ -13,6 +13,96 @@ from torchdata.datapipes import functional_datapipe
 from torchdata.datapipes.iter import IterDataPipe
 
 
+@functional_datapipe("mosaic_dataarray")
+class StackSTACMosaickerIterDataPipe(IterDataPipe[xr.DataArray]):
+    """
+    Takes :py:class:`xarray.DataArray` objects, flattens a dimension by picking
+    the first valid pixel, to yield mosaicked :py:class:`xarray.DataArray`
+    objects (functional name: ``mosaic_dataarray``).
+
+    Parameters
+    ----------
+    source_datapipe : IterDataPipe[xarray.DataArray]
+        A DataPipe that contains :py:class:`xarray.DataArray` objects, with
+        e.g. dimensions ("time", "band", "y", "x").
+
+    kwargs : Optional
+        Extra keyword arguments to pass to :py:func:`stackstac.mosaic`.
+
+    Yields
+    ------
+    dataarray : xarray.DataArray
+        An :py:class:`xarray.DataArray` that has been mosaicked with e.g.
+        dimensions ("band", "y", "x").
+
+    Raises
+    ------
+    ModuleNotFoundError
+        If ``stackstac`` is not installed. See
+        :doc:`install instructions for stackstac <stackstac:index>`, (e.g. via
+        ``pip install stackstac``) before using this class.
+
+    Example
+    -------
+    >>> import pytest
+    >>> import xarray as xr
+    >>> pystac = pytest.importorskip("pystac")
+    >>> stackstac = pytest.importorskip("stackstac")
+    ...
+    >>> from torchdata.datapipes.iter import IterableWrapper
+    >>> from zen3geo.datapipes import StackSTACMosaicker
+    ...
+    >>> # Get list of ALOS DEM tiles to mosaic together later
+    >>> item_urls = [
+    ...     "https://planetarycomputer.microsoft.com/api/stac/v1/collections/alos-dem/items/ALPSMLC30_N022E113_DSM",
+    ...     "https://planetarycomputer.microsoft.com/api/stac/v1/collections/alos-dem/items/ALPSMLC30_N022E114_DSM",
+    ... ]
+    >>> stac_items = [pystac.Item.from_file(href=url) for url in item_urls]
+    >>> dataarray = stackstac.stack(items=stac_items)
+    >>> assert dataarray.sizes == {'time': 2, 'band': 1, 'y': 3600, 'x': 7200}
+    ...
+    >>> # Mosaic different tiles in an xarray.DataArray using DataPipe
+    >>> dp = IterableWrapper(iterable=[dataarray])
+    >>> dp_mosaic = dp.mosaic_dataarray()
+    ...
+    >>> # Loop or iterate over the DataPipe stream
+    >>> it = iter(dp_mosaic)
+    >>> dataarray = next(it)
+    >>> print(dataarray.sizes)
+    Frozen({'band': 1, 'y': 3600, 'x': 7200})
+    >>> print(dataarray.coords)
+    Coordinates:
+      * band         (band) <U4 'data'
+      * x            (x) float64 113.0 113.0 113.0 113.0 ... 115.0 115.0 115.0 115.0
+      * y            (y) float64 23.0 23.0 23.0 23.0 23.0 ... 22.0 22.0 22.0 22.0
+    ...
+    >>> print(dataarray.attrs["spec"])
+    RasterSpec(epsg=4326, bounds=(113.0, 22.0, 115.0, 23.0), resolutions_xy=(0.0002777777777777778, 0.0002777777777777778))
+    """
+
+    def __init__(
+        self,
+        source_datapipe: IterDataPipe[xr.DataArray],
+        **kwargs: Optional[Dict[str, Any]]
+    ) -> None:
+        if stackstac is None:
+            raise ModuleNotFoundError(
+                "Package `stackstac` is required to be installed to use this datapipe. "
+                "Please use `pip install stackstac` or "
+                "`conda install -c conda-forge stackstac` "
+                "to install the package"
+            )
+        self.source_datapipe: IterDataPipe = source_datapipe
+        self.kwargs = kwargs
+
+    def __iter__(self) -> Iterator[xr.DataArray]:
+        for dataarray in self.source_datapipe:
+            yield stackstac.mosaic(arr=dataarray, **self.kwargs)
+
+    def __len__(self) -> int:
+        return len(self.source_datapipe)
+
+
 @functional_datapipe("stack_stac_items")
 class StackSTACStackerIterDataPipe(IterDataPipe[xr.DataArray]):
     """

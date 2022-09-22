@@ -12,7 +12,7 @@ from torchdata.datapipes.iter import IterDataPipe
 
 
 @functional_datapipe("search_for_pystac_item")
-class PySTACAPISearchIterDataPipe(IterDataPipe):
+class PySTACAPISearcherIterDataPipe(IterDataPipe):
     """
     Takes dictionaries containing a STAC API query (as long as the parameters
     are understood by :py:meth:`pystac_client.Client.search`) and yields
@@ -75,7 +75,7 @@ class PySTACAPISearchIterDataPipe(IterDataPipe):
     >>> pystac_client = pytest.importorskip("pystac_client")
     ...
     >>> from torchdata.datapipes.iter import IterableWrapper
-    >>> from zen3geo.datapipes import PySTACAPISearch
+    >>> from zen3geo.datapipes import PySTACAPISearcher
     ...
     >>> # Peform STAC API query using DataPipe
     >>> query = dict(
