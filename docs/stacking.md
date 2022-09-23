@@ -47,7 +47,6 @@ import numpy as np
 import planetary_computer
 import pystac
 import rasterio
-import stackstac
 import torchdata
 import xarray as xr
 import zen3geo
@@ -304,7 +303,7 @@ an {py:class}`xarray.Dataset` 🧊, similar to what was done in
 {doc}`./object-detection-boxes`.
 
 ```{code-cell}
-def xr_collate_fn(sar_and_dem: tuple) -> xr.Dataset:
+def sardem_collate_fn(sar_and_dem: tuple) -> xr.Dataset:
     """
     Combine a pair of xarray.DataArray (SAR, DEM) inputs into an
     xarray.Dataset with data variables named 'vh', 'vv' and 'dem'.
@@ -323,7 +322,7 @@ def xr_collate_fn(sar_and_dem: tuple) -> xr.Dataset:
 ```
 
 ```{code-cell}
-dp_vhvvdem_dataset = dp_sen1_copdem.collate(collate_fn=xr_collate_fn)
+dp_vhvvdem_dataset = dp_sen1_copdem.collate(collate_fn=sardem_collate_fn)
 dp_vhvvdem_dataset
 ```
 
@@ -343,4 +342,72 @@ Visualize the DataPipe graph ⛓️ too for good measure.
 
 ```{code-cell}
 torchdata.datapipes.utils.to_graph(dp=dp_vhvvdem_dataset)
+```
+
+
+### Rasterize target labels to datacube extent 🏷️
+
+The landslide polygons 🔶 can now be rasterized and added as another layer to
+our datacube 🧊. Following {doc}`./vector-segmentation-masks`, we'll first fork
+the DataPipe into two branches 🫒 using
+{py:class}`torchdata.datapipes.iter.Forker` (functional name: `fork`).
+
+```{code-cell}
+dp_vhvvdem_canvas, dp_vhvvdem_datacube = dp_vhvvdem_dataset.fork(num_instances=2)
+dp_vhvvdem_canvas, dp_vhvvdem_datacube
+```
+
+Next, create a blank canvas 📃 using
+{py:class}`zen3geo.datapipes.XarrayCanvas` (functional name:
+``canvas_from_xarray``) and rasterize 🖌 the vector polygons onto the template
+canvas using {py:class}`zen3geo.datapipes.DatashaderRasterizer` (functional
+name: ``rasterize_with_datashader``)
+
+```{code-cell}
+dp_datashader = dp_vhvvdem_canvas.canvas_from_xarray().rasterize_with_datashader(
+    vector_datapipe=dp_pyogrio
+)
+dp_datashader
+```
+
+As promised, here's the landslide mask 🏁 visualized.
+
+```{code-cell}
+it = iter(dp_datashader)
+mask = next(it)
+mask.plot.imshow(cmap="binary_r")
+```
+
+Cool, and this layer can be added as another data variable in the datacube.
+
+```{code-cell}
+def cubemask_collate_fn(cube_and_mask: tuple) -> xr.Dataset:
+    """
+    Insert target 'mask' (xarray.DataArray) as a data variable in an existing
+    datacube (xarray.Dataset).
+    """
+    # Turn 2 xr.DataArray objects into 1 xr.Dataset with multiple data var
+    datacube, mask = cube_and_mask
+    datacube["mask"] = mask
+
+    return datacube
+```
+
+```{code-cell}
+dp_datacube = dp_vhvvdem_datacube.zip(dp_datashader).collate(
+    collate_fn=cubemask_collate_fn
+)
+dp_datacube
+```
+
+Preview the final datacube 🧊 and DataPipe graph ⛓️.
+
+```{code-cell}
+it = iter(dp_datacube)
+datacube = next(it)
+datacube
+```
+
+```{code-cell}
+torchdata.datapipes.utils.to_graph(dp=dp_datacube)
 ```
