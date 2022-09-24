@@ -43,6 +43,8 @@ tutorial will cover the following topics:
 Load up them libraries!
 
 ```{code-cell}
+import os
+
 import numpy as np
 import planetary_computer
 import pystac
@@ -59,8 +61,8 @@ focus area is [Gunung Talamau](https://ban.wikipedia.org/wiki/Gunung_Talamau),
 Sumatra Barat, Indonesia 🇮🇩 where an
 [earthquake on 25 Feb 2022](https://id.wikipedia.org/wiki/Gempa_bumi_Pasaman_Barat_2022)
 triggered a series of landslides ⛰️. Affected areas will be mapped using
-Sentinel-1 Ground-Range Detected (GRD) SAR data 📡 obtained via a
-spatiotemporal query to a [STAC](https://stacspec.org) API.
+Sentinel-1 Radiometrically Terrain Corrected (RTC) intensity SAR data 📡
+obtained via a spatiotemporal query to a [STAC](https://stacspec.org) API.
 
 🔗 Links:
 - [UNOSAT satellite-detected landslide maps over Pasaman, Indonesia](https://unosat.org/products/3064)
@@ -70,19 +72,37 @@ spatiotemporal query to a [STAC](https://stacspec.org) API.
 This is how the Sentinel-1 radar image looks like over Sumatra Barat, Indonesia
 on 23 February 2022, two days before the earthquake.
 
-![Sentinel-1 image over Sumatra Barat, Indonesia on 20220223](https://planetarycomputer.microsoft.com/api/data/v1/item/preview.png?collection=sentinel-1-grd&item=S1A_IW_GRDH_1SDV_20220223T114141_20220223T114206_042039_0501F9&assets=vv&assets=vh&expression=vv%2Cvh%2Cvv%2Fvh&rescale=0%2C500&rescale=0%2C300&rescale=0%2C7&tile_format=png)
+![Sentinel-1 image over Sumatra Barat, Indonesia on 20220223](https://planetarycomputer.microsoft.com/api/data/v1/item/preview.png?collection=sentinel-1-rtc&item=S1A_IW_GRDH_1SDV_20220223T114141_20220223T114206_042039_0501F9_rtc&assets=vv&assets=vh&tile_format=png&expression=0.03+%2B+log+%2810e-4+-+log+%280.05+%2F+%280.02+%2B+2+%2A+vv%29%29%29%2C0.05+%2B+exp+%280.25+%2A+%28log+%280.01+%2B+2+%2A+vv%29+%2B+log+%280.02+%2B+5+%2A+vh%29%29%29%2C1+-+log+%280.05+%2F+%280.045+-+0.9+%2A+vv%29%29&rescale=0%2C.8000&rescale=0%2C1.000&rescale=0%2C1.000)
 
 ### Sentinel-1 PolSAR time-series ⏳
 
-To start, let’s define an 🧭 area of interest and 📆 time range covering one
+Before we start, we'll need to set the `PC_SDK_SUBSCRIPTION_KEY` environment
+variable 🔡 to access the Sentinel-1 RTC data from Planetary Computer 💻. The
+steps are:
+
+1. Get a 🪐 Planetary Computer account at
+   https://planetarycomputer.microsoft.com/account/request
+2. Follow 🧑‍🏫 instructions to
+   [get a subscription key](https://planetarycomputer.microsoft.com/docs/concepts/sas/#supplying-a-subscription-key)
+3. Go to https://planetarycomputer.developer.azure-api.net/profile. You should
+   have a Primary key 🔑 and Secondary key 🗝️, click on 'Show' to reveal it.
+   Copy and paste the key below, or better, set it securely 🔐 in something
+   like a`.env` file!
+
+```
+# Uncomment the line below and set your Planetary Computer subscription key
+# os.environ["PC_SDK_SUBSCRIPTION_KEY"] = "abcdefghijklmnopqrstuvwxyz123456"
+```
+
+Done? Let’s now define an 🧭 area of interest and 📆 time range covering one
 month before and one month after the earthquake ⚠️.
 
 ```{code-cell}
-# Spatiotemporal query on STAC catalog for Sentinel-1 SAR data
+# Spatiotemporal query on STAC catalog for Sentinel-1 RTC data
 query = dict(
-    bbox=[99.8, -0.24, 100.07, -0.15],  # West, South, North, East
+    bbox=[99.8, -0.24, 100.07, 0.15],  # West, South, East, North
     datetime=["2022-01-25T00:00:00Z", "2022-03-25T23:59:59Z"],
-    collections=["sentinel-1-grd"],
+    collections=["sentinel-1-rtc"],
 )
 dp = torchdata.datapipes.iter.IterableWrapper(iterable=[query])
 ```
@@ -145,7 +165,7 @@ a 🏔️ topographic layer. Let's set up a STAC query 🙋 to get the
 ```{code-cell}
 # Spatiotemporal query on STAC catalog for Copernicus DEM 30m data
 query = dict(
-    bbox=[99.8, -0.24, 100.07, -0.15],  # West, South, North, East
+    bbox=[99.8, -0.24, 100.07, 0.15],  # West, South, East, North
     collections=["cop-dem-glo-30"],
 )
 dp_copdem30 = torchdata.datapipes.iter.IterableWrapper(iterable=[query])
@@ -212,7 +232,7 @@ will show you step by step 📶 instructions to
 ### Stack multi-channel time-series GeoTIFFs 🗓️
 
 Each {py:class}`pystac.Item` in a {py:class}`pystac.ItemCollection` represents
-a 🛰️ Sentinel-1 GRD image captured at a particular datetime ⌚. Let's subset
+a 🛰️ Sentinel-1 RTC image captured at a particular datetime ⌚. Let's subset
 the data to just the mountain area, and stack 🥞 all the STAC items into a 4D
 time-series tensor using {py:class}`zen3geo.datapipes.StackSTACStacker`
 (functional name: `stack_stac_items`)!
@@ -234,7 +254,7 @@ scenes. The important❕parameters to set in this case are:
 
 - **assets**: The STAC item assets 🍱 (typically the 'band' names)
 - **epsg**: The 🌐 EPSG projection code, best if you know the native projection
-- **resolution**: Spatial resolution 📏. The Sentinel-1 GRD is actually at 10m,
+- **resolution**: Spatial resolution 📏. The Sentinel-1 RTC is actually at 10m,
   but we'll resample to 30m to keep things small 🤏 and match the Copernicus
   DEM.
 
@@ -275,7 +295,7 @@ dataarray = next(it)
 dataarray
 ```
 
-Why are there 2 ⏳ time layers? Actually, the STAC query had returned two DEM
+Why are there 4 ⏳ time layers? Actually, the STAC query had returned four DEM
 tiles 🀫, and {py:func}`stackstac.stack` has stacked both of them along a
 dimension name 'time' (probably better named 'tile'). Fear not, the tiles can
 be joined 🍒 into a single terrain mosaic layer with dimensions ("band", "y",
@@ -283,7 +303,7 @@ be joined 🍒 into a single terrain mosaic layer with dimensions ("band", "y",
 `mosaic_dataarray`).
 
 ```{code-cell}
-dp_copdem_mosaic = dp_copdem_stack.mosaic_dataarray()
+dp_copdem_mosaic = dp_copdem_stack.mosaic_dataarray(nodata=0)
 dp_copdem_mosaic
 ```
 
