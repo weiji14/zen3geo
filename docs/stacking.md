@@ -45,6 +45,7 @@ Load up them libraries!
 ```{code-cell}
 import os
 
+import matplotlib.pyplot as plt
 import numpy as np
 import planetary_computer
 import pystac
@@ -181,7 +182,7 @@ dp_copdem30_items = dp_copdem30.search_for_pystac_item(
 dp_copdem30_items
 ```
 
-This is one of the two DEM tiles 🀫 that will be returned from the query.
+This is one of the four DEM tiles 🀫 that will be returned from the query.
 
 ![Copernicus 30m DEM over Sumatra Barat, Indonesia](https://planetarycomputer.microsoft.com/api/data/v1/item/preview.png?collection=cop-dem-glo-30&item=Copernicus_DSM_COG_10_N00_00_E099_00_DEM&assets=data&colormap_name=terrain&rescale=-1000%2C4000)
 
@@ -390,27 +391,19 @@ dp_datashader = dp_vhvvdem_canvas.canvas_from_xarray().rasterize_with_datashader
 dp_datashader
 ```
 
-As promised, here's the landslide mask 🏁 visualized.
-
-```{code-cell}
-it = iter(dp_datashader)
-mask = next(it)
-mask.plot.imshow(cmap="binary_r")
-```
-
-Cool, and this layer can be added as another data variable in the datacube.
+Cool, and this layer can be added 🧮 as another data variable in the datacube.
 
 ```{code-cell}
 def cubemask_collate_fn(cube_and_mask: tuple) -> xr.Dataset:
     """
-    Insert target 'mask' (xarray.DataArray) as a data variable in an existing
-    datacube (xarray.Dataset).
+    Merge target 'mask' (xarray.DataArray) into an existing datacube
+    (xarray.Dataset) as another data variable.
     """
-    # Turn 2 xr.DataArray objects into 1 xr.Dataset with multiple data var
     datacube, mask = cube_and_mask
-    datacube["mask"] = mask
 
-    return datacube
+    merged_datacube = xr.merge(objects=[datacube, mask.rename("mask")], join="override")
+
+    return merged_datacube
 ```
 
 ```{code-cell}
@@ -420,13 +413,35 @@ dp_datacube = dp_vhvvdem_datacube.zip(dp_datashader).collate(
 dp_datacube
 ```
 
-Preview the final datacube 🧊 and DataPipe graph ⛓️.
+Inspect the datacube 🧊 and visualize all the layers 🧅 within.
 
 ```{code-cell}
 it = iter(dp_datacube)
 datacube = next(it)
 datacube
 ```
+
+```{code-cell}
+dataslice = datacube.sel(time="2022-02-23T11:41:54.329096000").compute()
+
+fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(11, 12), sharex=True, sharey=True)
+
+dataslice.vh.plot.imshow(ax=ax[0][0], cmap="bone", robust=True)
+ax[0][0].set_title("Sentinel-1 RTC 20220223 VH")
+
+dataslice.vv.plot.imshow(ax=ax[0][1], cmap="bone", robust=True)
+ax[0][1].set_title("Sentinel-1 RTC 20220223 VV")
+
+dataslice.dem.plot.imshow(ax=ax[1][0], cmap="gist_earth")
+ax[1][0].set_title("Copernicus DEM")
+
+dataslice.mask.plot.imshow(ax=ax[1][1], cmap="binary_r")
+ax[1][1].set_title("Landslide mask")
+
+plt.show()
+```
+
+This is the final DataPipe graph ⛓️.
 
 ```{code-cell}
 torchdata.datapipes.utils.to_graph(dp=dp_datacube)
