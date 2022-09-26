@@ -25,7 +25,10 @@ torchdata = ">=0.4.0"
 # Optional
 datashader = {version = ">=0.14.0", optional = true}
 pyogrio = {version = ">=0.4.0", extras = ["geopandas"], optional = true}
+pystac = {version=">=1.4.0", optional=true}
+pystac-client = {version = ">=0.4.0", optional = true}
 spatialpandas = {version = ">=0.4.0", optional = true}
+stackstac = {version = ">=0.4.0", optional = true}
 xbatcher = {version = ">=0.1.0", optional = true}
 # Docs
 adlfs = {version = "*", optional = true}
@@ -34,9 +37,6 @@ graphviz = {version = "*", optional = true}
 jupyter-book = {version="*", optional=true}
 matplotlib = {version = "*", optional = true}
 planetary-computer = {version="*", optional=true}
-pystac = {version="*", optional=true}
-pystac-client = {version = "*", optional = true}
-stackstac = {version = "*", optional = true}
 
 [tool.poetry.group.dev.dependencies]
 black = "*"

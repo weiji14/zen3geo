@@ -3052,7 +3052,7 @@ vector = ["pyogrio"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8, <3.12"
-content-hash = "44bf86fe0af1c417306ec4bad4bdb53666093fd794c33ea6fb4873a9ba240a9a"
+content-hash = "3c168466d744bdc831ee1912aa75cd531857703fbf3dcbf06be551f93af42d0a"
 
 [metadata.files]
 adal = [
