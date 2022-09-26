@@ -53,6 +53,8 @@ docs = [
     "planetary-computer",
     "pyogrio",
     "pystac",
+    "pystac_client",
+    "stackstac",
     "spatialpandas",
     "xbatcher"
 ]

@@ -13,6 +13,8 @@ chapters:
         file: vector-segmentation-masks
       - title: 🥡 Object Detection Boxes
         file: object-detection-boxes
+      - title: 🏳️‍🌈 Stacking layers
+        file: stacking
   - title: 📖 API Reference
     file: api
   - title: 📆 Changelog
