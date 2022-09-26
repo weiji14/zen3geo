@@ -1,5 +1,34 @@
 # Changelog
 
+## Release v0.5.0 (2022/09/26)
+
+### 💫 Highlights
+
+* 🎉 **Fifth release of zen3geo** 🎉
+* 🚸 Walkthrough on stacking time-series earth observation data ([#62](https://github.com/weiji14/zen3geo/pull/62))
+
+### 🚀 Features
+
+* ✨ StackSTACMosaicIterDataPipe to mosaic tiles into one piece ([#63](https://github.com/weiji14/zen3geo/pull/63))
+* ✨ StackSTACStackerIterDataPipe for stacking STAC items ([#61](https://github.com/weiji14/zen3geo/pull/61))
+* ✨ PySTACAPISearchIterDataPipe to query dynamic STAC Catalogs ([#59](https://github.com/weiji14/zen3geo/pull/59))
+* ✨ PySTACItemReaderIterDataPipe for reading STAC Items ([#46](https://github.com/weiji14/zen3geo/pull/46))
+
+### 📖 Documentation
+
+* 🚚 Rename to PySTACAPISearcher and StackSTACMosaicker ([#64](https://github.com/weiji14/zen3geo/pull/64))
+
+### 🧰 Maintenance
+
+* 📌 Pin min pystac-client and stackstac to v0.4.0, pystac to 1.4.0 ([#66](https://github.com/weiji14/zen3geo/pull/66))
+* 📦️ Exclude tests from source distribution and binary wheel ([#58](https://github.com/weiji14/zen3geo/pull/58))
+
+### 🧑‍🤝‍🧑 Contributors
+
+[@dependabot[bot]](https://github.com/dependabot-bot) and [@weiji14](https://github.com/weiji14)
+
+---
+
 ## Release v0.4.0 (2022/09/08)
 
 ### 💫 Highlights
