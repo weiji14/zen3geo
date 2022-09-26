@@ -50,6 +50,7 @@ import numpy as np
 import planetary_computer
 import pystac
 import rasterio
+import torch
 import torchdata
 import xarray as xr
 import zen3geo
@@ -441,8 +442,107 @@ ax[1][1].set_title("Landslide mask")
 plt.show()
 ```
 
+
+## 2️⃣ Splitters and lumpers 🪨
+
+There are many ways to do change detection 🕵️. Here is but one ☝️.
+
+### Slice spatially and temporally 💇
+
+For the splitters, let's first slice the datacube along the spatial dimension
+into 256x256 chips 🍪 using {py:class}`zen3geo.datapipes.XbatcherSlicer`
+(functional name: `slice_with_xbatcher`). Refer to {doc}`./chipping` if you
+need a 🧑‍🎓 refresher.
+
+```{code-cell}
+dp_xbatcher = dp_datacube.slice_with_xbatcher(input_dims={"y": 256, "x": 256})
+dp_xbatcher
+```
+
+Next, we'll use the earthquake ⚠️ date to divide each 256x256 SAR time-series
+chip 🍕 with dimensions (time, y, x) into pre-event and post-event tensors.
+The target landslide 🛝 mask will be split out too.
+
+```{code-cell}
+def pre_post_target_tuple(
+    datachip: xr.Dataset, event_time: str = "2022-02-25T01:39:27"
+) -> tuple[xr.Dataset, xr.Dataset, xr.Dataset]:
+    """
+    From a single xarray.Dataset, split it into a tuple containing the
+    pre/post/target tensors.
+    """
+    pre_times = datachip.time <= np.datetime64(event_time)
+    post_times = datachip.time > np.datetime64(event_time)
+
+    return (
+        datachip.sel(time=pre_times)[["vv", "vh", "dem"]],
+        datachip.sel(time=post_times)[["vv", "vh", "dem"]],
+        datachip[["mask"]],
+    )
+```
+
+```{code-cell}
+dp_pre_post_target = dp_xbatcher.map(fn=pre_post_target_tuple)
+dp_pre_post_target
+```
+
+Inspect 👀 the shapes of one of the data chips that has been split into
+pre/post/target 🍡 {py:class}`xarray.Dataset` objects.
+
+```{code-cell}
+it = iter(dp_pre_post_target)
+pre, post, target = next(it)
+print(f"Before: {pre.sizes}")
+print(f"After: {post.sizes}")
+print(f"Target: {target.sizes}")
+```
+
+Cool, at this point, you may want to decide 🤔 on how to handle different sized
+before and after time-series images 🎞️. Or maybe not, and
+{py:class}`torch.Tensor` objects are all you desire ❤️‍🔥.
+
+```{code-cell}
+def dataset_to_tensors(triple_tuple) -> (torch.Tensor, torch.Tensor, torch.Tensor):
+    """
+    Converts xarray.Datasets in a tuple into torch.Tensor objects.
+    """
+    pre, post, target = triple_tuple
+
+    _pre: torch.Tensor = torch.as_tensor(pre.to_array().data)
+    _post: torch.Tensor = torch.as_tensor(post.to_array().data)
+    _target: torch.Tensor = torch.as_tensor(target.mask.data.astype("uint8"))
+
+    return _pre, _post, _target
+```
+
+```{code-cell}
+dp_tensors = dp_pre_post_target.map(fn=dataset_to_tensors)
+dp_tensors
+```
+
 This is the final DataPipe graph ⛓️.
 
 ```{code-cell}
-torchdata.datapipes.utils.to_graph(dp=dp_datacube)
+torchdata.datapipes.utils.to_graph(dp=dp_tensors)
+```
+
+### Into a DataLoader 🏋️
+
+Time to connect the DataPipe to {py:class}`torch.utils.data.DataLoader` ♻️!
+
+```{code-cell}
+dataloader = torch.utils.data.DataLoader2(dataset=dp_tensors, batch_size=None)
+for i, batch in enumerate(dataloader):
+    pre, post, target = batch
+    print(f"Batch {i} - pre: {pre.shape}, post: {post.shape}, target: {target.shape}")
+```
+
+Don't just see change, be the change 🪧!
+
+```{seealso}
+This data pipeline is adapted from (a subset of) some amazing 🧪 research done
+during the
+[Frontier Development Lab 2022](https://frontierdevelopmentlab.org/fdl2022) -
+Self Supervised Learning on SAR data for Change Detection challenge 🚀. Watch
+the final showcase video at https://www.youtube.com/watch?v=igAUTJwbmsY 📽️!
 ```
