@@ -73,7 +73,8 @@ Malaysia on 15 Dec 2019.
 ### Load and reproject image data 🔄
 
 To keep things simple, we'll load just the VV channel into a DataPipe via
-{py:class}`zen3geo.datapipes.rioxarray.RioXarrayReaderIterDataPipe` 😀.
+{py:class}`zen3geo.datapipes.RioXarrayReader` (functional name:
+`read_from_rioxarray`) 😀.
 
 ```{code-cell}
 url = signed_item.assets["vv"].href
@@ -196,6 +197,7 @@ put it into a DataPipe called {py:class}`zen3geo.datapipes.PyogrioReader`
 ```{code-cell}
 dp_shapes = torchdata.datapipes.iter.IterableWrapper(iterable=[shape_url])
 dp_pyogrio = dp_shapes.read_from_pyogrio()
+dp_pyogrio
 ```
 
 This will take care of loading the shapefile into a
@@ -227,7 +229,7 @@ correspond to the zoomed in Sentinel-1 image plotted earlier above.
 gdf.plot(figsize=(11.5, 9))
 ```
 
-```{tip}  
+```{tip}
 Make sure to understand your raster and vector datasets well first! Open the
 files up in your favourite 🌐 Geographic Information System (GIS) tool, see how
 they actually look like spatially. Then you'll have a better idea to decide on
@@ -465,7 +467,7 @@ Pass the DataPipe into {py:class}`torch.utils.data.DataLoader` 🤾!
 dataloader = torch.utils.data.DataLoader(dataset=dp_map)
 for i, batch in enumerate(dataloader):
     image, mask = batch
-    print(f"Batch {i} - image: {image.shape}, mask:{mask.shape}")
+    print(f"Batch {i} - image: {image.shape}, mask: {mask.shape}")
 ```
 
 Now go train some flood water detection models 🌊🌊🌊
