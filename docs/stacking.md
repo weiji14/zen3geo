@@ -322,7 +322,7 @@ dp_sen1_copdem
 Next, use {py:class}`torchdata.datapipes.iter.Collator` (functional name:
 `collate`) to convert 🤸 the tuple of {py:class}`xarray.DataArray` objects into
 an {py:class}`xarray.Dataset` 🧊, similar to what was done in
-{doc}`./object-detection-boxes`.
+{doc}`./vector-segmentation-masks`.
 
 ```{code-cell}
 def sardem_collate_fn(sar_and_dem: tuple) -> xr.Dataset:
@@ -333,12 +333,13 @@ def sardem_collate_fn(sar_and_dem: tuple) -> xr.Dataset:
     # Turn 2 xr.DataArray objects into 1 xr.Dataset with multiple data vars
     sar, dem = sar_and_dem
 
-    # Initialize xr.Dataset with VH and VV channels
-    dataset: xr.Dataset = sar.sel(band="vh").to_dataset(name="vh")
-    dataset["vv"] = sar.sel(band="vv")
-
-    # Add Copernicus DEM mosaic as another layer
-    dataset["dem"] = dem.squeeze()
+    # Create datacube with VH and VV channels from SAR + Copernicus DEM mosaic
+    da_vh: xr.DataArray = sar.sel(band="vh", drop=True).rename("vh")
+    da_vv: xr.DataArray = sar.sel(band="vv", drop=True).rename("vv")
+    da_dem: xr.DataArray = (
+        dem.sel(band="data").drop_vars(names=["proj:epsg", "platform"]).rename("dem")
+    )
+    dataset: xr.Dataset = xr.merge(objects=[da_vh, da_vv, da_dem], join="override")
 
     return dataset
 ```
@@ -365,7 +366,6 @@ Visualize the DataPipe graph ⛓️ too for good measure.
 ```{code-cell}
 torchdata.datapipes.utils.to_graph(dp=dp_vhvvdem_dataset)
 ```
-
 
 ### Rasterize target labels to datacube extent 🏷️
 
