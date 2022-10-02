@@ -88,7 +88,7 @@ geographic coordinates by default (OGC:CRS84). To make the pixels more equal ğŸ”
 area, we can project it to a ğŸŒ local projected coordinate system instead.
 
 ```{code-cell}
-def reproject_to_local_utm(dataarray: xr.DataArray, resolution: float=100.0) -> xr.DataArray:
+def reproject_to_local_utm(dataarray: xr.DataArray, resolution: float=80.0) -> xr.DataArray:
     """
     Reproject an xarray.DataArray grid from OGC:CRS84 to a local UTM coordinate
     reference system.
@@ -382,8 +382,10 @@ def xr_collate_fn(image_and_mask: tuple) -> xr.Dataset:
     """
     # Turn 2 xr.DataArray objects into 1 xr.Dataset with multiple data vars
     image, mask = image_and_mask
-    dataset: xr.Dataset = image.isel(band=0).to_dataset(name="image")
-    dataset["mask"] = mask
+    dataset: xr.Dataset = xr.merge(
+        objects=[image.isel(band=0).rename("image"), mask.rename("mask")],
+        join="override",
+    )
 
     # Clip dataset to bounding box extent of where labels are
     mask_extent: tuple = mask.where(cond=mask == 1, drop=True).rio.bounds()
