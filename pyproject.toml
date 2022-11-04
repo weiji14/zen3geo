@@ -31,7 +31,7 @@ pystac = {version=">=1.4.0", optional=true}
 pystac-client = {version = ">=0.4.0", optional = true}
 spatialpandas = {version = ">=0.4.0", optional = true}
 stackstac = {version = ">=0.4.0", optional = true}
-xbatcher = {version = ">=0.1.0", optional = true}
+xbatcher = {version = ">=0.2.0", optional = true}
 # Docs
 adlfs = {version = "*", optional = true}
 contextily = {version = "*", optional = true}
