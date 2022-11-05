@@ -282,7 +282,7 @@ geographic bounds 🗺️ of each building footprint geometry 📐 in each 128x1
 chip.
 
 ```{code-cell}
-def polygon_to_bbox(geom_and_chip) -> (gpd.GeoDataFrame, xr.Dataset):
+def polygon_to_bbox(geom_and_chip) -> (gpd.GeoDataFrame, xr.DataArray):
     """
     Get bounding box (minx, miny, maxx, maxy) coordinates for each geometry in
     a geopandas.GeoDataFrame.
@@ -313,7 +313,7 @@ be flipped 🤸 upside down, and we'll be using the spatial bounds (or corner
 coordinates) of the 128x128 image chip as a reference 📍.
 
 ```{code-cell}
-def geobox_to_imgbox(bbox_and_chip) -> (pd.DataFrame, xr.Dataset):
+def geobox_to_imgbox(bbox_and_chip) -> (pd.DataFrame, xr.DataArray):
     """
     Convert bounding boxes in a pandas.DataFrame from geographic coordinates
     (minx, miny, maxx, maxy) to image coordinates (x1, y1, x2, y2) based on the
@@ -421,7 +421,7 @@ def boximg_collate_fn(samples) -> (list[torch.Tensor], torch.Tensor, list[dict])
 
     Specifically, the bounding boxes in pandas.DataFrame format are each
     converted to a torch.Tensor and collated into a list, while the raster
-    images in xarray.Dataset format are converted to a torch.Tensor (int16
+    images in xarray.DataArray format are converted to a torch.Tensor (int16
     dtype) and stacked into a single torch.Tensor.
     """
     box_tensors: list[torch.Tensor] = [
