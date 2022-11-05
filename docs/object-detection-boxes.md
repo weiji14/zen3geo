@@ -248,7 +248,7 @@ And here's a side by side visualization of the 🌈 RGB chip image (left) and
 
 ```{code-cell}
 fig, ax = plt.subplots(ncols=2, figsize=(18, 9), sharex=True, sharey=True)
-raster.__xarray_dataarray_variable__.plot.imshow(ax=ax[0])
+raster.plot.imshow(ax=ax[0])
 vector.plot(ax=ax[1])
 ```
 
@@ -365,7 +365,7 @@ ibox
 
 ```{code-cell}
 fig, ax = plt.subplots(ncols=2, figsize=(18, 9), sharex=True, sharey=True)
-ax[0].imshow(X=ichip.__xarray_dataarray_variable__.transpose("y", "x", "band"))
+ax[0].imshow(X=ichip.transpose("y", "x", "band"))
 for i, row in ibox.iterrows():
     rectangle = matplotlib.patches.Rectangle(
         xy=(row.x1, row.y1),
@@ -429,12 +429,7 @@ def boximg_collate_fn(samples) -> (list[torch.Tensor], torch.Tensor, list[dict])
     ]
 
     tensors: list[torch.Tensor] = [
-        torch.as_tensor(
-            data=sample[1]
-            .data_vars.get(key="__xarray_dataarray_variable__")
-            .data.astype("int16"),
-        )
-        for sample in samples
+        torch.as_tensor(data=sample[1].data.astype(dtype="int16")) for sample in samples
     ]
     img_tensors = torch.stack(tensors=tensors)
 

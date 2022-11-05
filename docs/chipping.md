@@ -221,10 +221,7 @@ def xr_collate_fn(samples) -> torch.Tensor:
     and stacks them all into a single torch.Tensor.
     """
     tensors = [
-        torch.as_tensor(
-            data=sample.data_vars.get(key="__xarray_dataarray_variable__").data.astype("int16"),
-        )
-        for sample in samples
+        torch.as_tensor(data=sample.data.astype(dtype="int16")) for sample in samples
     ]
     return torch.stack(tensors=tensors)
 ```
