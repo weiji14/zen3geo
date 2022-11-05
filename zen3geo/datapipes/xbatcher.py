@@ -61,22 +61,27 @@ class XbatcherSlicerIterDataPipe(IterDataPipe[Union[xr.DataArray, xr.Dataset]]):
     ...
     >>> # Sliced window view of xarray.DataArray using DataPipe
     >>> dataarray: xr.DataArray = xr.DataArray(
-    ...     data=np.ones(shape=(3, 128, 128)),
+    ...     data=np.ones(shape=(3, 64, 64)),
     ...     name="foo",
     ...     dims=["band", "y", "x"]
     ... )
     >>> dp = IterableWrapper(iterable=[dataarray])
-    >>> dp_xbatcher = dp.slice_with_xbatcher(input_dims={"y": 64, "x": 64})
+    >>> dp_xbatcher = dp.slice_with_xbatcher(input_dims={"y": 2, "x": 2})
     ...
     >>> # Loop or iterate over the DataPipe stream
     >>> it = iter(dp_xbatcher)
     >>> dataarray_chip = next(it)
     >>> dataarray_chip
-    <xarray.Dataset>
-    Dimensions:  (band: 3, y: 64, x: 64)
+    <xarray.DataArray 'foo' (band: 3, y: 2, x: 2)>
+    array([[[1., 1.],
+            [1., 1.]],
+    <BLANKLINE>
+           [[1., 1.],
+            [1., 1.]],
+    <BLANKLINE>
+           [[1., 1.],
+            [1., 1.]]])
     Dimensions without coordinates: band, y, x
-    Data variables:
-        foo      (band, y, x) float64 1.0 1.0 1.0 1.0 1.0 ... 1.0 1.0 1.0 1.0 1.0
     """
 
     def __init__(
@@ -99,13 +104,6 @@ class XbatcherSlicerIterDataPipe(IterDataPipe[Union[xr.DataArray, xr.Dataset]]):
 
     def __iter__(self) -> Iterator[Union[xr.DataArray, xr.Dataset]]:
         for dataarray in self.source_datapipe:
-            if hasattr(dataarray, "name") and dataarray.name is None:
-                # Workaround for ValueError: unable to convert unnamed
-                # DataArray to a Dataset without providing an explicit name
-                dataarray = dataarray.to_dataset(
-                    name=xr.backends.api.DATAARRAY_VARIABLE
-                )[xr.backends.api.DATAARRAY_VARIABLE]
-                # dataarray.name = "z"  # doesn't work for some reason
             for chip in dataarray.batch.generator(
                 input_dims=self.input_dims, **self.kwargs
             ):

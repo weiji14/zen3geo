@@ -2988,16 +2988,21 @@ viz = ["matplotlib", "nc-time-axis", "seaborn"]
 
 [[package]]
 name = "xbatcher"
-version = "0.1.0"
-description = "Batch generation from xarray dataset"
+version = "0.2.0"
+description = "Batch generation from Xarray objects"
 category = "main"
 optional = true
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 
 [package.dependencies]
 dask = "*"
 numpy = "*"
 xarray = "*"
+
+[package.extras]
+dev = ["adlfs", "asv", "coverage", "pytest", "pytest-cov", "tensorflow", "torch"]
+tensorflow = ["tensorflow"]
+torch = ["torch"]
 
 [[package]]
 name = "xyzservices"
@@ -3052,7 +3057,7 @@ vector = ["pyogrio"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8, <3.12"
-content-hash = "3c168466d744bdc831ee1912aa75cd531857703fbf3dcbf06be551f93af42d0a"
+content-hash = "59f5b26eaac52cbd9a1b8723e0b60985e6af68625b70b7596f6cfe646b1ab1a8"
 
 [metadata.files]
 adal = [
@@ -5163,8 +5168,8 @@ xarray = [
     {file = "xarray-2022.3.0.tar.gz", hash = "sha256:398344bf7d170477aaceff70210e11ebd69af6b156fe13978054d25c48729440"},
 ]
 xbatcher = [
-    {file = "xbatcher-0.1.0-py3-none-any.whl", hash = "sha256:811dbdc5e17a8a42284419a8033adc631998d87d5e3fd502726fe7784d004954"},
-    {file = "xbatcher-0.1.0.tar.gz", hash = "sha256:f09badd59a8821f8976a303f68ca74371a0b29703dc1e70032ff05d38fb5218f"},
+    {file = "xbatcher-0.2.0-py3-none-any.whl", hash = "sha256:1b4cdb6a4c79afd11dc5ce7badea22ddacb7a947e88197c4f5b035dfed7bb907"},
+    {file = "xbatcher-0.2.0.tar.gz", hash = "sha256:70b3da6e6277b57ef5ccfa56fa7e5e81c04d7f7e2bda671629653a7534a81970"},
 ]
 xyzservices = [
     {file = "xyzservices-2022.6.0-py3-none-any.whl", hash = "sha256:eb493eb69bde966788f482e1c3608af99ff18fea8885d795ed1ca3b1a8d2e0ec"},

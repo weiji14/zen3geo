@@ -193,7 +193,7 @@ print(f"Number of items in first batch: {len(list(dp_batch)[0])}")
 ```
 
 Now each batch will have 10 chips of size 512 x 512, with
-each chip being an {py:class}``xarray.Dataset``.
+each chip being an {py:class}``xarray.DataArray``.
 
 ```{note}
 Notice how no mosaicking nor reprojection was done for the two satellite
@@ -212,19 +212,17 @@ Oh, and to be super clear, of the 3 batches of 10 chips each:
 Let's now stack all these chips into a single tensor per batch, with a
 (number, channel, height, width) shape like (10, 1, 512, 512). We'll need a
 custom 🪄 collate function to do the conversion
-(from {py:class}``xarray.Dataset`` to {py:class}``torch.Tensor``) and stacking.
+(from {py:class}``xarray.DataArray`` to {py:class}``torch.Tensor``) and
+stacking.
 
 ```{code-cell}
 def xr_collate_fn(samples) -> torch.Tensor:
     """
-    Converts individual xarray.Dataset objects to a torch.Tensor (int16 dtype),
-    and stacks them all into a single torch.Tensor.
+    Converts individual xarray.DataArray objects to a torch.Tensor (int16
+    dtype), and stacks them all into a single torch.Tensor.
     """
     tensors = [
-        torch.as_tensor(
-            data=sample.data_vars.get(key="__xarray_dataarray_variable__").data.astype("int16"),
-        )
-        for sample in samples
+        torch.as_tensor(data=sample.data.astype(dtype="int16")) for sample in samples
     ]
     return torch.stack(tensors=tensors)
 ```

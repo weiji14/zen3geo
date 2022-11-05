@@ -278,7 +278,7 @@ print(f"X-range: {canvas.x_range}")
 print(f"Coordinate reference system: {canvas.crs}")
 ```
 
-This information should match the template the Sentinel-1 dataarray 🏁.
+This information should match the template Sentinel-1 dataarray 🏁.
 
 ```{code-cell}
 print(f"Dimensions: {dict(dataarray.sizes)}")
