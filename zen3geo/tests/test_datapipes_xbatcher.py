@@ -28,6 +28,7 @@ def test_xbatcher_slicer_dataarray():
     # Using functional form (recommended)
     dp_xbatcher = dp.slice_with_xbatcher(input_dims={"y": 64, "x": 64})
 
+    assert len(dp_xbatcher) == 4
     it = iter(dp_xbatcher)
     dataarray_chip = next(it)
 
@@ -55,6 +56,7 @@ def test_xbatcher_slicer_dataset():
     # Using functional form (recommended)
     dp_xbatcher = dp.slice_with_xbatcher(input_dims={"y": 16, "x": 16})
 
+    assert len(dp_xbatcher) == 4
     it = iter(dp_xbatcher)
     dataset_chip = next(it)
 
