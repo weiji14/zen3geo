@@ -33,7 +33,7 @@ class XbatcherSlicerIterDataPipe(IterDataPipe[Union[xr.DataArray, xr.Dataset]]):
         stacked into one dimension called ``batch``.
 
     kwargs : Optional
-        Extra keyword arguments to pass to :py:func:`xbatcher.BatchGenerator`.
+        Extra keyword arguments to pass to :py:class:`xbatcher.BatchGenerator`.
 
     Yields
     ------
@@ -88,7 +88,7 @@ class XbatcherSlicerIterDataPipe(IterDataPipe[Union[xr.DataArray, xr.Dataset]]):
         self,
         source_datapipe: IterDataPipe[Union[xr.DataArray, xr.Dataset]],
         input_dims: Dict[Hashable, int],
-        **kwargs: Optional[Dict[str, Any]]
+        **kwargs: Optional[Dict[str, Any]],
     ) -> None:
         if xbatcher is None:
             raise ModuleNotFoundError(
@@ -109,5 +109,8 @@ class XbatcherSlicerIterDataPipe(IterDataPipe[Union[xr.DataArray, xr.Dataset]]):
             ):
                 yield chip
 
-    # def __len__(self) -> int:
-    #     return len(self.source_datapipe)
+    def __len__(self) -> int:
+        return sum(
+            len(dataarray.batch.generator(input_dims=self.input_dims, **self.kwargs))
+            for dataarray in self.source_datapipe
+        )
