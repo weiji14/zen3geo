@@ -447,7 +447,7 @@ def boximg_collate_fn(samples) -> (list[torch.Tensor], torch.Tensor, list[dict])
 
 ```{code-cell}
 dp_collate = dp_batch.collate(collate_fn=boximg_collate_fn)
-print(f"Number of mini-batches: {len(list(dp_collate))}")
+print(f"Number of mini-batches: {len(dp_collate)}")
 mini_batch_box, mini_batch_img, mini_batch_metadata = list(dp_collate)[1]
 print(f"Mini-batch image tensor shape: {mini_batch_img.shape}")
 print(f"Mini-batch box tensors: {mini_batch_box}")

@@ -126,8 +126,7 @@ This should give us about 12 chips in total, 6 from each of the 2 Sentinel-1
 images that were passed in.
 
 ```{code-cell}
-chips = [chip for chip in dp_xbatcher]
-print(f"Number of chips: {len(chips)}")
+print(f"Number of chips: {len(dp_xbatcher)}")
 ```
 
 Now, if you want to customize the sliding window (e.g. do overlapping strides),
@@ -145,14 +144,14 @@ Great, and this overlapping stride method should give us more 512x512 chips 🧮
 than before.
 
 ```{code-cell}
-chips = [chip for chip in dp_xbatcher]
-print(f"Number of chips: {len(chips)}")
+print(f"Number of chips: {len(dp_xbatcher)}")
 ```
 
 Double-check that single chips are of the correct dimensions
 (band: 1, y: 512, x: 512).
 
 ```{code-cell}
+chips = list(dp_xbatcher)
 sample = chips[0]
 sample
 ```
@@ -232,7 +231,7 @@ Then, pass this collate function to
 
 ```{code-cell}
 dp_collate = dp_batch.collate(collate_fn=xr_collate_fn)
-print(f"Number of mini-batches: {len(list(dp_collate))}")
+print(f"Number of mini-batches: {len(dp_collate)}")
 print(f"Mini-batch tensor shape: {list(dp_collate)[0].shape}")
 ```
 
