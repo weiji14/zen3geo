@@ -19,7 +19,10 @@ build:
     post_install:
       # Install torchdata=0.4.1 instead of 0.5.0 to prevent AttributeError, see
       # https://github.com/pytorch/data/issues/869
-      - "pip install torchdata==0.4.1"
+      # Don't install ipython=8.7.0 to prevent
+      # WARNING, Pygments lexer name 'ipython' is not known, see
+      # https://github.com/ipython/ipython/issues/13845
+      - "pip install torchdata==0.4.1 ipython!=8.7.0"
 
 python:
   install:
