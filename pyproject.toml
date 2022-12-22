@@ -21,7 +21,7 @@ exclude = ["zen3geo/tests"]
 
 [tool.poetry.dependencies]
 # Required
-python = ">=3.8, <3.12"
+python = ">=3.8, <4.0"
 rioxarray = ">=0.10.0"
 torchdata = ">=0.4.0"
 # Optional
