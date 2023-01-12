@@ -22,7 +22,7 @@ build:
       # Install jupyter_server<2 to prevent exception: jsonschema 3.2.0 has no
       # such extra feature 'format-nongpl', see
       # https://github.com/ProjectPythia/cookbook-template/issues/100
-      - "pip install torchdata==0.4.1 'jupyter_server<2'"
+      - "pip install torchdata==0.4.1 jupyter_server==1.*"
 
 python:
   install:
