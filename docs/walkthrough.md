@@ -211,7 +211,7 @@ And so it begins 🌄
 
 That’s all 🎉! For more information on how to use DataPipes, check out:
 
-- {doc}`TorchData Tutorials <torchdata:tutorial>`
+- {doc}`TorchData DataPipe Tutorial <torchdata:dp_tutorial>`
 - {doc}`TorchData Usage Examples <torchdata:examples>`
 
 If you have any questions 🙋, feel free to ask us anything at
