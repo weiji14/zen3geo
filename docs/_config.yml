@@ -32,7 +32,8 @@ html:
 sphinx:
   config:
     autodoc_typehints: 'description'
-    execution_show_tb: True
+    myst_all_links_external: true
+    nb_execution_show_tb: true
     html_show_copyright: false
     html_theme_options:
       # https://sphinx-book-theme.readthedocs.io/en/stable/customize/sidebar-secondary.html

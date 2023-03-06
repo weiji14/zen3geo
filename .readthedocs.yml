@@ -19,10 +19,7 @@ build:
     post_install:
       # Install torchdata=0.4.1 instead of 0.5.0 to prevent AttributeError, see
       # https://github.com/pytorch/data/issues/869
-      # Install jupyter_server<2 to prevent exception: jsonschema 3.2.0 has no
-      # such extra feature 'format-nongpl', see
-      # https://github.com/ProjectPythia/cookbook-template/issues/100
-      - "pip install torchdata==0.4.1 jupyter_server==1.*"
+      - "pip install torchdata==0.4.1"
 
 python:
   install:
