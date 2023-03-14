@@ -4719,7 +4719,7 @@ docs = ["jaraco.packaging (>=9)", "rst.linker (>=1.9)", "sphinx"]
 testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.0.1)", "pytest-flake8", "pytest-mypy (>=0.9.1)"]
 
 [extras]
-docs = ["adlfs", "contextily", "datashader", "graphviz", "jupyter-book", "matplotlib", "planetary-computer", "pyogrio", "pystac", "pystac-client", "stackstac", "spatialpandas", "xbatcher"]
+docs = ["adlfs", "contextily", "datashader", "graphviz", "jupyter-book", "matplotlib", "planetary-computer", "pyogrio", "pystac", "pystac-client", "stackstac", "spatialpandas", "xbatcher", "xpystac", "zarr"]
 raster = ["xbatcher", "xpystac", "zarr"]
 spatial = ["datashader", "spatialpandas"]
 stac = ["pystac", "pystac-client", "stackstac"]
@@ -4728,4 +4728,4 @@ vector = ["pyogrio"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8, <4.0"
-content-hash = "5693beac275d41cec1bc8cff195dcf004b17189b4944be0ae738f51f46cf644e"
+content-hash = "e89ad2f12ec7ca0d485650b57729fafbd273a06484b532aa4e370b1c3642592e"

@@ -60,7 +60,9 @@ docs = [
     "pystac_client",
     "stackstac",
     "spatialpandas",
-    "xbatcher"
+    "xbatcher",
+    "xpystac",
+    "zarr"
 ]
 raster = [
     "xbatcher",
