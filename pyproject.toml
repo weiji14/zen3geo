@@ -32,6 +32,7 @@ pystac-client = {version = ">=0.4.0", optional = true}
 spatialpandas = {version = ">=0.4.0", optional = true}
 stackstac = {version = ">=0.4.0", optional = true}
 xbatcher = {version = ">=0.2.0", optional = true}
+xpystac = {version = ">=0.0.1", optional = true}
 # Docs
 adlfs = {version = "*", optional = true}
 contextily = {version = "*", optional = true}
@@ -60,7 +61,10 @@ docs = [
     "spatialpandas",
     "xbatcher"
 ]
-raster = ["xbatcher"]
+raster = [
+    "xbatcher",
+    "xpystac"
+]
 spatial = [
     "datashader",
     "spatialpandas"

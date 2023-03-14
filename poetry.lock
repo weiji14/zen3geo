@@ -4507,6 +4507,25 @@ tensorflow = ["tensorflow"]
 torch = ["torch"]
 
 [[package]]
+name = "xpystac"
+version = "0.0.1"
+description = "Extend xarray.open_dataset to accept pystac objects"
+category = "main"
+optional = true
+python-versions = ">=3.8"
+files = [
+    {file = "xpystac-0.0.1-py3-none-any.whl", hash = "sha256:89d68e5ba9135f43f78991cb4dd9dd3cdc5802aefdfc0cf9458bf080257956aa"},
+    {file = "xpystac-0.0.1.tar.gz", hash = "sha256:5964e24dcb140efa8854782713c86a3a566a78d2cd4b14fb377d19866e308005"},
+]
+
+[package.dependencies]
+pystac = ">=1.0.0b3"
+xarray = "*"
+
+[package.extras]
+dev = ["pre-commit", "pytest"]
+
+[[package]]
 name = "xyzservices"
 version = "2022.6.0"
 description = "Source of XYZ tiles providers"
@@ -4624,7 +4643,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 
 [extras]
 docs = ["adlfs", "contextily", "datashader", "graphviz", "jupyter-book", "matplotlib", "planetary-computer", "pyogrio", "pystac", "pystac-client", "stackstac", "spatialpandas", "xbatcher"]
-raster = ["xbatcher"]
+raster = ["xbatcher", "xpystac"]
 spatial = ["datashader", "spatialpandas"]
 stac = ["pystac", "pystac-client", "stackstac"]
 vector = ["pyogrio"]
@@ -4632,4 +4651,4 @@ vector = ["pyogrio"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8, <4.0"
-content-hash = "7f1829e82d7c54944a60da872a89e7b454bd1e766300f0895d3538c450da9ea5"
+content-hash = "a6ae871e2146c094841138b492c0f891deef0651b314cc5d373173790032855d"
