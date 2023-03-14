@@ -96,6 +96,9 @@ sphinx:
       xbatcher:
         - 'https://xbatcher.readthedocs.io/en/latest/'
         - null
+      zarr:
+        - 'https://zarr.readthedocs.io/en/latest/'
+        - null
   extra_extensions:
     - 'sphinx.ext.autodoc'
     - 'sphinx.ext.intersphinx'
