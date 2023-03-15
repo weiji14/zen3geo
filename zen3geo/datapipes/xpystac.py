@@ -21,6 +21,7 @@ class XpySTACAssetReaderIterDataPipe(IterDataPipe[StreamWrapper]):
     """
     Takes a :py:class:`pystac.Asset` object containing raster data (e.g.
     :doc:`Zarr <zarr:index>`,
+    `NetCDF <https://www.unidata.ucar.edu/software/netcdf>`,
     `Cloud-Optimized GeoTIFF <https://www.cogeo.org>`__, etc) from local disk
     or URLs (as long as they can be read by xpystac) and yields
     :py:class:`xarray.Dataset` objects (functional name:
@@ -34,6 +35,7 @@ class XpySTACAssetReaderIterDataPipe(IterDataPipe[StreamWrapper]):
     source_datapipe : IterDataPipe[pystac.Asset]
         A DataPipe that contains :py:class:`pystac.Asset` objects to raster
         files such as :doc:`Zarr <zarr:index>`,
+        `NetCDF <https://www.unidata.ucar.edu/software/netcdf>`,
         `Cloud-Optimized GeoTIFF <https://www.cogeo.org>`__, etc.
 
     engine : str or xarray.backends.BackendEntrypoint
@@ -65,8 +67,10 @@ class XpySTACAssetReaderIterDataPipe(IterDataPipe[StreamWrapper]):
     >>> pystac = pytest.importorskip("pystac")
     >>> xpystac = pytest.importorskip("xpystac")
     >>> zarr = pytest.importorskip("zarr")
+    ...
     >>> from torchdata.datapipes.iter import IterableWrapper
     >>> from zen3geo.datapipes import XpySTACAssetReader
+    ...
     >>> # Read in STAC Asset using DataPipe
     >>> collection_url: str = "https://planetarycomputer.microsoft.com/api/stac/v1/collections/nasa-nex-gddp-cmip6"
     >>> asset: pystac.Asset = pystac.Collection.from_file(href=collection_url).assets[
@@ -74,6 +78,7 @@ class XpySTACAssetReaderIterDataPipe(IterDataPipe[StreamWrapper]):
     ... ]
     >>> dp = IterableWrapper(iterable=[asset])
     >>> dp_xpystac = dp.read_from_xpystac()
+    ...
     >>> # Loop or iterate over the DataPipe stream
     >>> it = iter(dp_xpystac)
     >>> dataset = next(it)

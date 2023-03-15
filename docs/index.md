@@ -7,7 +7,7 @@ Get what you need, not more, not less:
 | Command                        |  Dependencies |
 |:-------------------------------|---------------|
 | `pip install zen3geo`          | rioxarray, torchdata |
-| `pip install zen3geo[raster]`  | rioxarray, torchdata, xbatcher |
+| `pip install zen3geo[raster]`  | rioxarray, torchdata, xbatcher, xpystac, zarr |
 | `pip install zen3geo[spatial]` | rioxarray, torchdata, datashader, spatialpandas |
 | `pip install zen3geo[stac]`    | rioxarray, torchdata, pystac, pystac-client, stackstac |
 | `pip install zen3geo[vector]`  | rioxarray, torchdata, pyogrio[geopandas] |
