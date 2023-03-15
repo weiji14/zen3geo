@@ -43,6 +43,7 @@ matplotlib = {version = "*", optional = true}
 planetary-computer = {version="*", optional=true}
 
 [tool.poetry.group.dev.dependencies]
+aiohttp = "*"
 black = "*"
 pytest = "*"
 
