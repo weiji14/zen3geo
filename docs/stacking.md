@@ -52,6 +52,7 @@ import pystac
 import rasterio
 import torch
 import torchdata
+import torchdata.dataloader2
 import xarray as xr
 import zen3geo
 ```
@@ -528,10 +529,11 @@ torchdata.datapipes.utils.to_graph(dp=dp_tensors)
 
 ### Into a DataLoader 🏋️
 
-Time to connect the DataPipe to {py:class}`torch.utils.data.DataLoader` ♻️!
+Time to connect the DataPipe to
+{py:class}`torchdata.dataloader2.DataLoader2` ♻️!
 
 ```{code-cell}
-dataloader = torch.utils.data.DataLoader2(dataset=dp_tensors, batch_size=None)
+dataloader = torchdata.dataloader2.DataLoader2(datapipe=dp_tensors)
 for i, batch in enumerate(dataloader):
     pre, post, target = batch
     print(f"Batch {i} - pre: {pre.shape}, post: {post.shape}, target: {target.shape}")
