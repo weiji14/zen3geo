@@ -1,5 +1,5 @@
 # This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
 name: Tests
 
@@ -25,9 +25,11 @@ jobs:
         # Is it a draft Pull Request (true or false)?
         isDraft:
           - ${{ github.event.pull_request.draft }}
-        # Exclude Ubuntu + Python 3.8 job for draft PRs
+        # Exclude Ubuntu + Python 3.8 and 3.11 jobs for draft PRs
         exclude:
           - python-version: '3.8'
+            isDraft: true
+          - python-version: '3.11'
             isDraft: true
         # Only install optional packages on Ubuntu-22.04/Python 3.10 and 3.11
         include:
