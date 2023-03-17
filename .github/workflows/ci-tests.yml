@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.10"]
+        python-version: ["3.8", "3.10", "3.11"]
         os: [ubuntu-22.04]
         # Is it a draft Pull Request (true or false)?
         isDraft:
@@ -29,11 +29,14 @@ jobs:
         exclude:
           - python-version: '3.8'
             isDraft: true
-        # Only install optional packages on Ubuntu-22.04/Python 3.10
+        # Only install optional packages on Ubuntu-22.04/Python 3.10 and 3.11
         include:
           - os: 'ubuntu-22.04'
             python-version: '3.10'
             extra-packages: '--extras "raster spatial stac vector"'
+          - os: 'ubuntu-22.04'
+            python-version: '3.11'
+            extra-packages: '--extras "raster stac vector"'
 
     steps:
       # Checkout current git repository
@@ -42,7 +45,7 @@ jobs:
 
       # Install Python
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@98f2ad02fd48d057ee3b4d4f66525b231c3e52b6
+        uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435
         with:
           python-version: ${{ matrix.python-version }}
 
