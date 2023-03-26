@@ -51,6 +51,7 @@ import shapely.affinity
 import shapely.geometry
 import torch
 import torchdata
+import torchdata.dataloader2
 import xarray as xr
 import zen3geo
 ```
@@ -465,7 +466,7 @@ torchdata.datapipes.utils.to_graph(dp=dp_collate)
 Loop over the DataPipe using {py:class}`torch.utils.data.DataLoader` ⚙️!
 
 ```{code-cell}
-dataloader = torch.utils.data.DataLoader2(dataset=dp_collate, batch_size=None)
+dataloader = torchdata.dataloader2.DataLoader2(datapipe=dp_collate)
 for i, batch in enumerate(dataloader):
     box, img, metadata = batch
     print(f"Batch {i} - img: {img.shape}, box sizes: {[len(b) for b in box]}")

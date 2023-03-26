@@ -16,8 +16,17 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
 ]
 exclude = ["zen3geo/tests"]
+
+[tool.poetry.urls]
+"Homepage" = "https://github.com/weiji14/zen3geo/discussions"
+"Changelog" = "https://zen3geo.readthedocs.io/en/latest/changelog.html"
+"Documentation" = "https://zen3geo.readthedocs.io"
+"Download" = "https://anaconda.org/conda-forge/zen3geo"
+"Source Code" = "https://github.com/weiji14/zen3geo"
+"Sponsor" = "https://github.com/sponsors/weiji14"
 
 [tool.poetry.dependencies]
 # Required
