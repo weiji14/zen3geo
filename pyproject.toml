@@ -76,7 +76,6 @@ docs = [
 ]
 raster = [
     "xbatcher",
-    "xpystac",
     "zarr"
 ]
 spatial = [
@@ -86,7 +85,8 @@ spatial = [
 stac = [
     "pystac",
     "pystac_client",
-    "stackstac"
+    "stackstac",
+    "xpystac"
 ]
 vector = ["pyogrio"]
 

@@ -5062,12 +5062,12 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 
 [extras]
 docs = ["adlfs", "contextily", "datashader", "graphviz", "jupyter-book", "matplotlib", "planetary-computer", "pyogrio", "pystac", "pystac-client", "stackstac", "spatialpandas", "xbatcher", "xpystac", "zarr"]
-raster = ["xbatcher", "xpystac", "zarr"]
+raster = ["xbatcher", "zarr"]
 spatial = ["datashader", "spatialpandas"]
-stac = ["pystac", "pystac-client", "stackstac"]
+stac = ["pystac", "pystac-client", "stackstac", "xpystac"]
 vector = ["pyogrio"]
 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8, <4.0"
-content-hash = "64b046286aca49bf9fd8341c97f5da310afa07ef59873de86415d00b5cf556fc"
+content-hash = "90dfbece41b0ddeecc3b882e82574ef0ac8c40b51fca9c7e201343d92595e4d1"
