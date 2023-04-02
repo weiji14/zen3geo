@@ -21,7 +21,7 @@ class XpySTACAssetReaderIterDataPipe(IterDataPipe[StreamWrapper]):
     """
     Takes a :py:class:`pystac.Asset` object containing raster data (e.g.
     :doc:`Zarr <zarr:index>`,
-    `NetCDF <https://www.unidata.ucar.edu/software/netcdf>`,
+    `NetCDF <https://www.unidata.ucar.edu/software/netcdf>`__,
     `Cloud-Optimized GeoTIFF <https://www.cogeo.org>`__, etc) from local disk
     or URLs (as long as they can be read by xpystac) and yields
     :py:class:`xarray.Dataset` objects (functional name:
@@ -35,7 +35,7 @@ class XpySTACAssetReaderIterDataPipe(IterDataPipe[StreamWrapper]):
     source_datapipe : IterDataPipe[pystac.Asset]
         A DataPipe that contains :py:class:`pystac.Asset` objects to raster
         files such as :doc:`Zarr <zarr:index>`,
-        `NetCDF <https://www.unidata.ucar.edu/software/netcdf>`,
+        `NetCDF <https://www.unidata.ucar.edu/software/netcdf>`__,
         `Cloud-Optimized GeoTIFF <https://www.cogeo.org>`__, etc.
 
     engine : str or xarray.backends.BackendEntrypoint
@@ -118,7 +118,7 @@ class XpySTACAssetReaderIterDataPipe(IterDataPipe[StreamWrapper]):
 
     def __init__(
         self,
-        source_datapipe: IterDataPipe[pystac.Asset],
+        source_datapipe: IterDataPipe,
         engine: str = "stac",
         **kwargs: Optional[Dict[str, Any]]
     ) -> None:
@@ -128,7 +128,7 @@ class XpySTACAssetReaderIterDataPipe(IterDataPipe[StreamWrapper]):
                 "Please use `pip install xpystac` "
                 "to install the package"
             )
-        self.source_datapipe: IterDataPipe[str] = source_datapipe
+        self.source_datapipe: IterDataPipe = source_datapipe
         self.engine: str = engine
         self.kwargs = kwargs
 
