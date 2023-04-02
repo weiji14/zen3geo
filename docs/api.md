@@ -82,3 +82,12 @@
 .. autoclass:: zen3geo.datapipes.xbatcher.XbatcherSlicerIterDataPipe
     :show-inheritance:
 ```
+
+### XpySTAC
+
+```{eval-rst}
+.. automodule:: zen3geo.datapipes.xpystac
+.. autoclass:: zen3geo.datapipes.XpySTACAssetReader
+.. autoclass:: zen3geo.datapipes.xpystac.XpySTACAssetReaderIterDataPipe
+    :show-inheritance:
+```

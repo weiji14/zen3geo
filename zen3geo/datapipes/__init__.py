@@ -20,3 +20,6 @@ from zen3geo.datapipes.stackstac import (
     StackSTACStackerIterDataPipe as StackSTACStacker,
 )
 from zen3geo.datapipes.xbatcher import XbatcherSlicerIterDataPipe as XbatcherSlicer
+from zen3geo.datapipes.xpystac import (
+    XpySTACAssetReaderIterDataPipe as XpySTACAssetReader,
+)

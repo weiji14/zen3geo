@@ -41,6 +41,8 @@ pystac-client = {version = ">=0.4.0", optional = true}
 spatialpandas = {version = ">=0.4.0", optional = true}
 stackstac = {version = ">=0.4.0", optional = true}
 xbatcher = {version = ">=0.2.0", optional = true}
+xpystac = {version = ">=0.0.1", optional = true}
+zarr = {version = ">=2.13.0", optional = true}
 # Docs
 adlfs = {version = "*", optional = true}
 contextily = {version = "*", optional = true}
@@ -50,6 +52,7 @@ matplotlib = {version = "*", optional = true}
 planetary-computer = {version="*", optional=true}
 
 [tool.poetry.group.dev.dependencies]
+aiohttp = "*"
 black = "*"
 pytest = "*"
 
@@ -67,9 +70,14 @@ docs = [
     "pystac_client",
     "stackstac",
     "spatialpandas",
-    "xbatcher"
+    "xbatcher",
+    "xpystac",
+    "zarr"
 ]
-raster = ["xbatcher"]
+raster = [
+    "xbatcher",
+    "zarr"
+]
 spatial = [
     "datashader",
     "spatialpandas"
@@ -77,7 +85,8 @@ spatial = [
 stac = [
     "pystac",
     "pystac_client",
-    "stackstac"
+    "stackstac",
+    "xpystac"
 ]
 vector = ["pyogrio"]
 
