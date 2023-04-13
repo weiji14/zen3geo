@@ -48,6 +48,9 @@ sphinx:
       datashader:
         - 'https://datashader.org/'
         - null
+      datatree:
+        - 'https://xarray-datatree.readthedocs.io/en/latest/'
+        - null
       geopandas:
         - 'https://geopandas.org/en/latest/'
         - null

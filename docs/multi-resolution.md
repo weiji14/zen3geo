@@ -27,8 +27,9 @@ native resolution 🔬 of the physical variable being measured, while 🪶
 minimizing memory usage. By the end of the lesson, you should be able to:
 
 - Find 🔍 low and high spatial resolution climate datasets and load them from
-  Zarr stores
-- Stack 🥞 different spatial resolution datasets into an xarray.DataTree
+  {doc}`Zarr <zarr:index>` stores
+- Stack 🥞 and subset different spatial resolution datasets in a hierarchical
+  {py:class}`datatree.DataTree` structure
 - Slice 🔪 the multi-resolution dataset into chips and pass into a DataLoader
 
 🔗 Links:
@@ -81,8 +82,8 @@ highres_deepsd = "https://cpdataeuwest.blob.core.windows.net/cp-cmip/version1/da
 ```
 
 This is how the projected maximum temperature 🥵 for August 2089 looks like over
-South Asia 🪷 for a low resolution 🔅 Global Climate Model (left) and a
-high resolution 🔆 downscaled product (right).
+South Asia 🪷 for a low-resolution 🔅 Global Climate Model (left) and a
+high-resolution 🔆 downscaled product (right).
 
 ```{code-cell}
 :tags: [hide-input]
@@ -130,16 +131,83 @@ datasets.
 ```{code-cell}
 it = iter(dp_lowres_dataset)
 ds_lowres = next(it)
-print(ds_lowres)
+ds_lowres
 ```
 
 ```{code-cell}
 it = iter(dp_highres_dataset)
 ds_highres = next(it)
-print(ds_highres)
+ds_highres
 ```
 
 Notice that the low-resolution 🔅 dataset has lon/lat pixels of shape
 (320, 160), whereas the high-resolution 🔆 dataset is of shape (1440, 720). So
 there has been a 4.5x increase 📈 in spatial resolution going from the raw GCM
 🌐 grid to the super-resolution 🔭 DeepSD grid.
+
+
+## Spatiotemporal stack and subset 🍱
+
+Following on from {doc}`./stacking` where multiple 🥞 layers with the **same**
+spatial resolution were stacked together into an {py:class}`xarray.DataArray`
+object, this section will teach 🧑‍🏫 you about stacking datasets with
+**different** spatial resolutions 📶 into a {py:class}`datatree.DataTree`
+object that has a nested/hierarchical structure. That
+{py:class}`datatree.DataTree` can then be subsetted 🥮 to the desired spatial
+and temporal extent in one go 😎.
+
+### Stack multi-resolution datasets 📚
+
+First, we'll need to combine 🪢 the low-resolution GCM and high-resolution
+DeepSD {py:class}`xarray.Dataset` objects into a tuple 🎵 using
+{py:class}`torchdata.datapipes.iter.Zipper` (functional name: zip).
+
+```{code-cell}
+dp_lowres_highres = dp_lowres_dataset.zip(dp_highres_dataset)
+dp_lowres_highres
+```
+
+Next, use {py:class}`torchdata.datapipes.iter.Collator` (functional name:
+`collate`) to convert 🤸 the tuple of {py:class}`xarray.Dataset` objects into
+an {py:class}`datatree.DataTree` 🎋, similar to what was done in
+{doc}`./stacking`. Note that we'll only take the 'tasmax' ♨️ (Daily Maximum
+Near-Surface Air Temperature) {py:class}`xarray.DataArray` variable from each
+of the {py:class}`xarray.Dataset` objects.
+
+```{code-cell}
+def multires_collate_fn(lowres_and_highres: tuple) -> DataTree:
+    """
+    Combine a pair of xarray.Dataset (lowres, highres) inputs into a
+    datatree.DataTree with groups named 'lowres' and 'highres'.
+    """
+    # Turn 2 xr.Dataset objects into 1 xr.DataTree with multiple groups
+    ds_lowres, ds_highres = lowres_and_highres
+
+    # Create datacube with lowres and highres groups
+    datatree: DataTree = DataTree.from_dict(
+        d={"lowres": ds_lowres.tasmax, "highres": ds_highres.tasmax}
+    )
+
+    return datatree
+```
+
+```{code-cell}
+dp_datatree = dp_lowres_highres.collate(collate_fn=multires_collate_fn)
+dp_datatree
+```
+
+See the nested 🪆 structure of the {py:class}`datatree.DataTree`. The
+low-resolution 🔅 GCM and high-resolution 🔆 DeepSD outputs have been placed in
+separate groups 🖖.
+
+```{code-cell}
+it = iter(dp_datatree)
+datatree = next(it)
+datatree
+```
+
+Visualize the DataPipe graph ⛓️ so far.
+
+```{code-cell}
+torchdata.datapipes.utils.to_graph(dp=dp_datatree)
+```
