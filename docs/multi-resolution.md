@@ -41,28 +41,33 @@ minimizing memory usage. By the end of the lesson, you should be able to:
 These are the tools 🛠️ you'll need.
 
 ```{code-cell}
+import matplotlib.pyplot as plt
 import torchdata
+import xarray as xr
 import xpystac
 import zen3geo
+
+from datatree import DataTree
 ```
 
-## 0️⃣ Find Zarr stores 🧊
+## 0️⃣ Find climate model datasets 🪸
 
 The two datasets we'll be working with are 🌐 gridded climate projections, one
 that is in its original low 🔅 spatial resolution, and another one of a
 higher 🔆 spatial resolution. Specifically, we'll be looking at the maximum
 temperature 🌡️ (tasmax) variable from one of the Coupled Model Intercomparison
 Project Phase 6 (CMIP6) global coupled ocean-atmosphere general circulation
-model (GCM) 💨 outputs that is of low resolution (1.125 arc degrees), and a
-super-resolution product from DeepSD 🤔 that is of a higher resolution (0.25
-arc degrees).
+model (GCM) 💨 outputs that is of low resolution (67.5 arcminute), and a
+super-resolution product from DeepSD 🤔 that is of a higher resolution (15
+arcminute).
 
 ```{note}
-The following tutorial will use the term super-resolution 🔭 from Computer
-Vision instead of downscaling ⏬. It's just that the term downscaling ⏬ (going
-from low to high resolution) can get confused with downsampling 🙃 (going from
-high to low resolution), whereas super-resolution 🔭 is unambiguously about
-going from low 🔅 to high 🔆 resolution.
+The following tutorial will mostly use the term super-resolution 🔭 from
+Computer Vision instead of downscaling ⏬. It's just that the term
+downscaling ⏬ (going from low to high resolution) can get confused with
+downsampling 🙃 (going from high to low resolution), whereas
+super-resolution 🔭 is unambiguously about going from low 🔅 to high 🔆
+resolution.
 ```
 
 🔖 References:
@@ -75,7 +80,36 @@ lowres_raw = "https://cpdataeuwest.blob.core.windows.net/cp-cmip/cmip6/ScenarioM
 highres_deepsd = "https://cpdataeuwest.blob.core.windows.net/cp-cmip/version1/data/DeepSD/ScenarioMIP.MRI.MRI-ESM2-0.ssp585.r1i1p1f1.month.DeepSD.tasmax.zarr"
 ```
 
-The :doc:`Zarr <zarr:index>` stores 🧊 can be loaded into an
+This is how the projected maximum temperature 🥵 for August 2089 looks like over
+South Asia 🪷 for a low resolution 🔅 Global Climate Model (left) and a
+high resolution 🔆 downscaled product (right).
+
+```{code-cell}
+:tags: [hide-input]
+# Zarr datasets from https://github.com/carbonplan/research/blob/d05d148fd716ba6304e3833d765069dd890eaf4a/articles/cmip6-downscaling-explainer/components/downscaled-data.js#L97-L122
+ds_gcm = xr.open_dataset(filename_or_obj="https://cmip6downscaling.blob.core.windows.net/vis/article/fig1/regions/india/gcm-tasmax.zarr")
+ds_gcm -= 273.15  # convert from Kelvin to Celsius
+ds_downscaled = xr.open_dataset(filename_or_obj="https://cmip6downscaling.blob.core.windows.net/vis/article/fig1/regions/india/downscaled-tasmax.zarr")
+ds_downscaled -= 273.15  # convert from Kelvin to Celsius
+
+# Plot projected maximum temperature over South Asia from GCM and GARD-MV
+fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(15, 3), sharey=True)
+
+img1 = ds_gcm.tasmax.plot.imshow(ax=ax[0], cmap="inferno", vmin=16, vmax=48, add_colorbar=False)
+ax[0].set_title("Global Climate Model (67.5 arcminute)")
+
+img2 = ds_downscaled.tasmax.plot.imshow(ax=ax[1], cmap="inferno", vmin=16, vmax=48, add_colorbar=False)
+ax[1].set_title("Downscaled result (15 arcminute)")
+
+cbar = fig.colorbar(mappable=img1, ax=ax.ravel().tolist(), extend="both")
+cbar.set_label(label="Daily Max Near-Surface Air\nTemperature in Aug 2089 (°C)")
+
+plt.show()
+```
+
+### Load Zarr stores 📦
+
+The {doc}`Zarr <zarr:index>` stores 🧊 can be loaded into an
 {py:class}`xarray.Dataset` via {py:class}`zen3geo.datapipes.XpySTACAssetReader`
 (functional name: ``read_from_xpystac``) with the `engine="zarr"` keyword
 argument.
