@@ -88,18 +88,26 @@ high-resolution 🔆 downscaled product (right).
 ```{code-cell}
 :tags: [hide-input]
 # Zarr datasets from https://github.com/carbonplan/research/blob/d05d148fd716ba6304e3833d765069dd890eaf4a/articles/cmip6-downscaling-explainer/components/downscaled-data.js#L97-L122
-ds_gcm = xr.open_dataset(filename_or_obj="https://cmip6downscaling.blob.core.windows.net/vis/article/fig1/regions/india/gcm-tasmax.zarr")
+ds_gcm = xr.open_dataset(
+    filename_or_obj="https://cmip6downscaling.blob.core.windows.net/vis/article/fig1/regions/india/gcm-tasmax.zarr"
+)
 ds_gcm -= 273.15  # convert from Kelvin to Celsius
-ds_downscaled = xr.open_dataset(filename_or_obj="https://cmip6downscaling.blob.core.windows.net/vis/article/fig1/regions/india/downscaled-tasmax.zarr")
+ds_downscaled = xr.open_dataset(
+    filename_or_obj="https://cmip6downscaling.blob.core.windows.net/vis/article/fig1/regions/india/downscaled-tasmax.zarr"
+)
 ds_downscaled -= 273.15  # convert from Kelvin to Celsius
 
 # Plot projected maximum temperature over South Asia from GCM and GARD-MV
 fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(15, 3), sharey=True)
 
-img1 = ds_gcm.tasmax.plot.imshow(ax=ax[0], cmap="inferno", vmin=16, vmax=48, add_colorbar=False)
+img1 = ds_gcm.tasmax.plot.imshow(
+    ax=ax[0], cmap="inferno", vmin=16, vmax=48, add_colorbar=False
+)
 ax[0].set_title("Global Climate Model (67.5 arcminute)")
 
-img2 = ds_downscaled.tasmax.plot.imshow(ax=ax[1], cmap="inferno", vmin=16, vmax=48, add_colorbar=False)
+img2 = ds_downscaled.tasmax.plot.imshow(
+    ax=ax[1], cmap="inferno", vmin=16, vmax=48, add_colorbar=False
+)
 ax[1].set_title("Downscaled result (15 arcminute)")
 
 cbar = fig.colorbar(mappable=img1, ax=ax.ravel().tolist(), extend="both")
@@ -145,6 +153,39 @@ Notice that the low-resolution 🔅 dataset has lon/lat pixels of shape
 there has been a 4.5x increase 📈 in spatial resolution going from the raw GCM
 🌐 grid to the super-resolution 🔭 DeepSD grid.
 
+### Shift from 0-360 to -180-180 🌐
+
+A sharp eye 👁️ would have noticed that the longitudinal range of the
+low-resolution 🔅 and high-resolution 🔆 dataset are offset ↔️ by 180°, going
+from 0° to 360° and -180° to +180° respectively. Let's shift the coordinates 📍
+of the low-resolution grid 🌍 from 0-360 to -180-180 using a custom
+{py:class}`torchdata.datapipes.iter.Mapper` (functional name: `map`) function.
+
+🔖 References:
+- https://discourse.pangeo.io/t/handling-slicing-with-circular-longitude-coordinates-in-xarray/1608/3
+- https://gis.stackexchange.com/questions/416091/converting-a-netcdf-from-0-to-360-to-180-to-180-via-xarray
+
+```{code-cell}
+def shift_longitude_360_to_180(ds: xr.Dataset) -> xr.Dataset:
+    ds = ds.assign_coords(lon=(((ds.lon + 180) % 360) - 180))
+    ds = ds.roll(lon=int(len(ds.lon) / 2), roll_coords=True)
+    return ds
+```
+
+```{code-cell}
+dp_lowres_dataset_180 = dp_lowres_dataset.map(fn=shift_longitude_360_to_180)
+dp_lowres_dataset_180
+```
+
+Double check that the low resolution 🔆 grid's longitude coordinates 🔢 are now
+in the -180° to +180° range.
+
+```{code-cell}
+it = iter(dp_lowres_dataset_180)
+ds_lowres_180 = next(it)
+ds_lowres_180
+```
+
 
 ## Spatiotemporal stack and subset 🍱
 
@@ -163,7 +204,7 @@ DeepSD {py:class}`xarray.Dataset` objects into a tuple 🎵 using
 {py:class}`torchdata.datapipes.iter.Zipper` (functional name: zip).
 
 ```{code-cell}
-dp_lowres_highres = dp_lowres_dataset.zip(dp_highres_dataset)
+dp_lowres_highres = dp_lowres_dataset_180.zip(dp_highres_dataset)
 dp_lowres_highres
 ```
 
@@ -206,8 +247,93 @@ datatree = next(it)
 datatree
 ```
 
+### Spatiotemporal subset 🥮
+
+The climate model outputs above are a global 🗺️ one covering a timespan from
+January 2015 to December 2100 📅. If you're only interested in a particular
+region 🌏 or timespan ⌚, then the {py:class}`datatree.DataTree` will need to
+be trimmed 💇 down. Let's use {py:meth}`datatree.DataTree.sel` to subset the
+multi-resolution data to just the Philippines 🇵🇭 for the period 2015 to 2030.
+
+```{code-cell}
+def spatiotemporal_subset(dt: DataTree) -> DataTree:
+    dt_subset = dt.sel(
+        lon=slice(116.4375, 126.5625),
+        lat=slice(5.607445, 19.065325),
+        time=slice("2015-01-01", "2030-12-31"),
+    )
+    return dt_subset
+```
+
+```{code-cell}
+dp_datatree_subset = dp_datatree.map(fn=spatiotemporal_subset)
+dp_datatree_subset
+```
+
+Inspect the subsetted climate dataset 🕵️
+
+```{code-cell}
+it = iter(dp_datatree_subset)
+datatree_subset = next(it)
+datatree_subset
+```
+
+Let's plot the projected temperature 🌡️ for Dec 2030 to ensure things look ok.
+
+```{code-cell}
+ds_lowres = (
+    datatree_subset["lowres/tasmax"]
+    .sel(time=slice("2030-12-01", "2030-12-31"))
+    .squeeze()
+)
+ds_lowres -= 273.15  # convert from Kelvin to Celsius
+ds_highres = (
+    datatree_subset["highres/tasmax"]
+    .sel(time=slice("2030-12-01", "2030-12-31"))
+    .squeeze()
+)
+ds_highres -= 273.15  # convert from Kelvin to Celsius
+
+# Plot projected maximum temperature over the Philippines from GCM and DeepSD
+fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(15, 8), sharey=True)
+
+img1 = ds_lowres.plot.imshow(
+    ax=ax[0], cmap="inferno", vmin=22, vmax=33, add_colorbar=False
+)
+ax[0].set_title("Global Climate Model (67.5 arcminute)")
+
+img2 = ds_highres.plot.imshow(
+    ax=ax[1], cmap="inferno", vmin=22, vmax=33, add_colorbar=False
+)
+ax[1].set_title("DeepSD output (15 arcminute)")
+
+cbar = fig.colorbar(mappable=img1, ax=ax.ravel().tolist(), extend="max")
+cbar.set_label(label="Daily Max Near-Surface Air\nTemperature in Dec 2030 (°C)")
+
+plt.show()
+```
+
+```{important}
+When slicing ✂️ different spatial resolution grids, put some 🧠 thought into the
+process. Do some 🧮 math to ensure the coordinates of the bounding box (min/max
+lon/lat) cut through the pixels exactly at the 📐 pixel boundaries whenever
+possible.
+
+If your multi-resolution 📶 layers have spatial resolutions that are
+round multiples ✖️ of each other (e.g. 10m, 20m, 60m), it is advisable to align
+🎯 the pixel corners, such that the high-resolution 🔆 pixels fit within the
+low-resolution 🔅 pixels (e.g. one 20m pixel should contain four 10m pixels).
+This can be done by resampling 🖌️ or interpolating the grid (typically the
+higher resolution one) onto a new reference frame 🖼️.
+
+For datasets ℹ️ that come from different sources and need to be reprojected 🔁,
+you can do the reprojection and pixel alignment in a single step 🔂. Be extra
+careful about resampling, as certain datasets (e.g. complex SAR 📡 data that
+has been collected off-nadir) may require special 🌷 treatment.
+```
+
 Visualize the DataPipe graph ⛓️ so far.
 
 ```{code-cell}
-torchdata.datapipes.utils.to_graph(dp=dp_datatree)
+torchdata.datapipes.utils.to_graph(dp=dp_datatree_subset)
 ```
