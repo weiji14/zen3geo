@@ -28,14 +28,15 @@ minimizing memory usage. By the end of the lesson, you should be able to:
 
 - Find 🔍 low and high spatial resolution climate datasets and load them from
   {doc}`Zarr <zarr:index>` stores
-- Stack 🥞 and subset different spatial resolution datasets in a hierarchical
-  {py:class}`datatree.DataTree` structure
-- Slice 🔪 the multi-resolution dataset into chips and pass into a DataLoader
+- Stack 🥞 and subset time-series datasets with different spatial resolutions
+  stored in a hierarchical {py:class}`datatree.DataTree` structure
+- Slice 🔪 the multi-resolution dataset along the time-axis into monthly bins
 
 🔗 Links:
 - https://carbonplan.org/research/cmip6-downscaling-explainer
 - https://github.com/carbonplan/cmip6-downscaling/blob/1.0/notebooks/accessing_data_example.ipynb
 - https://github.com/xarray-contrib/xbatcher/issues/93
+
 
 ## 🎉 **Getting started**
 
@@ -59,7 +60,7 @@ that is in its original low 🔅 spatial resolution, and another one of a
 higher 🔆 spatial resolution. Specifically, we'll be looking at the maximum
 temperature 🌡️ (tasmax) variable from one of the Coupled Model Intercomparison
 Project Phase 6 (CMIP6) global coupled ocean-atmosphere general circulation
-model (GCM) 💨 outputs that is of low resolution (67.5 arcminute), and a
+model (GCM) 💨 outputs that is of low-resolution (67.5 arcminute), and a
 super-resolution product from DeepSD 🤔 that is of a higher resolution (15
 arcminute).
 
@@ -178,7 +179,7 @@ dp_lowres_dataset_180 = dp_lowres_dataset.map(fn=shift_longitude_360_to_180)
 dp_lowres_dataset_180
 ```
 
-Double check that the low resolution 🔆 grid's longitude coordinates 🔢 are now
+Double check that the low-resolution 🔆 grid's longitude coordinates 🔢 are now
 in the -180° to +180° range.
 
 ```{code-cell}
@@ -225,7 +226,7 @@ def multires_collate_fn(lowres_and_highres: tuple) -> DataTree:
     # Turn 2 xr.Dataset objects into 1 xr.DataTree with multiple groups
     ds_lowres, ds_highres = lowres_and_highres
 
-    # Create datacube with lowres and highres groups
+    # Create DataTree with lowres and highres groups
     datatree: DataTree = DataTree.from_dict(
         d={"lowres": ds_lowres.tasmax, "highres": ds_highres.tasmax}
     )
@@ -279,7 +280,8 @@ datatree_subset = next(it)
 datatree_subset
 ```
 
-Let's plot the projected temperature 🌡️ for Dec 2030 to ensure things look ok.
+Let's plot the projected temperature 🌡️ for Dec 2030 over the Philippine
+Archipelago to ensure things look ok.
 
 ```{code-cell}
 ds_lowres = (
