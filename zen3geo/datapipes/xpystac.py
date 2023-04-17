@@ -1,5 +1,5 @@
 """
-DataPipes for `xpystac <https://github.com/jsignell/xpystac>`__.
+DataPipes for `xpystac <https://github.com/stac-utils/xpystac>`__.
 """
 from typing import Any, Dict, Iterator, Optional
 
@@ -19,7 +19,7 @@ from torchdata.datapipes.utils import StreamWrapper
 @functional_datapipe("read_from_xpystac")
 class XpySTACAssetReaderIterDataPipe(IterDataPipe[StreamWrapper]):
     """
-    Takes a :py:class:`pystac.Asset` object containing raster data (e.g.
+    Takes a :py:class:`pystac.Asset` object containing n-dimensional data (e.g.
     :doc:`Zarr <zarr:index>`,
     `NetCDF <https://www.unidata.ucar.edu/software/netcdf>`__,
     `Cloud-Optimized GeoTIFF <https://www.cogeo.org>`__, etc) from local disk
@@ -33,8 +33,8 @@ class XpySTACAssetReaderIterDataPipe(IterDataPipe[StreamWrapper]):
     Parameters
     ----------
     source_datapipe : IterDataPipe[pystac.Asset]
-        A DataPipe that contains :py:class:`pystac.Asset` objects to raster
-        files such as :doc:`Zarr <zarr:index>`,
+        A DataPipe that contains :py:class:`pystac.Asset` objects to
+        n-dimensional files such as :doc:`Zarr <zarr:index>`,
         `NetCDF <https://www.unidata.ucar.edu/software/netcdf>`__,
         `Cloud-Optimized GeoTIFF <https://www.cogeo.org>`__, etc.
 
@@ -51,14 +51,14 @@ class XpySTACAssetReaderIterDataPipe(IterDataPipe[StreamWrapper]):
     Yields
     ------
     stream_obj : xarray.Dataset
-        A :py:class:`xarray.Dataset` object containing the raster data.
+        An :py:class:`xarray.Dataset` object containing the n-dimensional data.
 
     Raises
     ------
     ModuleNotFoundError
         If ``xpystac`` is not installed. See
         `install instructions for xpystac
-        <https://github.com/jsignell/xpystac#install>`__,
+        <https://github.com/stac-utils/xpystac#install>`__,
         (e.g. via ``pip install xpystac``) before using this class.
 
     Example
