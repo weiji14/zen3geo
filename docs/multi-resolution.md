@@ -43,7 +43,8 @@ These are the tools 🛠️ you'll need.
 
 ```{code-cell}
 import matplotlib.pyplot as plt
-import torchdata
+import pandas as pd
+import torchdata.dataloader2
 import xarray as xr
 import xpystac
 import zen3geo
@@ -247,7 +248,7 @@ datatree = next(it)
 datatree
 ```
 
-### Spatiotemporal subset 🥮
+### Subset multi-resolution layers 🥮
 
 The climate model outputs above are a global 🗺️ one covering a timespan from
 January 2015 to December 2100 📅. If you're only interested in a particular
@@ -332,8 +333,87 @@ careful about resampling, as certain datasets (e.g. complex SAR 📡 data that
 has been collected off-nadir) may require special 🌷 treatment.
 ```
 
-Visualize the DataPipe graph ⛓️ so far.
+
+## Time to slice again ⌛
+
+So, we now have a {py:class}`datatree.DataTree` with two 💕 groups/nodes called
+'lowres' and 'highres' that have tensor shapes `(lat: 12, lon: 9, time: 192)`
+and `(lat: 54, lon: 40, time: 192)` respectively. While the time dimension ⏱️
+is of the same length, the timestamp values between the low-resolution 🔅 GCM
+and high-resolution 🔆 DeepSD output are different. Specifically, the GCM
+output dates at the middle of the month 📅, while the DeepSD output has dates
+at the start of the month. Let's see how this can be handled 🫖.
+
+### Slicing by month 🗓️
+
+Assuming that the roughly two week offset ↔️ between the monthly resolution GCM
+and DeepSD time-series is negligible 🤏, we can split the dataset on the time
+dimension at the start/end of each month 📆. Let's write a function and use
+{py:class}`torchdata.datapipes.iter.FlatMapper` (functional name: `flatmap`)
+for this.
 
 ```{code-cell}
-torchdata.datapipes.utils.to_graph(dp=dp_datatree_subset)
+def split_on_month(dt: DataTree, node:str = "highres/tasmax") -> DataTree:
+    """
+    Return a slice of data for every month in a datatree.DataTree time-series.
+    """
+    for t in dt[node].time.to_pandas():
+        dt_slice = dt.sel(
+            time=slice(t + pd.offsets.MonthBegin(0), t + pd.offsets.MonthEnd(0))
+        )
+        yield dt_slice.squeeze(dim="time")
+```
+
+```{code-cell}
+dp_datatree_timeslices = dp_datatree_subset.flatmap(fn=split_on_month)
+dp_datatree_timeslices
+```
+
+The datapipe should yield a {py:class}`datatree.DataTree` with just one
+month's 📅 worth of temperature 🌡️ data per iteration.
+
+```{code-cell}
+it = iter(dp_datatree_timeslices)
+datatree_timeslice = next(it)
+datatree_timeslice
+```
+
+```{seealso}
+Those interested in slicing multi-resolution arrays spatially can keep an eye
+on the 🚧 ongoing implementation at
+https://github.com/xarray-contrib/xbatcher/pull/171 and the discussion at
+https://github.com/xarray-contrib/xbatcher/issues/93. This 🧑‍🏫 tutorial will be
+updated ♻️ once there's a clean way to generate multi-resolution
+{py:class}`datatree.DataTree` slices in a newer release of
+{doc}`xbatcher <xbatcher:index>` 😉
+```
+
+Visualize the final DataPipe graph ⛓️.
+
+```{code-cell}
+torchdata.datapipes.utils.to_graph(dp=dp_datatree_timeslices)
+```
+
+### Into a DataLoader 🏋️
+
+Ready to populate the {py:class}`torchdata.dataloader2.DataLoader2` 🏭!
+
+```{code-cell}
+dataloader = torchdata.dataloader2.DataLoader2(datapipe=dp_datatree_timeslices)
+for i, batch in enumerate(dataloader):
+    ds_lowres = batch["lowres/tasmax"]
+    ds_highres = batch["highres/tasmax"]
+    print(f"Batch {i} - lowres: {ds_lowres.shape}, highres: {ds_highres.shape}")
+    if i > 8:
+        break
+```
+
+Do super-resolution, but make no illusion 🧚
+
+```{seealso}
+Credits to [CarbonPlan](https://github.com/carbonplan) for making the code and
+data for their
+[CMIP6 downscaling](https://github.com/carbonplan/cmip6-downscaling) work
+openly available. Find out more at
+https://docs.carbonplan.org/cmip6-downscaling!
 ```
