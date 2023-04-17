@@ -50,6 +50,7 @@ graphviz = {version = "*", optional = true}
 jupyter-book = {version="*", optional=true}
 matplotlib = {version = "*", optional = true}
 planetary-computer = {version="*", optional=true}
+xarray-datatree = {version="*", optional=true}
 
 [tool.poetry.group.dev.dependencies]
 aiohttp = "*"
@@ -70,6 +71,7 @@ docs = [
     "pystac_client",
     "stackstac",
     "spatialpandas",
+    "xarray-datatree",
     "xbatcher",
     "xpystac",
     "zarr"

@@ -4859,28 +4859,43 @@ test = ["pytest (>=3.0.0)"]
 
 [[package]]
 name = "xarray"
-version = "2022.3.0"
+version = "2022.6.0"
 description = "N-D labeled arrays and datasets in Python"
 category = "main"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "xarray-2022.3.0-py3-none-any.whl", hash = "sha256:560f36eaabe7a989d5583d37ec753dd737357aa6a6453e55c80bb4f92291a69e"},
-    {file = "xarray-2022.3.0.tar.gz", hash = "sha256:398344bf7d170477aaceff70210e11ebd69af6b156fe13978054d25c48729440"},
+    {file = "xarray-2022.6.0-py3-none-any.whl", hash = "sha256:c052208afc3f261984049f28b962d64eb6741a7967898315642f5da85448b6b0"},
+    {file = "xarray-2022.6.0.tar.gz", hash = "sha256:1028d198493f66bb15bd35dcfdd11defd831cbee3af6589fff16f41bddd67e84"},
 ]
 
 [package.dependencies]
-numpy = ">=1.18"
+numpy = ">=1.19"
 packaging = ">=20.0"
-pandas = ">=1.1"
+pandas = ">=1.2"
 
 [package.extras]
-accel = ["bottleneck", "numbagg", "scipy"]
-complete = ["bottleneck", "cfgrib", "cftime", "dask[complete]", "fsspec", "h5netcdf", "matplotlib", "nc-time-axis", "netCDF4", "numbagg", "pooch", "pydap", "rasterio", "scipy", "seaborn", "zarr"]
-docs = ["bottleneck", "cfgrib", "cftime", "dask[complete]", "fsspec", "h5netcdf", "ipykernel", "ipython", "jupyter-client", "matplotlib", "nbsphinx", "nc-time-axis", "netCDF4", "numbagg", "pooch", "pydap", "rasterio", "scanpydoc", "scipy", "seaborn", "sphinx-autosummary-accessors", "sphinx-rtd-theme", "zarr"]
+accel = ["bottleneck", "flox", "numbagg", "scipy"]
+complete = ["bottleneck", "cfgrib", "cftime", "dask[complete]", "flox", "fsspec", "h5netcdf", "matplotlib", "nc-time-axis", "netCDF4", "numbagg", "pooch", "pydap", "rasterio", "scipy", "seaborn", "zarr"]
+docs = ["bottleneck", "cfgrib", "cftime", "dask[complete]", "flox", "fsspec", "h5netcdf", "ipykernel", "ipython", "jupyter-client", "matplotlib", "nbsphinx", "nc-time-axis", "netCDF4", "numbagg", "pooch", "pydap", "rasterio", "scanpydoc", "scipy", "seaborn", "sphinx-autosummary-accessors", "sphinx-rtd-theme", "zarr"]
 io = ["cfgrib", "cftime", "fsspec", "h5netcdf", "netCDF4", "pooch", "pydap", "rasterio", "scipy", "zarr"]
 parallel = ["dask[complete]"]
 viz = ["matplotlib", "nc-time-axis", "seaborn"]
+
+[[package]]
+name = "xarray-datatree"
+version = "0.0.10"
+description = "Hierarchical tree-like data structures for xarray"
+category = "main"
+optional = true
+python-versions = ">=3.8"
+files = [
+    {file = "xarray-datatree-0.0.10.tar.gz", hash = "sha256:71cfb4b881eed816e2967e4fbf3b5d2f19c30cc19aefe95531ab7209d0ce5366"},
+    {file = "xarray_datatree-0.0.10-py3-none-any.whl", hash = "sha256:cfc762296915888e0020457b78f0b908514be67ac49d8cbb0ca571161c136a32"},
+]
+
+[package.dependencies]
+xarray = ">=2022.6.0"
 
 [[package]]
 name = "xbatcher"
@@ -5061,7 +5076,7 @@ docs = ["jaraco.packaging (>=9)", "rst.linker (>=1.9)", "sphinx"]
 testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.0.1)", "pytest-flake8", "pytest-mypy (>=0.9.1)"]
 
 [extras]
-docs = ["adlfs", "contextily", "datashader", "graphviz", "jupyter-book", "matplotlib", "planetary-computer", "pyogrio", "pystac", "pystac-client", "stackstac", "spatialpandas", "xbatcher", "xpystac", "zarr"]
+docs = ["adlfs", "contextily", "datashader", "graphviz", "jupyter-book", "matplotlib", "planetary-computer", "pyogrio", "pystac", "pystac-client", "stackstac", "spatialpandas", "xarray-datatree", "xbatcher", "xpystac", "zarr"]
 raster = ["xbatcher", "zarr"]
 spatial = ["datashader", "spatialpandas"]
 stac = ["pystac", "pystac-client", "stackstac", "xpystac"]
@@ -5070,4 +5085,4 @@ vector = ["pyogrio"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8, <4.0"
-content-hash = "90dfbece41b0ddeecc3b882e82574ef0ac8c40b51fca9c7e201343d92595e4d1"
+content-hash = "3f7035ab13e9026fd1b848930891b2e105ece1760c5f8bd026b98367c0876636"
