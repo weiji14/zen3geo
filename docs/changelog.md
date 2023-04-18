@@ -1,5 +1,37 @@
 # Changelog
 
+## Release v0.6.0 (2023/04/18)
+
+### 💫 Highlights
+
+* 🎉 **Sixth release of zen3geo** 🎉
+* 🚸 Walkthrough on handling multi-resolution climate data ([#91](https://github.com/weiji14/zen3geo/pull/91))
+
+### 🚀 Features
+
+* ✨ XpySTACAssetReader for reading COG, NetCDF & Zarr STAC assets ([#87](https://github.com/weiji14/zen3geo/pull/87))
+* ✨ Implement len function for XbatcherSlicerIterDataPipe ([#75](https://github.com/weiji14/zen3geo/pull/75))
+
+### 📖 Documentation
+
+* ♻️ Use xarray.merge with join="override" in collate functions ([#72](https://github.com/weiji14/zen3geo/pull/72))
+
+### 🧰 Maintenance
+
+* ⬆️ Bump jupyter-book from 0.14.0 to 0.15.1 ([#94](https://github.com/weiji14/zen3geo/pull/94))
+* 📦️ Publish to TestPyPI and PyPI via OpenID Connect token ([#90](https://github.com/weiji14/zen3geo/pull/90))
+* 👷 NEP29: Run Continuous Integration on Python 3.11 ([#89](https://github.com/weiji14/zen3geo/pull/89))
+* ⬆️ Bump jupyter-book from 0.13.0 to 0.14.0 ([#85](https://github.com/weiji14/zen3geo/pull/85))
+* 📌 Pin maximum python version to <4.0 ([#78](https://github.com/weiji14/zen3geo/pull/78))
+* ⬆️ Bump poetry from 1.2.0 to 1.3.0 ([#77](https://github.com/weiji14/zen3geo/pull/77))
+* 📌 Pin minimum xbatcher version to 0.2.0 ([#73](https://github.com/weiji14/zen3geo/pull/73))
+
+### 🧑‍🤝‍🧑 Contributors
+
+[@dependabot[bot]](https://github.com/dependabot-bot) and [@weiji14](https://github.com/weiji14)
+
+---
+
 ## Release v0.5.0 (2022/09/26)
 
 ### 💫 Highlights
