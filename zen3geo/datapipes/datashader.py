@@ -175,7 +175,7 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
 
         len_vector_datapipe: int = len(self.vector_datapipe)
         len_canvas_datapipe: int = len(self.source_datapipe)
-        if len_vector_datapipe != 1 or len_vector_datapipe != len_canvas_datapipe:
+        if len_vector_datapipe != 1 and len_vector_datapipe != len_canvas_datapipe:
             raise ValueError(
                 f"Unmatched lengths for the canvas datapipe ({self.source_datapipe}) "
                 f"and vector datapipe ({self.vector_datapipe}). \n"
