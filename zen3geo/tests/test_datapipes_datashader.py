@@ -10,6 +10,7 @@ from zen3geo.datapipes import DatashaderRasterizer, XarrayCanvas
 
 datashader = pytest.importorskip("datashader")
 
+
 # %%
 @pytest.fixture(scope="function", name="canvas")
 def fixture_canvas():
@@ -83,7 +84,7 @@ def test_datashader_rasterize_vector_geometry(canvas, geodataframe, geom_type, s
     geopandas.GeoDataFrame of point, line or polygon type into an
     xarray.DataArray grid.
     """
-    dp = IterableWrapper(iterable=[canvas])
+    dp = IterableWrapper(iterable=[canvas, canvas])
 
     vector = geodataframe[geodataframe.type.str.contains(geom_type)]
     dp_vector = IterableWrapper(iterable=[vector])
@@ -93,7 +94,7 @@ def test_datashader_rasterize_vector_geometry(canvas, geodataframe, geom_type, s
     # Using functional form (recommended)
     dp_datashader = dp.rasterize_with_datashader(vector_datapipe=dp_vector)
 
-    assert len(dp_datashader) == 1
+    assert len(dp_datashader) == 2
     it = iter(dp_datashader)
     dataarray = next(it)
 
