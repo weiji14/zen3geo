@@ -39,8 +39,7 @@ class PySTACAPISearcherIterDataPipe(IterDataPipe):
           provided Collections will be searched.
 
     catalog_url : str
-        The URL of a STAC Catalog. If not specified, this will use the
-        ``STAC_URL`` environment variable.
+        The URL of a STAC Catalog.
 
     kwargs : Optional
         Extra keyword arguments to pass to
