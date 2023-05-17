@@ -122,7 +122,7 @@ class XpySTACAssetReaderIterDataPipe(IterDataPipe[StreamWrapper]):
         engine: str = "stac",
         **kwargs: Optional[Dict[str, Any]]
     ) -> None:
-        if xpystac is None:
+        if xpystac is None and engine == "stac":
             raise ModuleNotFoundError(
                 "Package `xpystac` is required to be installed to use this datapipe. "
                 "Please use `pip install xpystac` "
