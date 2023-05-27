@@ -38,7 +38,7 @@ jobs:
             extra-packages: '--extras "raster spatial stac vector"'
           - os: 'ubuntu-22.04'
             python-version: '3.11'
-            extra-packages: '--extras "raster stac vector"'
+            extra-packages: '--extras "raster spatial stac vector"'
 
     steps:
       # Checkout current git repository
