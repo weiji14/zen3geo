@@ -214,8 +214,7 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
             # Convert vector to spatialpandas format to allow datashader's
             # rasterization methods to work
             try:
-                columns = ["geometry"] if not hasattr(vector, "columns") else None
-                _vector = spatialpandas.GeoDataFrame(data=vector, columns=columns)
+                _vector = spatialpandas.GeoDataFrame(data=vector.geometry)
             except ValueError as e:
                 if str(e) == "Unable to convert data argument to a GeometryList array":
                     raise NotImplementedError(
