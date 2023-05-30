@@ -214,13 +214,16 @@ class DatashaderRasterizerIterDataPipe(IterDataPipe):
             # Convert vector to spatialpandas format to allow datashader's
             # rasterization methods to work
             try:
-                columns = ["geometry"] if not hasattr(vector, "columns") else None
-                _vector = spatialpandas.GeoDataFrame(data=vector, columns=columns)
+                _vector = spatialpandas.GeoDataFrame(data=vector.geometry)
             except ValueError as e:
-                raise NotImplementedError(
-                    f"Unsupported geometry type(s) {set(vector.geom_type)} detected, "
-                    "only point, line or polygon vector geometry types are supported."
-                ) from e
+                if str(e) == "Unable to convert data argument to a GeometryList array":
+                    raise NotImplementedError(
+                        f"Unsupported geometry type(s) {set(vector.geom_type)} detected, "
+                        "only point, line or polygon vector geometry types "
+                        "(or their multi- equivalents) are supported."
+                    ) from e
+                else:
+                    raise e
 
             # Determine geometry type to know which rasterization method to use
             vector_dtype: spatialpandas.geometry.GeometryDtype = _vector.geometry.dtype

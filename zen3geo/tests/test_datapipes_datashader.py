@@ -50,7 +50,6 @@ def test_datashader_canvas_dataset():
     Ensure that XarrayCanvas works to create a blank datashader.Canvas object
     from an xarray.Dataset.
     """
-
     dataset: xr.Dataset = xr.Dataset(
         data_vars={"temperature": (["y", "x"], 15 * np.ones(shape=(12, 8)))},
         coords={
@@ -171,4 +170,25 @@ def test_datashader_rasterize_vector_geometrycollection(canvas, geodataframe):
     assert len(dp_datashader) == 1
     it = iter(dp_datashader)
     with pytest.raises(NotImplementedError, match="Unsupported geometry type"):
+        raster = next(it)
+
+
+def test_datashader_rasterize_invalid_vector(canvas, geodataframe):
+    """
+    Ensure that DatashaderRasterizer raises a ValueError when an invalid
+    geopandas.GeoDataFrame without a geometry is passed in as input.
+
+    Regression test for https://github.com/weiji14/zen3geo/pull/104.
+    """
+    # GeoDataFrame with empty data
+    gdf_none = geodataframe.loc[5:]
+    gdf_none = gdf_none.set_crs(crs="OGC:CRS84")
+
+    dp = IterableWrapper(iterable=[canvas])
+    dp_vector = IterableWrapper(iterable=[gdf_none])
+    dp_datashader = dp.rasterize_with_datashader(vector_datapipe=dp_vector)
+
+    assert len(dp_datashader) == 1
+    it = iter(dp_datashader)
+    with pytest.raises(ValueError, match="Cannot infer spatialpandas geometry type"):
         raster = next(it)
