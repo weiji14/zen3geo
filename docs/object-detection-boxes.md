@@ -133,7 +133,8 @@ cloud-native columnar 🀤 geospatial vector file format) over our study area.
 
 ```{code-cell}
 catalog = pystac_client.Client.open(
-    url="https://planetarycomputer.microsoft.com/api/stac/v1"
+    url="https://planetarycomputer.microsoft.com/api/stac/v1",
+    modifier=planetary_computer.sign_inplace,
 )
 items = catalog.search(
     collections=["ms-buildings"], query={"msbuildings:region": {"eq": "Brunei"}}
@@ -142,11 +143,18 @@ item = next(items.get_items())
 item
 ```
 
-Next, we'll sign 🔏 the URL to the STAC Item Asset, and load ⤵️ the GeoParquet
-file using {py:func}`geopandas.read_parquet`.
+```{note}
+Accessing the building footprint STAC Assets from Planetary Computer will
+require signing 🔏 the URL. This can be done with a `modifier` function in the
+{py:meth}`pystac_client.Client.open` call. See also 'Automatically modifying
+results' under {doc}`PySTAC-Client Usage <pystac_client:usage>`).
+```
+
+Next, we'll load ⤵️ the GeoParquet file using
+{py:func}`geopandas.read_parquet`.
 
 ```{code-cell}
-asset = planetary_computer.sign(item.assets["data"])
+asset = item.assets["data"]
 
 geodataframe = gpd.read_parquet(
     path=asset.href, storage_options=asset.extra_fields["table:storage_options"]
