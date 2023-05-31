@@ -16,10 +16,6 @@ build:
       # Generate the Sphinx configuration for this Jupyter Book so it builds.
       # https://jupyterbook.org/en/stable/publish/readthedocs.html
       - "jupyter-book config sphinx docs/"
-    post_install:
-      # Install numpy=1.23 instead of 1.24 to prevent AttributeError, see
-      # https://github.com/holoviz/datashader/issues/1209
-      - "pip install numpy==1.23.*"
 
 python:
   install:
