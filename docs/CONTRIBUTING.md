@@ -111,7 +111,7 @@ cd zen3geo
 ### Setup virtual environment ☁️
 
 ```
-mamba create --name zen3geo python=3.10
+mamba create --name zen3geo python=3.11
 mamba activate zen3geo
 
 pip install poetry==1.4.2
