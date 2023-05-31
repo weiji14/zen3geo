@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "zen3geo"
-version = "0.6.0"
+version = "0.6.1"
 description = "The 🌏 data science library you've been waiting for~"
 authors = ["Wei Ji <23487320+weiji14@users.noreply.github.com>"]
 license = "LGPL-3.0-or-later"

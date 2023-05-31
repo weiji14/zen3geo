@@ -1,5 +1,36 @@
 # Changelog
 
+## Release v0.6.1 (2023/05/31)
+
+### 💫 Highlights
+
+* 🎉 **Patch release for zen3geo** 🎉
+* 😎 Full Python 3.11 support and a couple of bug fixes for DatashaderRasterizer
+
+### 🚀 Features
+
+* 🥚 Allow using XpySTACAssetReader without xpystac when engine!=stac ([#100](https://github.com/weiji14/zen3geo/pull/100))
+
+### 🐛 Bug Fixes
+
+* 🐛 Fix DatashaderRasterizer for GeoDataFrame wrapped in StreamWrapper ([#104](https://github.com/weiji14/zen3geo/pull/104))
+* 🐛 Fix DatashaderRasterizer to allow N:1 instead of just 1:1 ([#98](https://github.com/weiji14/zen3geo/pull/98))
+
+### 📖 Documentation
+
+* 👽️ Handle ms-buildings 20230425 update in Object Detection tutorial ([#106](https://github.com/weiji14/zen3geo/pull/106))
+
+### 🧰 Maintenance
+
+* 👷 NEP29: Run CI and Docs build on Python 3.11 ([#103](https://github.com/weiji14/zen3geo/pull/103))
+* ⬆️ Bump poetry from 1.3.0 to 1.4.2 ([#99](https://github.com/weiji14/zen3geo/pull/99))
+
+### 🧑‍🤝‍🧑 Contributors
+
+[@dependabot[bot]](https://github.com/dependabot-bot) and [@weiji14](https://github.com/weiji14)
+
+---
+
 ## Release v0.6.0 (2023/04/18)
 
 ### 💫 Highlights
