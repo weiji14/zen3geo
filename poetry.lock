@@ -779,21 +779,21 @@ test = ["pre-commit", "pytest", "pytest-rerunfailures", "pytest-xdist"]
 
 [[package]]
 name = "datashader"
-version = "0.14.4"
+version = "0.15.0"
 description = "Data visualization toolchain based on aggregating into a grid"
 category = "main"
 optional = true
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "datashader-0.14.4-py2.py3-none-any.whl", hash = "sha256:5c27efd7c36f3638f7c31aa6ce84c7318df4494f69c6e401d79dea367db79578"},
-    {file = "datashader-0.14.4.tar.gz", hash = "sha256:0241e611f951be3245972708e5a769bb183afbfceeec3cf2eef6d80af7756fbd"},
+    {file = "datashader-0.15.0-py2.py3-none-any.whl", hash = "sha256:25832aec902b73d485a21d526fc518ae659e5004aad64db97b6f39d87d066453"},
+    {file = "datashader-0.15.0.tar.gz", hash = "sha256:81b0481a75530e713cfacf421da5e062ca5791832466987f70b59724cc03872f"},
 ]
 
 [package.dependencies]
 colorcet = "*"
 dask = "*"
 datashape = "*"
-numba = ">=0.51"
+numba = "*"
 numpy = "*"
 pandas = "*"
 param = "*"
@@ -805,10 +805,10 @@ toolz = "*"
 xarray = "*"
 
 [package.extras]
-all = ["bokeh (<3.0)", "codecov", "fastparquet", "flake8", "geopandas", "graphviz", "holoviews", "matplotlib", "nbconvert", "nbformat", "nbsite (>=0.7.1)", "nbsmoke[verify] (>0.5)", "netcdf4", "networkx", "numpydoc", "pyarrow (<11)", "pydata-sphinx-theme (<0.9.0)", "pytest", "pytest-benchmark", "pytest-cov", "python-graphviz", "python-snappy", "rasterio", "rioxarray", "scikit-image", "snappy", "spatialpandas", "sphinx-copybutton", "streamz"]
-doc = ["bokeh (<3.0)", "fastparquet", "geopandas", "graphviz", "holoviews", "matplotlib", "nbsite (>=0.7.1)", "networkx", "numpydoc", "pydata-sphinx-theme (<0.9.0)", "python-graphviz", "python-snappy", "rasterio", "scikit-image", "snappy", "spatialpandas", "sphinx-copybutton", "streamz"]
-examples = ["bokeh (<3.0)", "geopandas", "holoviews", "matplotlib", "scikit-image", "spatialpandas"]
-examples-extra = ["bokeh (<3.0)", "fastparquet", "geopandas", "graphviz", "holoviews", "matplotlib", "networkx", "python-graphviz", "python-snappy", "rasterio", "scikit-image", "snappy", "spatialpandas", "streamz"]
+all = ["bokeh", "codecov", "fastparquet", "flake8", "geopandas", "graphviz", "holoviews", "matplotlib", "nbconvert", "nbformat", "nbsite (==0.8.0)", "nbsmoke[verify] (>0.5)", "netcdf4", "networkx", "numpydoc", "pyarrow (<11)", "pytest", "pytest-benchmark", "pytest-cov", "python-graphviz", "python-snappy", "rasterio", "rioxarray", "scikit-image", "spatialpandas", "streamz"]
+doc = ["bokeh", "fastparquet", "geopandas", "graphviz", "holoviews", "matplotlib", "nbsite (==0.8.0)", "networkx", "numpydoc", "python-graphviz", "python-snappy", "rasterio", "scikit-image", "spatialpandas", "streamz"]
+examples = ["bokeh", "geopandas", "holoviews", "matplotlib", "scikit-image", "spatialpandas"]
+examples-extra = ["bokeh", "fastparquet", "geopandas", "graphviz", "holoviews", "matplotlib", "networkx", "python-graphviz", "python-snappy", "rasterio", "scikit-image", "spatialpandas", "streamz"]
 gpu-tests = ["cudf", "cupy", "dask-cudf"]
 tests = ["codecov", "fastparquet", "flake8", "nbconvert", "nbformat", "nbsmoke[verify] (>0.5)", "netcdf4", "pyarrow (<11)", "pytest", "pytest-benchmark", "pytest-cov", "rasterio", "rioxarray", "spatialpandas"]
 
