@@ -129,24 +129,35 @@ dataarray
 
 Now to pull in some building footprints 🛖. Let's make a STAC API query to get
 a [GeoParquet](https://github.com/opengeospatial/geoparquet) file (a
-cloud-native columnar 🀤 geospatial vector file format) over our study area.
+cloud-native columnar 🀤 geospatial vector file format) that intersects our
+study area.
 
 ```{code-cell}
 catalog = pystac_client.Client.open(
-    url="https://planetarycomputer.microsoft.com/api/stac/v1"
+    url="https://planetarycomputer.microsoft.com/api/stac/v1",
+    modifier=planetary_computer.sign_inplace,
 )
 items = catalog.search(
-    collections=["ms-buildings"], query={"msbuildings:region": {"eq": "Brunei"}}
+    collections=["ms-buildings"],
+    query={"msbuildings:region": {"eq": "Brunei"}},
+    intersects=shapely.geometry.box(minx=114.94, miny=4.88, maxx=114.95, maxy=4.89),
 )
 item = next(items.get_items())
 item
 ```
 
-Next, we'll sign 🔏 the URL to the STAC Item Asset, and load ⤵️ the GeoParquet
-file using {py:func}`geopandas.read_parquet`.
+```{note}
+Accessing the building footprint STAC Assets from Planetary Computer will
+require signing 🔏 the URL. This can be done with a `modifier` function in the
+{py:meth}`pystac_client.Client.open` call. See also 'Automatically modifying
+results' under {doc}`PySTAC-Client Usage <pystac_client:usage>`).
+```
+
+Next, we'll load ⤵️ the GeoParquet file using
+{py:func}`geopandas.read_parquet`.
 
 ```{code-cell}
-asset = planetary_computer.sign(item.assets["data"])
+asset = item.assets["data"]
 
 geodataframe = gpd.read_parquet(
     path=asset.href, storage_options=asset.extra_fields["table:storage_options"]
@@ -155,10 +166,11 @@ geodataframe
 ```
 
 This {py:class}`geopandas.GeoDataFrame` contains building outlines across
-Brunei 🇧🇳. Let's do a spatial subset ✂️ to just the Kampong Ayer study area
-using {py:attr}`geopandas.GeoDataFrame.cx`, and reproject it using
-{py:meth}`geopandas.GeoDataFrame.to_crs` to match the coordinate reference
-system of the optical image.
+Brunei 🇧🇳 that intersects and extends beyond our study area. Let's do a spatial
+subset ✂️ to just the Kampong Ayer study area using
+{py:attr}`geopandas.GeoDataFrame.cx`, and reproject the polygon coordinates
+using {py:meth}`geopandas.GeoDataFrame.to_crs` to match the coordinate
+reference system of the optical image.
 
 ```{code-cell}
 _gdf_kpgayer = geodataframe.cx[114.94:114.95, 4.88:4.89]
