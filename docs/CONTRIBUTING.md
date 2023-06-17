@@ -114,7 +114,7 @@ cd zen3geo
 mamba create --name zen3geo python=3.11
 mamba activate zen3geo
 
-pip install poetry==1.4.2
+pip install poetry==1.5.1
 poetry install --extras "raster spatial stac vector"
 ```
 
