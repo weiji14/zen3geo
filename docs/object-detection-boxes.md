@@ -137,12 +137,12 @@ catalog = pystac_client.Client.open(
     url="https://planetarycomputer.microsoft.com/api/stac/v1",
     modifier=planetary_computer.sign_inplace,
 )
-items = catalog.search(
+search = catalog.search(
     collections=["ms-buildings"],
     query={"msbuildings:region": {"eq": "Brunei"}},
     intersects=shapely.geometry.box(minx=114.94, miny=4.88, maxx=114.95, maxy=4.89),
 )
-item = next(items.get_items())
+item = next(search.items())
 item
 ```
 
