@@ -29,8 +29,9 @@ class PySTACItemReaderIterDataPipe(IterDataPipe):
     Yields
     ------
     stac_item : pystac.Item
-        An :py:class:`pystac.Item` object containing the specific STACObject
-        implementation class represented in a JSON format.
+        A :py:class:`pystac.Item` object containing the specific
+        :py:class:`pystac.STACObject` implementation class represented in a
+        JSON format.
 
     Raises
     ------
