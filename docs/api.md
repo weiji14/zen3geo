@@ -51,6 +51,8 @@
 .. automodule:: zen3geo.datapipes.pystac_client
 .. autoclass:: zen3geo.datapipes.PySTACAPISearcher
 .. autoclass:: zen3geo.datapipes.pystac_client.PySTACAPISearcherIterDataPipe
+.. autoclass:: zen3geo.datapipes.PySTACAPIItemLister
+.. autoclass:: zen3geo.datapipes.pystac.PySTACAPIItemListerIterDataPipe
     :show-inheritance:
 ```
 
