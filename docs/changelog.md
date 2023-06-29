@@ -1,5 +1,26 @@
 # Changelog
 
+## Release v0.6.2 (2023/06/29)
+
+### 💫 Highlights
+
+* 🎉 **Patch release for zen3geo** 🎉
+* 🚀 Quick addition of a new PySTACAPIItemLister DataPipe
+
+### 🚀 Features
+
+* ✨ PySTACAPIItemLister to list STAC Items matching STAC API search ([#111](https://github.com/weiji14/zen3geo/pull/111))
+
+### 🧰 Maintenance
+
+* ⬆️ Bump poetry from 1.4.2 to 1.5.1 ([#110](https://github.com/weiji14/zen3geo/pull/110))
+
+### 🧑‍🤝‍🧑 Contributors
+
+[@dependabot[bot]](https://github.com/dependabot-bot) and [@weiji14](https://github.com/weiji14)
+
+---
+
 ## Release v0.6.1 (2023/05/31)
 
 ### 💫 Highlights
