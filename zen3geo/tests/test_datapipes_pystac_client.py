@@ -58,34 +58,35 @@ def test_pystac_client_item_search():
     assert stac_item.assets["nidem"].extra_fields["eo:bands"] == [{"name": "nidem"}]
 
 
-def test_pystac_client_item_search_open_parameters():
+def test_pystac_client_item_search_open_headers():
     """
     Ensure that PySTACAPISearcher works to query a STAC API /search/ endpoint
-    with parameters passed to pystac_client.Client.open.
+    with headers passed to pystac_client.Client.open.
     """
     query: dict = dict(
         bbox=[150.9, -34.36, 151.3, -33.46],
         datetime=["2020-01-01T00:00:00Z", "2022-12-31T00:00:00Z"],
+        collections=["HLSS30.v2.0"],
     )
     dp = IterableWrapper(iterable=[query])
 
     # Using class constructors
     dp_pystac_client = PySTACAPISearcher(
         source_datapipe=dp,
-        catalog_url="https://api.radiant.earth/mlhub/v1/",
-        parameters={"key": "ANON_MLHUB_API_KEY"},
+        catalog_url="https://cmr.earthdata.nasa.gov/cloudstac/LPCLOUD",
+        headers={"Authorization": "Bearer <EDL_TOKEN>"},
     )
     # Using functional form (recommended)
     dp_pystac_client = dp.search_for_pystac_item(
-        catalog_url="https://api.radiant.earth/mlhub/v1/",
-        parameters={"key": "ANON_MLHUB_API_KEY"},
+        catalog_url="https://cmr.earthdata.nasa.gov/cloudstac/LPCLOUD",
+        headers={"Authorization": "Bearer <EDL_TOKEN>"},
     )
 
     assert len(dp_pystac_client) == 1
     it = iter(dp_pystac_client)
     stac_item_search = next(it)
-    assert stac_item_search.client.title == "Radiant MLHub API"
-    assert stac_item_search.client.description == "stac-fastapi"
+    assert stac_item_search.client.title == "LPCLOUD"
+    assert stac_item_search.client.description == "Root catalog for LPCLOUD"
 
 
 def test_pystac_client_item_lister():

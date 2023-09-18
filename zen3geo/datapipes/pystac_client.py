@@ -211,8 +211,8 @@ class PySTACAPIItemListerIterDataPipe(IterDataPipe):
      'sentinel:processing_baseline': '05.09',
      'proj:shape': [10980, 10980],
      'proj:transform': [10.0, 0.0, 499980.0, 0.0, -10.0, 7900000.0, 0.0, 0.0, 1.0],
-     'datetime': '2023-01-03T06:24:53Z',
-     'cubedash:region_code': '40KED'}
+     'cubedash:region_code': '40KED',
+     'datetime': '2023-01-03T06:24:53Z'}
     """
 
     def __init__(self, source_datapipe):
