@@ -16,6 +16,14 @@ build:
       # Generate the Sphinx configuration for this Jupyter Book so it builds.
       # https://jupyterbook.org/en/stable/publish/readthedocs.html
       - "jupyter-book config sphinx docs/"
+    post_install:
+      # Install stackstac=0.4.4 instead of 0.5.0 to prevent
+      # TypeError: Unsupported data type float16
+      # because stackstac casts to float16 at read-in instead of post-read
+      # see https://github.com/gjoseph92/stackstac/pull/208
+      # Need to wait for rasterio/GDAL to support float16
+      # see https://gdal.org/api/raster_c_api.html#_CPPv412GDALDataType
+      - "pip install stackstac==0.4.4"
 
 # Optional but recommended, declare the Python requirements required
 # to build your documentation
