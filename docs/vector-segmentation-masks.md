@@ -68,7 +68,7 @@ signed_item
 This is how the Sentinel-1 🩻 image looks like over Johor in Peninsular
 Malaysia on 15 Dec 2019.
 
-![Sentinel-1 image over Johor, Malaysia on 20191215](https://planetarycomputer.microsoft.com/api/data/v1/item/preview.png?collection=sentinel-1-grd&item=S1A_IW_GRDH_1SDV_20191215T224757_20191215T224822_030365_037955&assets=vv&assets=vh&expression=vv%2Cvh%2Cvv%2Fvh&rescale=0%2C500&rescale=0%2C300&rescale=0%2C7&tile_format=png)
+![Sentinel-1 GRD image over Johor, Malaysia on 20191215](https://planetarycomputer.microsoft.com/api/data/v1/item/preview.png?collection=sentinel-1-grd&item=S1A_IW_GRDH_1SDV_20191215T224757_20191215T224822_030365_037955&assets=vv&assets=vh&expression=vv%3Bvh%3Bvv%2Fvh&rescale=0%2C600&rescale=0%2C270&rescale=0%2C9&asset_as_band=True&tile_format=png&format=png)
 
 ### Load and reproject image data 🔄
 
