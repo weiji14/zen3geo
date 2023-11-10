@@ -184,14 +184,13 @@ Preview 👀 the building footprints to check that things are in the right place
 ax = gdf_kpgayer.plot(figsize=(9, 9))
 contextily.add_basemap(
     ax=ax,
-    source=contextily.providers.Stamen.TonerLite,
+    source=contextily.providers.CartoDB.Voyager,
     crs=gdf_kpgayer.crs.to_string(),
 )
 ax
 ```
 
-Hmm, seems like the Stamen basemap doesn't know that some of the buildings are
-on water 😂.
+Cool, we see that there are some building are on water as expected 😁.
 
 
 ## 1️⃣ Pair image chips with bounding boxes 🧑‍🤝‍🧑
