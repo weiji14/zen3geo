@@ -82,7 +82,7 @@ da
 
 This is how the Sentinel-2 image looks like over Singapore on 15 Jan 2022.
 
-![Sentinel-2 image over Singapore on 20220115](https://planetarycomputer.microsoft.com/api/data/v1/item/preview.png?collection=sentinel-2-l2a&item=S2A_MSIL2A_20220115T032101_R118_T48NUG_20220115T170435&assets=visual&asset_bidx=visual%7C1%2C2%2C3&nodata=0)
+![Sentinel-2 L2A image over Singapore on 20220115](https://planetarycomputer.microsoft.com/api/data/v1/item/preview.png?collection=sentinel-2-l2a&item=S2A_MSIL2A_20220115T032101_R118_T48NUG_20220115T170435&assets=visual&asset_bidx=visual%7C1%2C2%2C3&nodata=0&format=png)
 
 ## 1️⃣ Construct [DataPipe](https://github.com/pytorch/data/tree/v0.6.1#what-are-datapipes) 📡
 

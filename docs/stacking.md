@@ -75,7 +75,7 @@ obtained via a spatiotemporal query to a [STAC](https://stacspec.org) API.
 This is how the Sentinel-1 radar image looks like over Sumatra Barat, Indonesia
 on 23 February 2022, two days before the earthquake.
 
-![Sentinel-1 image over Sumatra Barat, Indonesia on 20220223](https://planetarycomputer.microsoft.com/api/data/v1/item/preview.png?collection=sentinel-1-rtc&item=S1A_IW_GRDH_1SDV_20220223T114141_20220223T114206_042039_0501F9_rtc&assets=vv&assets=vh&tile_format=png&expression=0.03+%2B+log+%2810e-4+-+log+%280.05+%2F+%280.02+%2B+2+%2A+vv%29%29%29%2C0.05+%2B+exp+%280.25+%2A+%28log+%280.01+%2B+2+%2A+vv%29+%2B+log+%280.02+%2B+5+%2A+vh%29%29%29%2C1+-+log+%280.05+%2F+%280.045+-+0.9+%2A+vv%29%29&rescale=0%2C.8000&rescale=0%2C1.000&rescale=0%2C1.000)
+![Sentinel-1 RTC image over Sumatra Barat, Indonesia on 20220223](https://planetarycomputer.microsoft.com/api/data/v1/item/preview.png?collection=sentinel-1-rtc&item=S1A_IW_GRDH_1SDV_20220223T114141_20220223T114206_042039_0501F9_rtc&assets=vv&assets=vh&tile_format=png&expression=0.03+%2B+log+%2810e-4+-+log+%280.05+%2F+%280.02+%2B+2+%2A+vv%29%29%29%3B0.05+%2B+exp+%280.25+%2A+%28log+%280.01+%2B+2+%2A+vv%29+%2B+log+%280.02+%2B+5+%2A+vh%29%29%29%3B1+-+log+%280.05+%2F+%280.045+-+0.9+%2A+vv%29%29&asset_as_band=True&rescale=0%2C.8000&rescale=0%2C1.000&rescale=0%2C1.000&format=png)
 
 ### Sentinel-1 PolSAR time-series ⏳
 
