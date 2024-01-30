@@ -27,6 +27,15 @@
     :show-inheritance:
 ```
 
+### Laspy
+
+```{eval-rst}
+.. automodule:: zen3geo.datapipes.laspy
+.. autoclass:: zen3geo.datapipes.LaspyReader
+.. autoclass:: zen3geo.datapipes.laspy.LaspyReaderIterDataPipe
+    :show-inheritance:
+```
+
 ### Pyogrio
 
 ```{eval-rst}

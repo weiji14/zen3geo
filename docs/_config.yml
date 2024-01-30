@@ -54,6 +54,9 @@ sphinx:
       geopandas:
         - 'https://geopandas.org/en/latest/'
         - null
+      laspy:
+        - 'https://laspy.readthedocs.io/en/latest/'
+        - null
       mmdetection:
         - 'https://mmdetection.readthedocs.io/zh_CN/latest/'
         - null
