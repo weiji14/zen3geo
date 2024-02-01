@@ -1,7 +1,6 @@
 """
 DataPipes for :doc:`laspy <laspy:index>`.
 """
-import io
 from typing import Any, Dict, Iterator, Optional
 
 try:
@@ -22,9 +21,9 @@ class LaspyReaderIterDataPipe(IterDataPipe[StreamWrapper]):
 
     Parameters
     ----------
-    source_datapipe : IterDataPipe[str]
+    source_datapipe : IterDataPipe[str, io.BytesIO]
         A DataPipe that contains filepaths or an :py:class:`io.BytesIO` stream to point
-        cloud files in LAS or LAZ format.
+        cloud data such as LAS, LAZ, COPC, etc.
 
     kwargs : Optional
         Extra keyword arguments to pass to :py:func:`laspy.read`.
