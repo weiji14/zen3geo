@@ -197,7 +197,7 @@ we'll first load the digitized landslide polygons from a vector file 📁 using
 
 ```{code-cell}
 # https://gdal.org/user/virtual_file_systems.html#vsizip-zip-archives
-shape_url = "/vsizip/vsicurl/https://unosat-maps.web.cern.ch/ID/LS20220308IDN/LS20220308IDN_SHP.zip/LS20220308IDN_SHP/S2_20220304_LandslideExtent_MountTalakmau.shp"
+shape_url = "/vsizip/vsicurl/https://unosat.org/static/unosat_filesystem/3064/LS20220308IDN_SHP.zip/LS20220308IDN_SHP/S2_20220304_LandslideExtent_MountTalakmau.shp"
 
 dp_shapes = torchdata.datapipes.iter.IterableWrapper(iterable=[shape_url])
 dp_pyogrio = dp_shapes.read_from_pyogrio()
