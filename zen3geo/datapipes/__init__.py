@@ -9,6 +9,7 @@ from zen3geo.datapipes.datashader import (
 from zen3geo.datapipes.geopandas import (
     GeoPandasRectangleClipperIterDataPipe as GeoPandasRectangleClipper,
 )
+from zen3geo.datapipes.laspy import LaspyReaderIterDataPipe as LaspyReader
 from zen3geo.datapipes.pyogrio import PyogrioReaderIterDataPipe as PyogrioReader
 from zen3geo.datapipes.pystac import PySTACItemReaderIterDataPipe as PySTACItemReader
 from zen3geo.datapipes.pystac_client import (

@@ -35,6 +35,7 @@ rioxarray = ">=0.10.0"
 torchdata = ">=0.4.0"
 # Optional
 datashader = {version = ">=0.14.0", optional = true}
+laspy = {version = ">=2.5.0", extras = ["lazrs"], optional = true}
 pyogrio = {version = ">=0.4.0", extras = ["geopandas"], optional = true}
 pystac = {version=">=1.4.0", optional=true}
 pystac-client = {version = ">=0.4.0", optional = true}
@@ -75,6 +76,9 @@ docs = [
     "xbatcher",
     "xpystac",
     "zarr"
+]
+lidar = [
+    "laspy",
 ]
 raster = [
     "xbatcher",
