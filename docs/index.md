@@ -7,6 +7,7 @@ Get what you need, not more, not less:
 | Command                        |  Dependencies |
 |:-------------------------------|---------------|
 | `pip install zen3geo`          | rioxarray, torchdata |
+| `pip install zen3geo[lidar]`   | rioxarray, torchdata, laspy[lazrs] |
 | `pip install zen3geo[raster]`  | rioxarray, torchdata, xbatcher, zarr |
 | `pip install zen3geo[spatial]` | rioxarray, torchdata, datashader, spatialpandas |
 | `pip install zen3geo[stac]`    | rioxarray, torchdata, pystac, pystac-client, stackstac, xpystac |
@@ -14,7 +15,7 @@ Get what you need, not more, not less:
 
 Retrieve more ['extras'](https://github.com/weiji14/zen3geo/blob/main/pyproject.toml) using
 
-    pip install zen3geo[raster,spatial,stac,vector]
+    pip install zen3geo[lidar,raster,spatial,stac,vector]
 
 To install the development version from [TestPyPI](https://test.pypi.org/project/zen3geo), do:
 
